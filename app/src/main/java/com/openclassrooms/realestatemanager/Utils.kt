@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils{
+
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
