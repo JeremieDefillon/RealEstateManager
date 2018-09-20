@@ -13,9 +13,7 @@ object Utils{
      * @param dollars
      * @return
      */
-    fun convertDollarToEuro(dollars: Int): Int {
-        return Math.round(dollars * 0.812).toInt()
-    }
+    fun convertDollarToEuro(dollars: Int): Int = Math.round(dollars * 0.812).toInt()
 
     /**
      * Conversion de la date d'aujourd'hui en un format plus approprié
@@ -37,4 +35,5 @@ object Utils{
         val wifi = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
         return wifi.isWifiEnabled
     }
+
 }
