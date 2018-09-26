@@ -1,6 +1,8 @@
-package com.openclassrooms.realestatemanager
+package com.gz.jey.realestatemanager.utils
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.wifi.WifiManager
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,8 +36,8 @@ object Utils{
     }
 
     /**
-     * Conversion de la date d'aujourd'hui en un format plus approprié
-     * @return
+     * convert today date in string format
+     * @return String as dd/mm/yyyy format
      */
     fun getTodayDateStr(): String {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy")
@@ -46,11 +48,23 @@ object Utils{
      * Vérification de la connexion réseau
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
      * @param context
-     * @return
+     * @return Boolean
      */
     fun isInternetAvailable(context: Context): Boolean {
         val wifi = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
         return wifi.isWifiEnabled
     }
+
+    /**
+     * check if device is connected to internet
+     * @param context
+     * @return Boolean
+     */
+    fun isConnected(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo = cm.activeNetworkInfo
+        return activeNetwork.isConnectedOrConnecting
+    }
+
 
 }

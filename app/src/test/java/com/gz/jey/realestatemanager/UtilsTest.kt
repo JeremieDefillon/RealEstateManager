@@ -1,5 +1,6 @@
-package com.openclassrooms.realestatemanager
+package com.gz.jey.realestatemanager
 
+import com.gz.jey.realestatemanager.utils.Utils
 import junit.framework.Assert
 import org.junit.Test
 import java.util.*
