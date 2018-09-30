@@ -35,7 +35,7 @@ class RealEstateDaoTest {
 
     // DATA SET FOR TEST
     private val RE_ID : Long = 1
-    private val RE_DEMO : RealEstate = RealEstate(RE_ID, "Flat", 1000000, 540, 4, 5, 2, "","",null,"","","","Jey")
+    private val RE_DEMO : RealEstate = RealEstate(RE_ID, "Flat", 1000000, 540, 4, 5, 2, "",null,"",null,"","","","Jey")
 
 
     @Test

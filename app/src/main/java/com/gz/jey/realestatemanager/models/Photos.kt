@@ -13,10 +13,10 @@ import android.arch.persistence.room.PrimaryKey
 )
 data class Photos(
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name="id")var id : Long?,
-        @ColumnInfo(name="path")var path : String?,
-        @ColumnInfo(name="desc")var desc : String?,
-        @ColumnInfo(name="reId")var reId : Long?
+        var id : Long?,
+        var path : String?,
+        var desc : String?,
+        var reId : Long?
 ){
         constructor():this(0,"","",0)
 }
