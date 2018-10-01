@@ -1,3 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Real Estate Manager</string>
+
+    <string name="navigation_drawer_close">Close</string>
+    <string name="navigation_drawer_open">Open</string>
+
+    <string name="colon">:</string>
+    <string name="search">Search</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="power_off">Turn Off</string>
+    <string name="check">Check</string>
+    <string name="save">Save</string>
+
+    <!-- ADD & UPDATE LABELS  -->
+    <string name="currency">Currency</string>
+
+    <string name="type">Type</string>
+    <string name="district">District</string>
+    <string name="room_number">Number of Rooms</string>
+    <string name="bed_number">Number of Bedrooms</string>
+    <string name="kitchen_number">Number of Kitchens</string>
+    <string name="bath_number">Number of Bathrooms</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="photos">Photos</string>
+    <string name="points_of_interest">Points of Interest</string>
+    <string name="status">Status</string>
+    <string name="agent">Agent</string>
+    <string name="date_of_sale">Sale\'s Date</string>
+    <string name="date_of_sold">Sold\'s Date</string>
+    <string name="address">Address</string>
+
+    <string name="add_symbol">+</string>
+    <string name="minus_symbol">-</string>
+
+    <!-- CURRENCY -->
+    <string name="dollar_symbol">$</string>
+    <string name="euro_symbol">€</string>
+
+    <string name="dollar">Dollar</string>
+    <string name="euro">Euro</string>
+
+    <string-array name="currency_ind">
+        <item>@string/dollar</item>
+        <item>@string/euro</item>
+    </string-array>
+
+    <string-array name="status_ind">
+        <item>to Sale</item>
+        <item>Sold</item>
+    </string-array>
+
+    <string-array name="type_ind">
+        <item>Flat</item>
+        <item>House</item>
+        <item>Villa</item>
+        <item>Loft</item>
+        <item>Manor</item>
+        <item>Castle</item>
+    </string-array>
+
+    <string-array name="poi_ind">
+        <item>School</item>
+        <item>Shops</item>
+        <item>Park</item>
+        <item>Subway</item>
+        <item>Bus</item>
+        <item>Train</item>
+        <item>Hospital</item>
+        <item>Airport</item>
+    </string-array>
+
+    <string-array name="rooms_ind">
+        <item>Facade</item>
+        <item>Hall</item>
+        <item>Lounge</item>
+        <item>Kitchen</item>
+        <item>Bedroom</item>
+        <item>Bathroom</item>
+        <item>Office</item>
+        <item>Dressing</item>
+        <item>Garden</item>
+        <item>Terrace</item>
+        <item>Garage</item>
+        <item>Attic</item>
+        <item>Cellar</item>
+        <item>Utility</item>
+    </string-array>
+
+
+
 </resources>

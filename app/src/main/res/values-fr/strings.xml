@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Real Estate Manager</string>
+
+    <string name="navigation_drawer_close">Close</string>
+    <string name="navigation_drawer_open">Open</string>
+
+    <string name="colon">:</string>
+    <string name="search">Search</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+    <string name="save">Enregistrer</string>
+
+
+    <!-- ADD & UPDATE LABELS  -->
+    <string name="currency">Monnaie</string>
+
+    <string name="type">Type</string>
+    <string name="district">Quartier</string>
+    <string name="room_number">Nombre de pièces</string>
+    <string name="bed_number">Nombre de chambres</string>
+    <string name="kitchen_number">Nombre de cuisines</string>
+    <string name="bath_number">Nombre de salle de Bain</string>
+    <string name="description">Description</string>
+    <string name="price">Prix</string>
+    <string name="photos">Photos</string>
+    <string name="points_of_interest">Points d\'intérêt</string>
+    <string name="status">Status</string>
+    <string name="agent">Agent</string>
+    <string name="date_of_sale">Date de mise en vente</string>
+    <string name="date_of_sold">Date vendu</string>
+    <string name="address">Adresse</string>
+
+    <!-- CURRENCY -->
+
+    <string name="dollar_symbol">$</string>
+    <string name="euro_symbol">€</string>
+    <string name="add_symbol">+</string>
+    <string name="minus_symbol">-</string>
+
+    <string-array name="status_ind">
+        <item>à Vendre</item>
+        <item>Vendu</item>
+    </string-array>
+
+    <string-array name="type_ind">
+        <item>Appart</item>
+        <item>Maison</item>
+        <item>Villa</item>
+        <item>Loft</item>
+        <item>Manoir</item>
+        <item>Château</item>
+    </string-array>
+
+    <string-array name="poi_ind">
+        <item>Ecole</item>
+        <item>Commerces</item>
+        <item>Parc</item>
+        <item>Métro</item>
+        <item>Bus</item>
+        <item>Train</item>
+        <item>Hôpital</item>
+        <item>Aéroport</item>
+    </string-array>
+
+
+    <string-array name="rooms_ind">
+        <item>Facade</item>
+        <item>Hall</item>
+        <item>Salon</item>
+        <item>Cuisine</item>
+        <item>Chambre</item>
+        <item>Salle de Bain</item>
+        <item>Bureau</item>
+        <item>Dressing</item>
+        <item>Jardin</item>
+        <item>Terrasse</item>
+        <item>Garage</item>
+        <item>Grenier</item>
+        <item>Cave</item>
+        <item>Buanderie</item>
+    </string-array>
+
+
+</resources>

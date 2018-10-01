@@ -40,7 +40,7 @@ class RealEstateDaoTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun insertAndGetAgent() {
+    fun insertAndGetRealEstate() {
         // BEFORE : Adding a new user
         this.database!!.realEstateDao().insertRealEstate(RE_DEMO)
         // TEST
