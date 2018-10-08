@@ -40,6 +40,11 @@ class RealEstateList : Fragment(){
         Log.d("RE LIST", "OK")
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        this.mainActivity = null
+    }
+
     companion object {
         /**
          * @param mainActivity MainActivity

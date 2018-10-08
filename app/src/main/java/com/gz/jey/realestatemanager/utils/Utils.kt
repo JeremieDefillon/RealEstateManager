@@ -4,8 +4,11 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
+import android.util.Log
+import com.gz.jey.realestatemanager.models.Data
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 object Utils{
 
@@ -66,5 +69,34 @@ object Utils{
         return activeNetwork.isConnectedOrConnecting
     }
 
+    /**
+     * convert today date in string format
+     * @return String as dd/mm/yyyy format
+     */
+    fun convertedHighPrice(text : String): String {
+        var hp : String
+        val s = if(Data.currency==0) "," else "."
+        val end = text.length
+        val step = 3
+        val over = end-1
+        val mod = text.length%step
+        val start = mod+1
+        if(end>3){
+            hp = text.substring(0,mod)
+            for (i in start until end+1 step step){
+                val init = i-1
+                val max = i+2
+                hp += when {
+                    i==end && mod!=0 -> s + text.substring(init,over)
+                    mod==0 && i==start && i!=end -> text.substring(0,step)
+                    mod==0 && i!=start && i==end -> text.substring(init,over)
+                    mod==0 && i!=start && i!=end -> s + text.substring(init, max)
+                    else -> s + text.substring(init, max)
+                }
+            }
+        }else
+            hp = text
 
+        return hp
+    }
 }

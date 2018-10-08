@@ -13,13 +13,23 @@
 
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorSecondary"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="25dip"
             android:layout_marginStart="5dip"
             android:layout_marginEnd="5dip"
-            android:layout_marginTop="5dip"
             android:background="@color/colorPrimary"
             android:paddingEnd="10dp"
             android:paddingStart="10dp"
+            android:layout_marginTop="5dip"
             android:text="@string/district"
             android:textColor="@color/colorWhite"
             android:textSize="16sp"
@@ -76,6 +86,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -141,9 +161,19 @@
     <LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:background="@color/colorWhite"
-	    android:orientation="horizontal">
-	    <TextView
+	    android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorSecondary"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
 	        android:layout_width="wrap_content"
 	        android:layout_height="25dip"
 	        android:layout_marginStart="5dip"
@@ -166,7 +196,6 @@
             android:textStyle="bold"
             android:textColor="@color/colorGrey"
             android:textSize="16sp"/>
-
 
         <TextView
             android:id="@+id/value_type"
@@ -207,6 +236,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorSecondary"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -270,6 +309,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -337,6 +386,16 @@
 
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="25dip"
             android:layout_marginStart="5dip"
             android:layout_marginEnd="5dip"
@@ -397,6 +456,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -463,6 +532,16 @@
 
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="25dip"
             android:layout_marginStart="5dip"
             android:layout_marginEnd="5dip"
@@ -516,6 +595,8 @@
             android:id="@+id/value_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="4"
+            android:scrollbars="vertical"
             android:layout_marginStart="5dip"
             android:layout_marginEnd="5dip"
             android:layout_marginTop="5dip"
@@ -531,6 +612,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorSecondary"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -592,6 +683,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorSecondary"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -658,6 +759,16 @@
 
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorSecondary"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="20dip"
             android:layout_marginStart="5dip"
             android:layout_marginEnd="5dip"
@@ -718,6 +829,16 @@
 
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="20dip"
             android:layout_marginStart="5dip"
             android:layout_marginEnd="5dip"
@@ -741,6 +862,19 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/value_poi"
+            android:layout_width="wrap_content"
+            android:layout_height="25dip"
+            android:layout_marginStart="5dip"
+            android:layout_marginEnd="5dip"
+            android:layout_marginTop="5dip"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -761,19 +895,20 @@
         </LinearLayout>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/poi_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
-        android:orientation="horizontal"
-        android:visibility="gone">
-    </android.support.v7.widget.RecyclerView>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -840,6 +975,16 @@
 
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="20dip"
             android:layout_marginStart="5dip"
             android:layout_marginEnd="5dip"
@@ -897,9 +1042,21 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/sold_date_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorWhite">
+        android:background="@color/colorWhite"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -963,6 +1120,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obl"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="7dip"
+            android:layout_marginStart="3dip"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"

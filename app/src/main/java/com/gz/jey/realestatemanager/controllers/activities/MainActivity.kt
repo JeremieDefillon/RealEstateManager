@@ -1,8 +1,11 @@
 package com.gz.jey.realestatemanager.controllers.activities
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
@@ -12,13 +15,12 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
-import com.gz.jey.realestatemanager.controllers.fragments.InputEditor
 import com.gz.jey.realestatemanager.controllers.fragments.RealEstateList
 import com.gz.jey.realestatemanager.controllers.fragments.SetRealEstate
+import com.gz.jey.realestatemanager.utils.SetImageColor
 import java.util.*
 
 class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -35,6 +37,9 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
 
     // FOR POSITION
     // FOR DESIGN
+
+    private lateinit var enableSaveIcon : Drawable
+    private lateinit var disableSaveIcon : Drawable
     private var toolMenu : Menu? = null
     var fragmentContainer : FrameLayout? = null
     private var drawerLayout: DrawerLayout? = null
@@ -46,6 +51,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     // FOR DATA
     var addOrEdit : Int? = null
     private var changeMenu = false
+    var enableSave = false
     private var existMenu : ArrayList<Boolean>? = null
 
     // FOR REALESTATE SELECTOR
@@ -59,6 +65,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
         setLang()
+        setIcon()
         //loading = findViewById(R.id.loading)
         //loadingContent = findViewById(R.id.content_loading)
         //loadingContent!!.text = getString(R.string.initActivity)
@@ -86,6 +93,11 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
        // Data.lang = if(Locale.getDefault().displayLanguage=="fr") 1 else 0
     }
 
+    private fun setIcon(){
+        enableSaveIcon = SetImageColor.changeDrawableColor(this , R.drawable.save, ContextCompat.getColor(this, R.color.colorWhite))
+        disableSaveIcon = SetImageColor.changeDrawableColor(this , R.drawable.save, ContextCompat.getColor(this, R.color.colorGrey))
+    }
+
     /**
      * INIT ACTIVITY
      */
@@ -100,6 +112,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
      * @return true
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
         toolMenu = menu
         // Inflate the menu and add it to the Toolbar
         menuInflater.inflate(R.menu.menu_toolbar, toolMenu)
@@ -109,6 +122,9 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
             changeMenu = false
         }
 
+        menu.getItem(3).isEnabled = enableSave
+        if(enableSave) menu.getItem(3).icon = enableSaveIcon
+        else menu.getItem(3).icon = disableSaveIcon
         return true
     }
 
@@ -122,12 +138,12 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         return when (id) {
             R.id.add -> {
                 addOrEdit = null
-                addFragment(0)
+                addFragment(0, "Add")
                 true
             }
             R.id.edit -> {
                 if(addOrEdit!=null){
-                    addFragment(0)
+                    addFragment(0, "Edit")
                     true
                 }else{
                     Log.e("EDIT FAILED", "NULL ITEM")
@@ -135,6 +151,10 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 }
             }
             R.id.search_on -> {
+                true
+            }
+            R.id.save -> {
+                setRealEstate!!.saveRealEstate()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -163,7 +183,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     /**
      * CONFIGURE NAVIGATION VIEW
      */
-    private fun setNavigationView() {
+    private fun setNavigationView(){
         navigationView = findViewById(R.id.activity_main_nav_view)
         navigationView!!.menu.clear()
         menuInflater.inflate(R.menu.menu_nav_drawer, navigationView!!.menu)
@@ -201,25 +221,22 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
          //   fromNotif=false
           //  execRequest(CODE_DETAILS)
         //}else {
-            var fragment: Fragment? = null
-            invalidateOptionsMenu()
+        var fragment: Fragment? = null
+        invalidateOptionsMenu()
            // Data.tab = index
-            when (index) {
-                0 -> {
-                    this.realEstateList = RealEstateList.newInstance(this)
-                    fragment = this.realEstateList
-                }
-
+        when (index) {
+            0 -> {
+                this.realEstateList = RealEstateList.newInstance(this)
+                fragment = this.realEstateList
             }
+        }
 
-
-            this.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, fragment)
-                    .commit()
-
+        this.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .commit()
     }
 
-    private fun addFragment(index: Int){
+    private fun addFragment(index: Int, func: String){
         changeToolBarMenu(0)
         var fragment: Fragment? = null
         invalidateOptionsMenu()
@@ -228,6 +245,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
             0 -> {
                 this.setRealEstate = SetRealEstate.newInstance(this)
                 fragment = this.setRealEstate
+                supportActionBar!!.title = "$func Real Estate"
             }
 
         }
@@ -237,12 +255,13 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 .commit()
     }
 
-    fun openInputEditor(){
-        val fragment: Fragment = InputEditor.newInstance(this)
-        lastFragment = fragment
+
+    fun removeFragment(fragment : Fragment){
         this.supportFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainer, fragment)
+                .remove(fragment)
                 .commit()
+
+        changeToolBarMenu(1)
     }
 
     fun changeToolBarMenu(em : Int){
@@ -254,12 +273,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 supportActionBar!!.setDisplayHomeAsUpEnabled(true)
                 toolbar!!.setNavigationOnClickListener {
                     //setLoading(true, true)
-                    val fragment: Fragment = lastFragment!!
-                    this.supportFragmentManager.beginTransaction()
-                        .remove(fragment)
-                        .commit()
-
-                    changeToolBarMenu(1)
+                    removeFragment(lastFragment!!)
                 }
             }
             1-> {
@@ -275,11 +289,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 supportActionBar!!.setDisplayHomeAsUpEnabled(true)
                 toolbar!!.setNavigationOnClickListener {
                     //setLoading(true, true)
-                    val fragment: Fragment = lastFragment!!
-                    this.supportFragmentManager.beginTransaction()
-                            .remove(fragment)
-                            .commit()
-                    changeToolBarMenu(1)
+                    removeFragment(lastFragment!!)
                 }
             }
         }

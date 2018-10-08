@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffffff">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:id="@+id/title_canvas"
+        android:gravity="center"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:scaleType="fitCenter" />
+
+    <RelativeLayout
+        android:id="@+id/input"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/title_canvas">
+
+        <GridLayout
+            android:id="@+id/grid_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:visibility="gone">
+        </GridLayout>
+
+        <DatePicker
+            android:id="@+id/date_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+        </DatePicker>
+
+        <TextView
+            android:id="@+id/overview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="italic"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone"/>
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/input_text"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="18sp"
+            android:textColor="#ff000000"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/overview"
+            android:gravity="center_horizontal"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/input"
+        android:gravity="center_vertical|center_horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:id="@+id/cancel_btn"
+            android:gravity="center_vertical|center_horizontal"
+            android:background="@color/colorTransparent"
+            android:textColor="@color/colorAccent" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit"
+            android:id="@+id/edit_btn"
+            android:gravity="center_vertical|center_horizontal"
+            android:background="@color/colorTransparent"
+            android:textColor="@color/colorAccent" />
+    </LinearLayout>
+
+</RelativeLayout>

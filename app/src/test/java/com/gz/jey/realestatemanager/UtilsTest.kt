@@ -52,4 +52,12 @@ class UtilsTest{
 
         Assert.assertEquals(expected, dollar)
     }
+
+    @Test
+    fun testConvertHighPrice(){
+        val expected = "1,000,000"
+        val money = Utils.convertedHighPrice("1000000")
+
+        Assert.assertEquals(expected, money)
+    }
 }

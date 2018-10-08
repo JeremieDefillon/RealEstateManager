@@ -9,21 +9,23 @@ import org.jetbrains.annotations.NotNull
 @Entity(tableName = "RealEstate")
 data class RealEstate(
         @PrimaryKey(autoGenerate = true)var id : Long?,
-        var type : String?,
+        var type : Int?,
         var price : Int?,
         var surface : Int?,
         var room : Int?,
         var bed : Int?,
         var bath : Int?,
+        var kitchen : Int?,
         var description : String?,
         @NotNull @Ignore
         var photo : ArrayList<Photos>?,
         var address : String?,
-        var pointsOfInterest : String?,
-        var status : String?,
+        @NotNull @Ignore
+        var pointsOfInterest : ArrayList<Int>?,
+        var status : Int?,
         var marketDate : String?,
         var soldDate : String?,
         var agentId : String?
 ){
-        constructor():this(null,"",0,0,0,0,0,"", null,"", "","","","","")
+        constructor():this(null,null,null,null,null,null,null, null,"", null,"", null,null,"","","")
 }
