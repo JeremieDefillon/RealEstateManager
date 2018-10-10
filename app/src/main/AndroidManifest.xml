@@ -19,6 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <!-- CONTENT PROVIDER -->
+        <provider
+            android:name=".provider.RealEstateContentProvider"
+            android:authorities="com.gz.jey.realestatemanager.provider"
+            android:exported="true"/>
     </application>
 
 </manifest>

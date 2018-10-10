@@ -18,6 +18,8 @@ import com.gz.jey.realestatemanager.controllers.fragments.SetRealEstate
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.utils.Utils
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ViewDialog {
 
@@ -52,8 +54,9 @@ class ViewDialog {
         result.addAll(actualValue)
 
         if(actualValue.isNotEmpty()){
-            val editable = SpannableStringBuilder(actualValue[0])
-            inputText.text = editable
+            val editable : Editable? = SpannableStringBuilder(actualValue[0])
+            if(editable != null)
+                inputText.text = editable
         }
 
         cancelBtn.setOnClickListener { dialog.dismiss() }
@@ -197,13 +200,17 @@ class ViewDialog {
             3 -> {
                 editBtn.setOnClickListener {
                     result.clear()
-                    for (i in 0 until list.size) {
-                        val resourceId = activity.resources.getIdentifier("check_$i", "id", activity.packageName)
-                        if(dialog.findViewById<RadioButton>(resourceId).isChecked) {
-                            result.add(i.toString())
-                            break
-                        }
-                    }
+                    val year = inputDate.year
+                    val month = inputDate.month
+                    val day = inputDate.dayOfMonth
+
+                    val calendar = Calendar.getInstance()
+                    calendar.set(year, month, day)
+
+                    val format = SimpleDateFormat("yyyy/MM/dd", Locale.US)
+                    val date = format.format(calendar.time)
+                    Log.d("Date", date)
+                    result.add(date)
                     fragActivity.insertEditedValue(result)
                     dialog.dismiss()
                 }

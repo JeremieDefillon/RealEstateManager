@@ -15,7 +15,6 @@ class RealEstateList : Fragment(){
 
     var mainActivity: MainActivity? = null
 
-
     /**
      * CALLED ON INSTANCE OF THIS FRAGMENT TO CREATE VIEW
      * @param inflater LayoutInflater

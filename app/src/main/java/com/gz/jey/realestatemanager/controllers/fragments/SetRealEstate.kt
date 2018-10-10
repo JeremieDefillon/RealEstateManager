@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
@@ -43,6 +44,7 @@ class SetRealEstate : Fragment(){
     private lateinit var addPOI : Button
 
     // + VALUES INPUT
+    private lateinit var soldDateLine : LinearLayout
     private lateinit var photosRecyclerView : RecyclerView
     private lateinit var editDistrict : Button
     private lateinit var editAddress : Button
@@ -77,12 +79,13 @@ class SetRealEstate : Fragment(){
 
     // FOR DATA
     private var oblArray : ArrayList<Int> = arrayListOf(0,2,3,8,9)
+    private var visi : ArrayList<Int> = arrayListOf(View.GONE,View.VISIBLE)
     private var result : ArrayList<String> = ArrayList()
 
     private var price : Int? = null
     private var typeNum : Int? = null
     private var currencyNum : Int = 0
-    private var statusNum : Int? = null
+    private var statusNum : Int = 0
     private lateinit var poiList : ArrayList<Int>
     var insert : Int? = null
 
@@ -112,6 +115,7 @@ class SetRealEstate : Fragment(){
         mainActivity!!.changeToolBarMenu(2)
 
         photosRecyclerView = view.findViewById(R.id.photos_recycler_view)
+        soldDateLine = view.findViewById(R.id.sold_date_line)
 
         addPhotos = view.findViewById(R.id.add_picture)
         //removePhotos = view.findViewById(R.id.remove_picture)
@@ -284,6 +288,8 @@ class SetRealEstate : Fragment(){
         }
 
         setCurrency(currencyNum)
+        valueStatus.text = resources.getStringArray(R.array.status_ind)[statusNum]
+        validate(12)
         //mainActivity!!.setLoading(false, false)
     }
 
@@ -380,9 +386,20 @@ class SetRealEstate : Fragment(){
             }
             Code.STATUS -> {
                 statusNum = array[0].toInt()
-                valueStatus.text = resources.getStringArray(R.array.status_ind)[statusNum!!]
+                valueStatus.text = resources.getStringArray(R.array.status_ind)[statusNum]
+                soldDateLine.visibility = visi[statusNum]
                 if(array[0].isNotEmpty()) validate(12)
                 else unvalidate(12)
+            }
+            Code.SALE_DATE -> {
+                valueSaleDate.text = array[0]
+                if(array[0].isNotEmpty()) validate(13)
+                else unvalidate(13)
+            }
+            Code.SOLD_DATE -> {
+                valueSoldDate.text = array[0]
+                if(array[0].isNotEmpty()) validate(14)
+                else unvalidate(14)
             }
             Code.AGENT -> {
                 valueAgent.text = array[0]
@@ -410,7 +427,7 @@ class SetRealEstate : Fragment(){
     }
 
     fun saveRealEstate(){
-        RealEstate(null,
+        val re = RealEstate(null,
                 typeNum,
                 price,
                 0,
@@ -419,13 +436,13 @@ class SetRealEstate : Fragment(){
                 if(valueBathNum.text.isNotEmpty()) valueBathNum.text.toString().toInt() else null,
                 if(valueKitchenNum.text.isNotEmpty()) valueKitchenNum.text.toString().toInt() else null,
                 valueDescription.text.toString(),
-                null,
                 valueAddress.text.toString(),
-                poiList,
                 statusNum,
                 valueSaleDate.text.toString(),
                 valueSaleDate.text.toString(),
                 valueAgent.text.toString())
+
+        mainActivity!!.database.realEstateDao().insertRealEstate(re)
         mainActivity!!.removeFragment(this)
     }
 

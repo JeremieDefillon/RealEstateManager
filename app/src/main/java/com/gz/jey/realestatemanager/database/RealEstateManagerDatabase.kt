@@ -5,17 +5,20 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import com.gz.jey.realestatemanager.database.dao.PhotosDao
+import com.gz.jey.realestatemanager.database.dao.PointsOfInterestDao
 import com.gz.jey.realestatemanager.database.dao.RealEstateDao
 import com.gz.jey.realestatemanager.models.Photos
+import com.gz.jey.realestatemanager.models.PointsOfInterest
 import com.gz.jey.realestatemanager.models.RealEstate
 
 
-@Database(entities = [RealEstate::class, Photos::class], version = 1, exportSchema = false)
+@Database(entities = [RealEstate::class, Photos::class, PointsOfInterest::class], version = 1, exportSchema = false)
 abstract class RealEstateManagerDatabase : RoomDatabase() {
 
     // --- DAO ---
     abstract fun realEstateDao(): RealEstateDao
     abstract fun photosDao(): PhotosDao
+    abstract fun pointsOfInterestDao(): PointsOfInterestDao
 
     companion object {
 

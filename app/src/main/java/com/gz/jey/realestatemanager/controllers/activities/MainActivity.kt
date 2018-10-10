@@ -1,5 +1,6 @@
 package com.gz.jey.realestatemanager.controllers.activities
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -20,6 +21,7 @@ import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.fragments.RealEstateList
 import com.gz.jey.realestatemanager.controllers.fragments.SetRealEstate
+import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import java.util.*
 
@@ -36,8 +38,8 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     // TASK CODE
 
     // FOR POSITION
-    // FOR DESIGN
 
+    // FOR DESIGN
     private lateinit var enableSaveIcon : Drawable
     private lateinit var disableSaveIcon : Drawable
     private var toolMenu : Menu? = null
@@ -49,6 +51,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     private var loadingContent : TextView? = null
 
     // FOR DATA
+    lateinit var database : RealEstateManagerDatabase
     var addOrEdit : Int? = null
     private var changeMenu = false
     var enableSave = false
@@ -64,6 +67,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
+
         setLang()
         setIcon()
         //loading = findViewById(R.id.loading)
@@ -112,7 +116,6 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
      * @return true
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
         toolMenu = menu
         // Inflate the menu and add it to the Toolbar
         menuInflater.inflate(R.menu.menu_toolbar, toolMenu)
@@ -133,7 +136,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
      * @return boolean
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
+        val id= item.itemId
         // Handle item selection
         return when (id) {
             R.id.add -> {

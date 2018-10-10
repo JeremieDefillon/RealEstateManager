@@ -8,14 +8,13 @@ import android.arch.persistence.room.PrimaryKey
         entity = RealEstate::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("reId")
-        )]
+)]
 )
-data class Photos(
+data class PointsOfInterest(
         @PrimaryKey(autoGenerate = true)
         var id : Long?,
-        var path : String?,
-        var desc : String?,
+        var value : Int?,
         var reId : Long?
 ){
-        constructor():this(0,"","",0)
+    constructor():this(null,null,null)
 }
