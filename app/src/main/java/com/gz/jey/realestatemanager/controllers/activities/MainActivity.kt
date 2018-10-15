@@ -1,7 +1,6 @@
 package com.gz.jey.realestatemanager.controllers.activities
 
-import android.arch.persistence.room.Room
-import android.content.Context
+import android.arch.lifecycle.ViewModelProviders
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -22,8 +21,14 @@ import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.fragments.RealEstateList
 import com.gz.jey.realestatemanager.controllers.fragments.SetRealEstate
 import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
+import com.gz.jey.realestatemanager.injection.Injection
+import com.gz.jey.realestatemanager.injection.RealEstateViewModel
+import com.gz.jey.realestatemanager.models.Photos
+import com.gz.jey.realestatemanager.models.PointsOfInterest
+import com.gz.jey.realestatemanager.models.RealEstate
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -33,11 +38,6 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     var setRealEstate: SetRealEstate? = null
     var realEstateList: RealEstateList? = null
 
-    // FOR PERMISSIONS
-
-    // TASK CODE
-
-    // FOR POSITION
 
     // FOR DESIGN
     private lateinit var enableSaveIcon : Drawable
@@ -51,14 +51,16 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     private var loadingContent : TextView? = null
 
     // FOR DATA
+    lateinit var realEstateViewModel : RealEstateViewModel
     lateinit var database : RealEstateManagerDatabase
-    var addOrEdit : Int? = null
     private var changeMenu = false
     var enableSave = false
     private var existMenu : ArrayList<Boolean>? = null
 
     // FOR REALESTATE SELECTOR
-    var reID: String? = null
+    var realEstate: RealEstate? = null
+    var poi: ArrayList<PointsOfInterest>? = null
+    var photos: ArrayList<Photos>? = null
 
     /**
      * @param savedInstanceState Bundle
@@ -81,14 +83,9 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
 
         if (savedInstanceState == null) {
             val extras = intent.extras
-            if (extras != null){
-               // fromNotif = extras.getBoolean("NotiClick")
-                reID = extras.getString("RestaurantId")
-            }
 
-           // if(Data.enableNotif && !fromNotif)
-             //   setNotification()
-
+            // if(Data.enableNotif && !fromNotif)
+                // setNotification()
             initActivity()
         }
     }
@@ -109,6 +106,8 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         //saveDatas()
         this.configureToolBar()
         this.setDrawerLayout()
+        this.setViewModel()
+        this.setFragment(0)
     }
 
     /**
@@ -140,12 +139,12 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         // Handle item selection
         return when (id) {
             R.id.add -> {
-                addOrEdit = null
+                realEstate = null
                 addFragment(0, "Add")
                 true
             }
             R.id.edit -> {
-                if(addOrEdit!=null){
+                if(realEstate!=null){
                     addFragment(0, "Edit")
                     true
                 }else{
@@ -170,6 +169,15 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     private fun configureToolBar() {
         this.toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+    }
+
+    // -------------------
+    // DATA
+    // -------------------
+
+    private fun setViewModel() {
+        val mViewModelFactory = Injection.provideViewModelFactory(this)
+        this.realEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel::class.java)
     }
 
     /**
@@ -211,7 +219,6 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         return true
     }
 
-
     /**
      * @param index Int
      * CHANGE FRAGMENT
@@ -250,7 +257,6 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 fragment = this.setRealEstate
                 supportActionBar!!.title = "$func Real Estate"
             }
-
         }
         lastFragment = fragment
         this.supportFragmentManager.beginTransaction()
@@ -258,13 +264,18 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 .commit()
     }
 
-
-    fun removeFragment(fragment : Fragment){
+    private fun removeFragment(fragment : Fragment){
         this.supportFragmentManager.beginTransaction()
                 .remove(fragment)
                 .commit()
 
         changeToolBarMenu(1)
+    }
+
+
+    fun saveRealEstate(fragment : Fragment){
+        removeFragment(fragment)
+        realEstateList!!.initRealEstateList()
     }
 
     fun changeToolBarMenu(em : Int){
@@ -298,6 +309,16 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         }
 
         changeMenu = true
+    }
+
+    fun setRE(re : RealEstate){
+        this.realEstate = re
+    }
+
+    fun unsetRE(){
+        realEstate = null
+        poi = null
+        photos = null
     }
 
 }

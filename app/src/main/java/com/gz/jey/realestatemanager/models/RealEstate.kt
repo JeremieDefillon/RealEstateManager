@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull
 @Entity(tableName = "RealEstate")
 data class RealEstate(
         @PrimaryKey(autoGenerate = true)var id : Long?,
+        var district : String?,
         var type : Int?,
         var price : Int?,
         var surface : Int?,
@@ -22,12 +23,14 @@ data class RealEstate(
         var status : Int?,
         var marketDate : String?,
         var soldDate : String?,
-        var agentName : String?
+        var agentName : String?,
+        var isSelected : Boolean = false
 ){
         companion object {
                 // --- UTILS ---
                 fun fromContentValues(values: ContentValues): RealEstate {
                         val re = RealEstate()
+                        if (values.containsKey("district")) re.district = values.getAsString("district")
                         if (values.containsKey("type")) re.type = values.getAsInteger("type")
                         if (values.containsKey("price")) re.price = values.getAsInteger("price")
                         if (values.containsKey("surface")) re.surface = values.getAsInteger("surface")
@@ -44,5 +47,5 @@ data class RealEstate(
                         return re
                 }
         }
-        constructor():this(null,null,null,null,null,null,null, null,"", "", null,"","","")
+        constructor():this(null, "",null,null,null,null,null,null, null,"", "", null,"","","")
 }

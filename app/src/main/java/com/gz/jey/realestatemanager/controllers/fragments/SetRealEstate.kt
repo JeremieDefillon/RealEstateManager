@@ -1,5 +1,6 @@
 package com.gz.jey.realestatemanager.controllers.fragments
 
+import android.arch.lifecycle.Observer
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -17,8 +18,7 @@ import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialog
-import com.gz.jey.realestatemanager.models.Code
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.*
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
 
@@ -79,14 +79,15 @@ class SetRealEstate : Fragment(){
 
     // FOR DATA
     private var oblArray : ArrayList<Int> = arrayListOf(0,2,3,8,9)
-    private var visi : ArrayList<Int> = arrayListOf(View.GONE,View.VISIBLE)
+    private var visi : ArrayList<Int> = arrayListOf(View.GONE, View.VISIBLE)
     private var result : ArrayList<String> = ArrayList()
 
     private var price : Int? = null
     private var typeNum : Int? = null
     private var currencyNum : Int = 0
     private var statusNum : Int = 0
-    private lateinit var poiList : ArrayList<Int>
+    private lateinit var poiList : ArrayList<PointsOfInterest>
+    private lateinit var photosList : ArrayList<Photos>
     var insert : Int? = null
 
     /**
@@ -274,22 +275,107 @@ class SetRealEstate : Fragment(){
      */
     private fun updateUI() {
         poiList = ArrayList()
+        photosList = ArrayList()
 
-        if (mainActivity!!.addOrEdit != null){
+        if (mainActivity!!.realEstate != null){
             Log.d("MODE", "EDIT")
-            for (c in checks){
-                c.setImageDrawable(validIcon)
+            val result : ArrayList<String> = ArrayList()
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.district.toString())
+            insert = Code.DISTRICT
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.address.toString())
+            insert = Code.ADDRESS
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.type.toString())
+            insert = Code.TYPE
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.room.toString())
+            insert = Code.ROOM_NUM
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.bed.toString())
+            insert = Code.BED_NUM
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.bath.toString())
+            insert = Code.BATH_NUM
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.kitchen.toString())
+            insert = Code.KITCHEN_NUM
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.description.toString())
+            insert = Code.DESCRIPTION
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(Data.currency.toString())
+            insert = Code.CURRENCY
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.price.toString())
+            insert = Code.PRICE
+            insertEditedValue(result)
+
+            result.clear()
+            mainActivity!!.realEstateViewModel.getAllPOI(mainActivity!!.realEstate!!.id!!).observe(this, Observer<List<PointsOfInterest>>{
+                poi -> for (p in poi!!){
+                result.add(p.value.toString())
             }
+            })
+            insert = Code.POI
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.status.toString())
+            insert = Code.STATUS
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.marketDate.toString())
+            insert = Code.SALE_DATE
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.soldDate.toString())
+            insert = Code.SOLD_DATE
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(mainActivity!!.realEstate!!.agentName.toString())
+            insert = Code.AGENT
+            insertEditedValue(result)
+
+            insert = null
         }else{
             Log.d("MODE", "ADD")
             for (c in checks){
                 c.setImageDrawable(unvalidIcon)
             }
-        }
 
-        setCurrency(currencyNum)
-        valueStatus.text = resources.getStringArray(R.array.status_ind)[statusNum]
-        validate(12)
+            result.clear()
+            result.add(statusNum.toString())
+            insert = Code.STATUS
+            insertEditedValue(result)
+
+            result.clear()
+            result.add(Data.currency.toString())
+            insert = Code.CURRENCY
+            insertEditedValue(result)
+        }
         //mainActivity!!.setLoading(false, false)
     }
 
@@ -363,6 +449,7 @@ class SetRealEstate : Fragment(){
                 setCurrency(currencyNum)
             }
             Code.PRICE -> {
+                price = array[0].toInt()
                 valuePrice.text = Utils.convertedHighPrice(array[0])
                 if(array[0].isNotEmpty()) validate(9)
                 else unvalidate(9)
@@ -371,7 +458,8 @@ class SetRealEstate : Fragment(){
                 var poiV = ""
                 poiList.clear()
                 for (i in 0 until array.size){
-                    poiList.add(array[i].toInt())
+                    val poi = PointsOfInterest(null, array[i].toInt(), null)
+                    poiList.add(poi)
                     val sent = resources.getStringArray(R.array.poi_ind)[array[i].toInt()]
                     val coma = if (i==(array.size-1)) "" else ","
                     poiV += "$sent$coma "
@@ -427,7 +515,8 @@ class SetRealEstate : Fragment(){
     }
 
     fun saveRealEstate(){
-        val re = RealEstate(null,
+        val re = RealEstate(mainActivity!!.realEstate?.id,
+                valueDistrict.text.toString(),
                 typeNum,
                 price,
                 0,
@@ -442,8 +531,23 @@ class SetRealEstate : Fragment(){
                 valueSaleDate.text.toString(),
                 valueAgent.text.toString())
 
-        mainActivity!!.database.realEstateDao().insertRealEstate(re)
-        mainActivity!!.removeFragment(this)
+
+        if(mainActivity!!.realEstate!=null)
+            mainActivity!!.realEstateViewModel.updateRealEstate(re)
+        else
+            mainActivity!!.realEstateViewModel.createRealEstate(re)
+
+        for (p in poiList){
+            p.reId = re.id
+            mainActivity!!.realEstateViewModel.createPOI(p)
+        }
+
+        for (photos in photosList){
+            photos.reId = re.id
+            mainActivity!!.realEstateViewModel.createPhotos(photos)
+        }
+
+        mainActivity!!.saveRealEstate(this)
     }
 
     override fun onDestroy() {

@@ -18,6 +18,7 @@
     <string name="save">Save</string>
     <string name="overview">Overview</string>
     <string name="insert">Insert</string>
+    <string name="loading">Loading ...</string>
 
     <!-- ADD & UPDATE LABELS  -->
     <string name="currency">Currency</string>

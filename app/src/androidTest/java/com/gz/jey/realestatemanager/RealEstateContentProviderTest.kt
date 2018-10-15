@@ -57,6 +57,10 @@ class RealEstateContentProviderTest {
         assertThat<Int>(cursor.count, `is`<Int>(1))
         assertThat<Boolean>(cursor.moveToFirst(), `is`<Boolean>(true))
         assertThat<String>(cursor.getString(cursor.getColumnIndexOrThrow("type")), `is`<String>("2"))
+        assertThat<String>(cursor.getString(cursor.getColumnIndexOrThrow("price")), `is`<String>("1000000"))
+        assertThat<String>(cursor.getString(cursor.getColumnIndexOrThrow("surface")), `is`<String>("450"))
+        assertThat<String>(cursor.getString(cursor.getColumnIndexOrThrow("room")), `is`<String>("9"))
+        assertThat<String>(cursor.getString(cursor.getColumnIndexOrThrow("bed")), `is`<String>("5"))
     }
 
     // ---

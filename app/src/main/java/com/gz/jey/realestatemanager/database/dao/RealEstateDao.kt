@@ -17,7 +17,7 @@ interface RealEstateDao {
     fun getRealEstatesWithCursor(id: Long): Cursor
 
     @Query("SELECT * FROM RealEstate")
-    fun getAllRealState(): LiveData<List<RealEstate>>
+    fun getAllRealEstate(): LiveData<List<RealEstate>>
 
     @Insert
     fun insertRealEstate(realEstate: RealEstate): Long

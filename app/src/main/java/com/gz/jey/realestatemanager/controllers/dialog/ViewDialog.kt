@@ -207,7 +207,7 @@ class ViewDialog {
                     val calendar = Calendar.getInstance()
                     calendar.set(year, month, day)
 
-                    val format = SimpleDateFormat("yyyy/MM/dd", Locale.US)
+                    val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                     val date = format.format(calendar.time)
                     Log.d("Date", date)
                     result.add(date)
