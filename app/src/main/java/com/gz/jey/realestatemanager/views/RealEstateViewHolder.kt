@@ -38,7 +38,7 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
                             else  res.getString(R.string.dollar_symbol)+Utils.convertedHighPrice(item.price.toString())
 
         if(mainPhoto!=null){
-            val imgLink = mainPhoto.path
+            val imgLink = mainPhoto.image
             Glide.with(context)
                     .load(imgLink)
                     .into(photo)

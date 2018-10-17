@@ -2,7 +2,10 @@ package com.gz.jey.realestatemanager.controllers.dialog
 
 import android.app.Activity
 import android.app.Dialog
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.support.design.widget.TextInputEditText
+import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.InputType
 import android.text.SpannableStringBuilder
@@ -13,6 +16,7 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.*
+import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.fragments.SetRealEstate
 import com.gz.jey.realestatemanager.models.Code
@@ -20,19 +24,32 @@ import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.utils.Utils
 import java.text.SimpleDateFormat
 import java.util.*
+import com.gz.jey.realestatemanager.utils.MyImagePicker
+import com.gz.jey.realestatemanager.utils.SetImageColor
+import com.qingmei2.rximagepicker.core.RxImagePicker
+
 
 class ViewDialog {
 
     private lateinit var titleCanvas : TextView
     private lateinit var overview : TextView
     private lateinit var inputText : TextInputEditText
+    private lateinit var scrollView: ScrollView
     private lateinit var inputChoice : GridLayout
     private lateinit var inputDate : DatePicker
     private lateinit var cancelBtn : Button
     private lateinit var editBtn : Button
+    private lateinit var photo : LinearLayout
+    private lateinit var galleryBtn : ImageView
+    private lateinit var cameraBtn : ImageView
+    private lateinit var image : ImageView
+
+    private lateinit var galleryDraw : Drawable
+    private lateinit var cameraDraw : Drawable
 
     private val list : ArrayList<String> = ArrayList()
     private var result : ArrayList<String> = ArrayList()
+    private lateinit var uri : Uri
 
     private var checkCode : Int? = null
 
@@ -46,9 +63,14 @@ class ViewDialog {
         overview = dialog.findViewById(R.id.overview)
         inputText = dialog.findViewById(R.id.input_text)
         inputChoice = dialog.findViewById(R.id.grid_layout)
+        scrollView = dialog.findViewById(R.id.scroll_view)
         inputDate = dialog.findViewById(R.id.date_picker)
         cancelBtn = dialog.findViewById(R.id.cancel_btn)
         editBtn = dialog.findViewById(R.id.edit_btn)
+        photo = dialog.findViewById(R.id.photo)
+        galleryBtn = dialog.findViewById(R.id.gallery_btn)
+        cameraBtn = dialog.findViewById(R.id.camera_btn)
+        image = dialog.findViewById(R.id.image)
 
         result.clear()
         result.addAll(actualValue)
@@ -76,7 +98,7 @@ class ViewDialog {
             Code.TYPE -> {titleLbl = activity.getString(R.string.type)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.type_ind))
-                inputChoice.visibility = View.VISIBLE
+                scrollView.visibility = View.VISIBLE
                 setOnClick(activity,1, fragActivity, dialog)
             }
             Code.ROOM_NUM -> {titleLbl = activity.getString(R.string.room_number)
@@ -107,7 +129,7 @@ class ViewDialog {
                 titleLbl = activity.getString(R.string.currency)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.currency_ind))
-                inputChoice.visibility = View.VISIBLE
+                scrollView.visibility = View.VISIBLE
                 setOnClick(activity,1, fragActivity, dialog)
             }
             Code.PRICE -> {titleLbl = activity.getString(R.string.price)
@@ -124,17 +146,25 @@ class ViewDialog {
                 setOnClick(activity,0, fragActivity, dialog)
             }
             Code.PHOTOS -> {titleLbl = activity.getString(R.string.photos)
-                inputText.visibility = View.VISIBLE}
+                galleryDraw = SetImageColor.changeDrawableColor(activity.baseContext, R.drawable.gallery, ContextCompat.getColor(activity.baseContext, R.color.colorSecondary))
+                cameraDraw = SetImageColor.changeDrawableColor(activity.baseContext, R.drawable.camera, ContextCompat.getColor(activity.baseContext, R.color.colorSecondary))
+                inputText.visibility = View.GONE
+                editBtn.visibility = View.GONE
+                photo.visibility = View.VISIBLE
+                galleryBtn.background = galleryDraw
+                cameraBtn.background = cameraDraw
+                setOnClick(activity, 4, fragActivity, dialog)
+            }
             Code.POI -> {titleLbl = activity.getString(R.string.points_of_interest)
                 checkCode = Code.MULTICHECK
                 list.addAll(activity.resources.getStringArray(R.array.poi_ind))
-                inputChoice.visibility = View.VISIBLE
+                scrollView.visibility = View.VISIBLE
                 setOnClick(activity,2, fragActivity, dialog)
             }
             Code.STATUS -> {titleLbl = activity.getString(R.string.status)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.status_ind))
-                inputChoice.visibility = View.VISIBLE
+                scrollView.visibility = View.VISIBLE
                 setOnClick(activity,1, fragActivity, dialog)
             }
             Code.SALE_DATE -> {titleLbl = activity.getString(R.string.date_of_sale)
@@ -149,13 +179,23 @@ class ViewDialog {
                 inputText.visibility = View.VISIBLE
                 setOnClick(activity,0, fragActivity, dialog)
             }
+            Code.LEGEND -> {
+                image.visibility = View.VISIBLE
+                Glide.with(activity)
+                        .load(uri)
+                        .into(image)
+                checkCode = Code.SOLOCHECK
+                list.addAll(activity.resources.getStringArray(R.array.rooms_ind))
+                scrollView.visibility = View.VISIBLE
+                setOnClick(activity,5, fragActivity, dialog)
+            }
         }
 
         titleCanvas.text = "$editLbl $titleLbl"
 
         when(View.VISIBLE) {
             inputText.visibility -> dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            inputChoice.visibility ->{setCheckList(activity, dialog, list)}
+            scrollView.visibility ->{setCheckList(activity, dialog, list)}
         }
         dialog.show()
     }
@@ -215,6 +255,45 @@ class ViewDialog {
                     dialog.dismiss()
                 }
             }
+            4 ->{
+                galleryBtn.setOnClickListener {
+                    RxImagePicker
+                            .create(MyImagePicker::class.java)
+                            .openGallery(fragActivity.context!!)
+                            .subscribe { picR ->
+                                uri = picR.uri
+                                result.clear()
+                                dialog.dismiss()
+                                showDialog(fragActivity ,activity, Code.LEGEND, result)
+                            }
+                }
+                cameraBtn.setOnClickListener {
+                    RxImagePicker
+                            .create(MyImagePicker::class.java)
+                            .openCamera(fragActivity.context!!)
+                            .subscribe { picR ->
+                                uri = picR.uri
+                                result.clear()
+                                dialog.dismiss()
+                                showDialog(fragActivity ,activity, Code.LEGEND, result)
+                            }
+                }
+            }
+            5 -> {
+                editBtn.setOnClickListener {
+                    var legend : Int? = null
+                    for (i in 0 until list.size) {
+                        result.clear()
+                        val resourceId = activity.resources.getIdentifier("check_$i", "id", activity.packageName)
+                        if((dialog.findViewById(resourceId) as RadioButton).isChecked) {
+                            legend = i
+                            break
+                        }
+                    }
+                    fragActivity.savePhoto(legend!!, SetImageColor.imageToBitmap(image))
+                    dialog.dismiss()
+                }
+            }
         }
     }
 
@@ -264,6 +343,7 @@ class ViewDialog {
             }
         }
     }
+
 
     private fun getPriceOverview(activity: Activity, ed : String) : String{
         val sb = StringBuilder()

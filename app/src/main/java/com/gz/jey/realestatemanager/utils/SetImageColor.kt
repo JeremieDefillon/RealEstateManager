@@ -2,8 +2,11 @@ package com.gz.jey.realestatemanager.utils
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
+import android.widget.ImageView
+import java.io.ByteArrayOutputStream
 
 object SetImageColor{
 
@@ -35,6 +38,15 @@ object SetImageColor{
         canvas.drawBitmap(resultBitmap, 0f, 0f, p)
 
         return resultBitmap
+    }
+
+
+    fun imageToBitmap(image: ImageView): ByteArray {
+        val bitmap = (image.drawable as BitmapDrawable).bitmap
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+
+        return stream.toByteArray()
     }
 
 }

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
@@ -19,11 +20,17 @@ import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialog
 import com.gz.jey.realestatemanager.models.*
+import com.gz.jey.realestatemanager.utils.ItemClickSupport
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
+import com.gz.jey.realestatemanager.views.PhotosAdapter
 
 
-class SetRealEstate : Fragment(){
+class SetRealEstate : Fragment(), PhotosAdapter.Listener{
+
+    override fun onClickDeleteButton(position: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private lateinit var mView : View
 
@@ -31,6 +38,8 @@ class SetRealEstate : Fragment(){
     private lateinit var checks : ArrayList<ImageView>
 
     // FOR DESIGN
+    private lateinit var adapter: PhotosAdapter
+
     private lateinit var addIcon : Drawable
     private lateinit var removeIcon : Drawable
     private lateinit var editIcon : Drawable
@@ -115,8 +124,13 @@ class SetRealEstate : Fragment(){
         mainActivity!!.enableSave = false
         mainActivity!!.changeToolBarMenu(2)
 
+        val llm = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         photosRecyclerView = view.findViewById(R.id.photos_recycler_view)
+        photosRecyclerView.layoutManager = llm
+
         soldDateLine = view.findViewById(R.id.sold_date_line)
+
+        configureRecyclerView()
 
         addPhotos = view.findViewById(R.id.add_picture)
         //removePhotos = view.findViewById(R.id.remove_picture)
@@ -192,72 +206,22 @@ class SetRealEstate : Fragment(){
         checks.add(view.findViewById(R.id.check_14))
         checks.add(view.findViewById(R.id.check_15))
 
-        editDistrict.setOnClickListener {
-            result.clear()
-            result.add(valueDistrict.text.toString())
-            openInputEditor(Code.DISTRICT) }
-        editAddress.setOnClickListener {
-            result.clear()
-            result.add(valueAddress.text.toString())
-            openInputEditor(Code.ADDRESS) }
-        editType.setOnClickListener {
-            result.clear()
-            result.add(typeNum.toString())
-            openInputEditor(Code.TYPE) }
-        editRoomNum.setOnClickListener {
-            result.clear()
-            result.add(valueRoomNum.text.toString())
-            openInputEditor(Code.ROOM_NUM) }
-        editBedNum.setOnClickListener {
-            result.clear()
-            result.add(valueBedNum.text.toString())
-            openInputEditor(Code.BED_NUM) }
-        editBathNum.setOnClickListener {
-            result.clear()
-            result.add(valueBathNum.text.toString())
-            openInputEditor(Code.BATH_NUM) }
-        editKitchenNum.setOnClickListener {
-            result.clear()
-            result.add(valueKitchenNum.text.toString())
-            openInputEditor(Code.KITCHEN_NUM) }
-        editDescription.setOnClickListener {
-            result.clear()
-            result.add(valueDescription.text.toString())
-            openInputEditor(Code.DESCRIPTION) }
-        editCurrency.setOnClickListener {
-            result.clear()
-            result.add(currencyNum.toString())
-            openInputEditor(Code.CURRENCY) }
-        editPrice.setOnClickListener {
-            result.clear()
-            result.add(price.toString())
-            openInputEditor(Code.PRICE) }
-        addPhotos.setOnClickListener {
-            result.clear()
-            //result.add(valueDistrict.text.toString())
-            openInputEditor(Code.PHOTOS) }
-        addPOI.setOnClickListener {
-            result.clear()
-            for (poi in poiList){
-                result.add(poi.toString())
-            }
-            openInputEditor(Code.POI) }
-        editStatus.setOnClickListener {
-            result.clear()
-            result.add(statusNum.toString())
-            openInputEditor(Code.STATUS) }
-        editSaleDate.setOnClickListener {
-            result.clear()
-            result.add(valueSaleDate.text.toString())
-            openInputEditor(Code.SALE_DATE) }
-        editSoldDate.setOnClickListener {
-            result.clear()
-            result.add(valueSoldDate.text.toString())
-            openInputEditor(Code.SOLD_DATE) }
-        editAgent.setOnClickListener {
-            result.clear()
-            result.add(valueAgent.text.toString())
-            openInputEditor(Code.AGENT) }
+        editDistrict.setOnClickListener {clickEdit(Code.DISTRICT)}
+        editAddress.setOnClickListener {clickEdit(Code.ADDRESS) }
+        editType.setOnClickListener {clickEdit(Code.TYPE) }
+        editRoomNum.setOnClickListener {clickEdit(Code.ROOM_NUM) }
+        editBedNum.setOnClickListener {clickEdit(Code.BED_NUM) }
+        editBathNum.setOnClickListener {clickEdit(Code.BATH_NUM) }
+        editKitchenNum.setOnClickListener {clickEdit(Code.KITCHEN_NUM) }
+        editDescription.setOnClickListener {clickEdit(Code.DESCRIPTION) }
+        editCurrency.setOnClickListener {clickEdit(Code.CURRENCY) }
+        editPrice.setOnClickListener {clickEdit(Code.PRICE) }
+        addPhotos.setOnClickListener {clickEdit(Code.PHOTOS) }
+        addPOI.setOnClickListener {clickEdit(Code.POI) }
+        editStatus.setOnClickListener {clickEdit(Code.STATUS) }
+        editSaleDate.setOnClickListener {clickEdit(Code.SALE_DATE) }
+        editSoldDate.setOnClickListener {clickEdit(Code.SOLD_DATE) }
+        editAgent.setOnClickListener {clickEdit(Code.AGENT) }
 
         updateUI()
     }
@@ -279,85 +243,21 @@ class SetRealEstate : Fragment(){
 
         if (mainActivity!!.realEstate != null){
             Log.d("MODE", "EDIT")
-            val result : ArrayList<String> = ArrayList()
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.district.toString())
-            insert = Code.DISTRICT
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.address.toString())
-            insert = Code.ADDRESS
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.type.toString())
-            insert = Code.TYPE
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.room.toString())
-            insert = Code.ROOM_NUM
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.bed.toString())
-            insert = Code.BED_NUM
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.bath.toString())
-            insert = Code.BATH_NUM
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.kitchen.toString())
-            insert = Code.KITCHEN_NUM
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.description.toString())
-            insert = Code.DESCRIPTION
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(Data.currency.toString())
-            insert = Code.CURRENCY
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.price.toString())
-            insert = Code.PRICE
-            insertEditedValue(result)
-
-            result.clear()
-            mainActivity!!.realEstateViewModel.getAllPOI(mainActivity!!.realEstate!!.id!!).observe(this, Observer<List<PointsOfInterest>>{
-                poi -> for (p in poi!!){
-                result.add(p.value.toString())
-            }
-            })
-            insert = Code.POI
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.status.toString())
-            insert = Code.STATUS
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.marketDate.toString())
-            insert = Code.SALE_DATE
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.soldDate.toString())
-            insert = Code.SOLD_DATE
-            insertEditedValue(result)
-
-            result.clear()
-            result.add(mainActivity!!.realEstate!!.agentName.toString())
-            insert = Code.AGENT
-            insertEditedValue(result)
+            getDtbValue(Code.DISTRICT)
+            getDtbValue(Code.ADDRESS)
+            getDtbValue(Code.TYPE)
+            getDtbValue(Code.ROOM_NUM)
+            getDtbValue(Code.BED_NUM)
+            getDtbValue(Code.BATH_NUM)
+            getDtbValue(Code.KITCHEN_NUM)
+            getDtbValue(Code.DESCRIPTION)
+            getDtbValue(Code.CURRENCY)
+            getDtbValue(Code.PRICE)
+            getDtbValue(Code.POI)
+            getDtbValue(Code.STATUS)
+            getDtbValue(Code.SALE_DATE)
+            getDtbValue(Code.SOLD_DATE)
+            getDtbValue(Code.AGENT)
 
             insert = null
         }else{
@@ -377,6 +277,14 @@ class SetRealEstate : Fragment(){
             insertEditedValue(result)
         }
         //mainActivity!!.setLoading(false, false)
+    }
+
+    private fun configureRecyclerView() {
+        this.adapter = PhotosAdapter(this)
+        this.photosRecyclerView.adapter = this.adapter
+        this.photosRecyclerView.layoutManager = LinearLayoutManager(this.context)
+        ItemClickSupport.addTo(photosRecyclerView, R.layout.photos_item)
+                .setOnItemClickListener { _, position, _ -> Log.d("PHOTO" , photosList[position].desc.toString())}
     }
 
     private fun validate(ind : Int){
@@ -497,6 +405,67 @@ class SetRealEstate : Fragment(){
         }
     }
 
+    private fun setEditedPhoto(){
+        if(photosList.size>0)
+            photosRecyclerView.visibility = View.VISIBLE
+        else
+            photosRecyclerView.visibility = View.GONE
+        this.adapter.updateData(photosList as List<Photos>)
+    }
+
+    private fun clickEdit(code : Int){
+        result.clear()
+        when (code){
+            Code.DISTRICT -> result.add(valueDistrict.text.toString())
+            Code.ADDRESS -> result.add(valueAddress.text.toString())
+            Code.TYPE -> result.add(valueType.text.toString())
+            Code.ROOM_NUM -> result.add(valueRoomNum.text.toString())
+            Code.BED_NUM -> result.add(valueBedNum.text.toString())
+            Code.BATH_NUM -> result.add(valueBathNum.text.toString())
+            Code.KITCHEN_NUM -> result.add(valueKitchenNum.text.toString())
+            Code.DESCRIPTION -> result.add(valueDescription.text.toString())
+            Code.CURRENCY -> result.add(currencyNum.toString())
+            Code.PRICE -> result.add(price.toString())
+            Code.PHOTOS -> ""
+            Code.POI -> for (poi in poiList)
+                result.add(poi.toString())
+
+            Code.STATUS -> result.add(statusNum.toString())
+            Code.SALE_DATE -> result.add(valueSaleDate.text.toString())
+            Code.SOLD_DATE -> result.add(valueSoldDate.text.toString())
+            Code.AGENT -> result.add(valueAgent.text.toString())
+        }
+        openInputEditor(code)
+    }
+
+    private fun getDtbValue(code : Int){
+        insert = code
+        result.clear()
+        when (code){
+            Code.DISTRICT -> if(mainActivity!!.realEstate!!.district!=null)result.add(mainActivity!!.realEstate!!.district.toString()) else result.add("")
+            Code.ADDRESS -> if(mainActivity!!.realEstate!!.address!=null)result.add(mainActivity!!.realEstate!!.address.toString()) else result.add("")
+            Code.TYPE -> if(mainActivity!!.realEstate!!.type!=null)result.add(mainActivity!!.realEstate!!.type.toString()) else result.add("")
+            Code.ROOM_NUM -> if(mainActivity!!.realEstate!!.room!=null)result.add(mainActivity!!.realEstate!!.room.toString()) else result.add("")
+            Code.BED_NUM -> if(mainActivity!!.realEstate!!.bed!=null)result.add(mainActivity!!.realEstate!!.bed.toString()) else result.add("")
+            Code.BATH_NUM -> if(mainActivity!!.realEstate!!.bath!=null)result.add(mainActivity!!.realEstate!!.bath.toString()) else result.add("")
+            Code.KITCHEN_NUM -> if(mainActivity!!.realEstate!!.kitchen!=null)result.add(mainActivity!!.realEstate!!.kitchen.toString()) else result.add("")
+            Code.DESCRIPTION -> if(mainActivity!!.realEstate!!.description!=null)result.add(mainActivity!!.realEstate!!.description.toString()) else result.add("")
+            Code.CURRENCY -> result.add(Data.currency.toString())
+            Code.PRICE -> if(mainActivity!!.realEstate!!.price!=null)result.add(mainActivity!!.realEstate!!.price.toString()) else result.add("")
+            Code.PHOTOS -> if(mainActivity!!.realEstate!!.price!=null)result.add("") else result.add("")
+            Code.POI -> mainActivity!!.realEstateViewModel.getAllPOI(mainActivity!!.realEstate!!.id!!).observe(this, Observer<List<PointsOfInterest>>{
+                    poi -> for (p in poi!!){
+                    result.add(p.value.toString())
+                }
+            })
+            Code.STATUS -> if(mainActivity!!.realEstate!!.status!=null)result.add(mainActivity!!.realEstate!!.status.toString()) else result.add("")
+            Code.SALE_DATE -> if(mainActivity!!.realEstate!!.marketDate!=null)result.add(mainActivity!!.realEstate!!.marketDate.toString()) else result.add("")
+            Code.SOLD_DATE -> if(mainActivity!!.realEstate!!.soldDate!=null)result.add(mainActivity!!.realEstate!!.soldDate.toString()) else result.add("")
+            Code.AGENT -> if(mainActivity!!.realEstate!!.agentName!=null)result.add(mainActivity!!.realEstate!!.agentName.toString()) else result.add("")
+        }
+        insertEditedValue(result)
+    }
+
     private fun setCurrency(n : Int){
         val dl = getString(R.string.dollar_symbol) + " " + getString(R.string.dollar)
         val er = getString(R.string.euro_symbol) + " " + getString(R.string.euro)
@@ -512,6 +481,13 @@ class SetRealEstate : Fragment(){
         insert = code
         val alert = ViewDialog()
         alert.showDialog(this, activity!!, code, result)
+    }
+
+    fun savePhoto(legend : Int, photo : ByteArray){
+        val photo = Photos(null, photo, legend, mainActivity!!.realEstate?.id)
+        photosList.add(photo)
+        Log.d("Photo" , photosList.size.toString())
+        setEditedPhoto()
     }
 
     fun saveRealEstate(){

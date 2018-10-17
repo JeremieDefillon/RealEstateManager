@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#ffffffff">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:id="@+id/title_canvas"
+    <RelativeLayout
+        android:id="@+id/title"
         android:gravity="center"
-        android:background="@color/colorPrimaryDark"
-        android:textColor="@color/colorWhite"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:scaleType="fitCenter" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:id="@+id/title_canvas"
+            android:gravity="center"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:scaleType="fitCenter"
+            app:layout_constrainedWidth="true"/>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/input"
@@ -22,15 +32,52 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/title_canvas">
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintBottom_toTopOf="@+id/controls">
 
-        <GridLayout
-            android:id="@+id/grid_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:visibility="gone">
-        </GridLayout>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/image_canvas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/scroll_view_canvas"
+                >
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="50dip"
+                    android:layout_height="50dip"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="gone"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/scroll_view_canvas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/image_canvas">
+                <ScrollView
+                    android:id="@+id/scroll_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="gone">
+
+                    <GridLayout
+                        android:id="@+id/grid_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:columnCount="2">
+                    </GridLayout>
+                </ScrollView>
+            </RelativeLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
 
         <DatePicker
             android:id="@+id/date_picker"
@@ -38,6 +85,31 @@
             android:layout_height="wrap_content"
             android:visibility="gone">
         </DatePicker>
+
+        <LinearLayout
+            android:id="@+id/photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/gallery_btn"
+                android:layout_width="70dip"
+                android:layout_height="70dip"
+                android:padding="10dip"
+                android:layout_marginEnd="10dip"
+                android:gravity="center"
+                />
+            <ImageView
+                android:id="@+id/camera_btn"
+                android:layout_width="70dip"
+                android:layout_height="70dip"
+                android:padding="10dip"
+                android:layout_marginStart="10dip"
+                android:gravity="center"
+                />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/overview"
@@ -65,31 +137,37 @@
 
     </RelativeLayout>
 
-
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/controls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/input"
-        android:gravity="center_vertical|center_horizontal">
+        app:layout_constraintTop_toBottomOf="@+id/input"
+        app:layout_constrainedWidth="false">
 
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:id="@+id/cancel_btn"
-            android:gravity="center_vertical|center_horizontal"
-            android:background="@color/colorTransparent"
-            android:textColor="@color/colorAccent" />
+            android:gravity="center_vertical|center_horizontal">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/edit"
-            android:id="@+id/edit_btn"
-            android:gravity="center_vertical|center_horizontal"
-            android:background="@color/colorTransparent"
-            android:textColor="@color/colorAccent" />
-    </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:id="@+id/cancel_btn"
+                android:gravity="center_vertical|center_horizontal"
+                android:background="@color/colorTransparent"
+                android:textColor="@color/colorAccent" />
 
-</RelativeLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit"
+                android:id="@+id/edit_btn"
+                android:gravity="center_vertical|center_horizontal"
+                android:background="@color/colorTransparent"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</android.support.constraint.ConstraintLayout>

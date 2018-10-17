@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
@@ -818,6 +823,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorWhite"
         android:orientation="horizontal"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         android:visibility="gone">
 
     </android.support.v7.widget.RecyclerView>
@@ -1190,3 +1196,4 @@
     </LinearLayout>
 
 </LinearLayout>
+</ScrollView>

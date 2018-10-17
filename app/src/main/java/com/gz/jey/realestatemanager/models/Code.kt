@@ -17,6 +17,7 @@ object Code{
     val SALE_DATE = 97
     val SOLD_DATE = 98
     val AGENT = 99
+    val LEGEND = 83
 
     val MULTICHECK = 487
     val SOLOCHECK = 548

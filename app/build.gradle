@@ -87,5 +87,8 @@ dependencies {
     // Test helpers for Room
     testImplementation "android.arch.persistence.room:testing:1.1.1"
 
+    // RX Image Picker
+    implementation "com.github.qingmei2:rximagepicker_support:2.2.0"
+
 }
 
