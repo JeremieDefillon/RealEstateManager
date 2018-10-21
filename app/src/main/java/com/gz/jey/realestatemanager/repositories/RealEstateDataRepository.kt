@@ -12,6 +12,14 @@ class RealEstateDataRepository(private val realEstateDao: RealEstateDao) {
         return this.realEstateDao.getAllRealEstate()
     }
 
+    fun getRealEstate(id: Long): LiveData<RealEstate> {
+        return this.realEstateDao.getRealEstate(id)
+    }
+
+    fun getRealEstateBySelect(): LiveData<RealEstate> {
+        return this.realEstateDao.getRealEstateBySelect()
+    }
+
     // --- CREATE ---
 
     fun createRealEstate(realEstate: RealEstate) {

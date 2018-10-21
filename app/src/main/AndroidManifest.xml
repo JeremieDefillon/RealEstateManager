@@ -12,6 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- FileProvider - Expose File -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.gz.jey.realestatemanager.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
         <activity android:name="com.gz.jey.realestatemanager.controllers.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,11 +31,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity"
+            android:parentActivityName="controllers.activities.MainActivity"/>
 
 
         <!-- CONTENT PROVIDER -->
         <provider
             android:name=".provider.RealEstateContentProvider"
+            android:authorities="com.gz.jey.realestatemanager.provider"
+            android:exported="true"/>
+        <provider
+            android:name=".provider.SettingsContentProvider"
             android:authorities="com.gz.jey.realestatemanager.provider"
             android:exported="true"/>
     </application>

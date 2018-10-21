@@ -1,9 +1,13 @@
 package com.gz.jey.realestatemanager.models
 
 object Code{
-    val DISTRICT = 84
-    val ADDRESS = 85
-    val TYPE = 86
+    val UNEDITABLE = 846
+    val UNSAVABLE = 543
+
+    val DISTRICT = 82
+    val ADDRESS = 83
+    val TYPE = 85
+    val SURFACE = 86
     val ROOM_NUM = 87
     val BED_NUM = 88
     val BATH_NUM = 89
@@ -21,4 +25,5 @@ object Code{
 
     val MULTICHECK = 487
     val SOLOCHECK = 548
+    val ERROR_NOT_FOUND = 987
 }

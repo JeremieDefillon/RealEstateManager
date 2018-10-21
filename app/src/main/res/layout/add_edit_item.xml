@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
+
+    <TextView
+        android:id="@+id/mark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/item_margin"
+        android:layout_marginTop="5dip"
+        android:text="@string/obl"
+        android:textSize="@dimen/item_textSize"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginEnd="@dimen/item_margin"
+        android:layout_marginStart="@dimen/item_margin"
+        android:layout_marginTop="@dimen/item_margin"
+        android:background="@color/colorPrimary"
+        android:paddingEnd="@dimen/item_padding"
+        android:paddingStart="@dimen/item_padding"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/item_textSize"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/colon"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginEnd="@dimen/item_margin"
+        android:layout_marginStart="@dimen/item_margin"
+        android:layout_marginTop="@dimen/item_margin"
+        android:text="@string/colon"
+        android:textColor="@color/colorGrey"
+        android:textSize="@dimen/item_textSize"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginEnd="@dimen/item_margin"
+        android:layout_marginStart="@dimen/item_margin"
+        android:layout_marginTop="@dimen/item_margin"
+        android:paddingEnd="@dimen/item_padding"
+        android:paddingStart="@dimen/item_padding"
+        android:textColor="@color/colorBlack"
+        android:textDirection="firstStrongLtr"
+        android:textSize="@dimen/item_textSize"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|bottom">
+
+        <Button
+            android:id="@+id/remove"
+            android:layout_width="@dimen/item_height"
+            android:layout_height="@dimen/item_height"
+            android:layout_marginEnd="@dimen/item_margin"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/edit"
+            android:layout_width="@dimen/item_height"
+            android:layout_height="@dimen/item_height"
+            android:layout_marginEnd="@dimen/item_margin"/>
+
+        <ImageView
+            android:id="@+id/check"
+            android:layout_width="@dimen/item_height"
+            android:layout_height="@dimen/item_height"
+            android:layout_marginEnd="@dimen/item_margin"
+            android:contentDescription="@string/check"/>
+    </LinearLayout>
+</LinearLayout>

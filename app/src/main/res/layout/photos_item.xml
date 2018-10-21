@@ -4,6 +4,7 @@
     android:orientation="horizontal"
     android:layout_width="60dip"
     android:layout_height="60dip"
+    android:layout_margin="5dip"
     android:gravity="center">
 
     <ImageView

@@ -1,8 +1,8 @@
 package com.gz.jey.realestatemanager.controllers.fragments
 
 import android.arch.lifecycle.Observer
-import android.support.v4.app.Fragment
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -18,14 +18,17 @@ import com.gz.jey.realestatemanager.utils.ItemClickSupport
 import com.gz.jey.realestatemanager.views.RealEstateAdapter
 
 class RealEstateList : Fragment(), RealEstateAdapter.Listener{
-
-
     private var mView : View? = null
 
     var mainActivity: MainActivity? = null
     private var adapter: RealEstateAdapter? = null
     private var recyclerView : RecyclerView? = null
     private var infoText : TextView? = null
+
+    private var photo : Photos? = null
+
+    private var selected = false
+    private var re : RealEstate? = null
 
     /**
      * CALLED ON INSTANCE OF THIS FRAGMENT TO CREATE VIEW
@@ -54,7 +57,7 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener{
     }
 
     override fun onClickDeleteButton(position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // DELETE
     }
 
 
@@ -66,44 +69,50 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener{
                 .setOnItemClickListener { _, position, _ -> this.updateRealEstate(this.adapter!!.getRealEstate(position), this.adapter!!.getAllRealEstate())}
     }
 
-    fun initRealEstateList(){
+    private fun initRealEstateList(){
         Log.d("RE LIST", "OK")
         getRealEstates()
     }
 
     private fun getRealEstates() {
-        mainActivity!!.realEstateViewModel.getAllRealEstate().observe(this, Observer<List<RealEstate>>{ re -> updateRealEstateList(re!!)})
+        mainActivity!!
+                .realEstateViewModel
+                .getAllRealEstate()
+                .observe(this, Observer<List<RealEstate>>{ re -> updateRealEstateList(re!!)})
     }
 
     private fun updateRealEstate(realEstate: RealEstate, realEstates: List<RealEstate>) {
         for (r in realEstates){
-            if(r == realEstate)
-                r.isSelected = !realEstate.isSelected
-            else
+            if(r == realEstate) {
+                this.selected = r == mainActivity!!.realEstate
+                mainActivity!!.setRE(realEstate)
+                r.isSelected = true
+            }else{
                 r.isSelected = false
+            }
             mainActivity!!.realEstateViewModel.updateRealEstate(r)
         }
 
         if(realEstate.isSelected){
-            mainActivity!!.setRE(realEstate)
+            if(this.selected)
+                mainActivity!!.setFragment(1)
         }else{
+            this.selected = false
             mainActivity!!.unsetRE()
         }
-        mainActivity!!.realEstateViewModel.updateRealEstate(realEstate)
+
     }
 
     private fun updateRealEstateList(items: List<RealEstate>) {
-        Log.d("RE LIST", "CALLED")
+        Log.d("RE LIST", items.toString())
         if(items.isEmpty())
             infoText!!.text = "No Real Estate found !"
         else
             infoText!!.visibility = View.GONE
 
         val photos : ArrayList<Photos?> = ArrayList()
-        for (i in items){
-            mainActivity!!.realEstateViewModel.getAllPhotos(i.id!!).observe(this, Observer<List<Photos>>{
-                p -> if (p!!.isNotEmpty()) photos.add(p[0]) else photos.add(null)
-            })
+        for (it in items){
+            photos.add(getMainPhoto(it))
         }
         this.adapter!!.updateData(items, photos as List<Photos>)
     }
@@ -111,6 +120,19 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener{
     override fun onDestroy() {
         super.onDestroy()
         this.mainActivity = null
+    }
+
+    private fun getMainPhoto(it : RealEstate): Photos?{
+        mainActivity!!.realEstateViewModel.getAllPhotos(it.id!!).observe(this, Observer<List<Photos>>{
+            p -> this.photo = if(p!!.isNotEmpty()){
+                Log.d("IS", "NOT NULL")
+                p[0]
+            }else{
+                Log.d("IS", "NULL")
+                null
+            }
+        })
+        return this.photo
     }
 
     companion object {

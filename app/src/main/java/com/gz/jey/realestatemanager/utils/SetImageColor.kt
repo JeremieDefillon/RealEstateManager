@@ -49,4 +49,12 @@ object SetImageColor{
         return stream.toByteArray()
     }
 
+    fun drawableToBitmap(image: Drawable): ByteArray {
+        val bitmap = (image as BitmapDrawable).bitmap
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+
+        return stream.toByteArray()
+    }
+
 }

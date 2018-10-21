@@ -18,17 +18,26 @@
     <string name="save">Save</string>
     <string name="overview">Overview</string>
     <string name="insert">Insert</string>
+    <string name="legend">Legend</string>
+    <string name="pick_up_photo">Pick up Photo</string>
     <string name="loading">Loading ...</string>
+    <string name="nc">NC</string>
 
     <!-- ADD & UPDATE LABELS  -->
     <string name="currency">Currency</string>
 
+    <string name="media">Media</string>
+    <string name="state">State</string>
+    <string name="location">Location</string>
+    <string name="nf_on_map">Did not found this location on map</string>
+
     <string name="type">Type</string>
+    <string name="surface">Surface</string>
     <string name="district">District</string>
     <string name="room_number">Number of Rooms</string>
-    <string name="bed_number">Number of Bedrooms</string>
-    <string name="kitchen_number">Number of Kitchens</string>
-    <string name="bath_number">Number of Bathrooms</string>
+    <string name="bed_number">Bedrooms</string>
+    <string name="kitchen_number">Kitchens</string>
+    <string name="bath_number">Bathrooms</string>
     <string name="description">Description</string>
     <string name="price">Price</string>
     <string name="photos">Photos</string>
@@ -38,6 +47,28 @@
     <string name="date_of_sale">Sale\'s Date</string>
     <string name="date_of_sold">Sold\'s Date</string>
     <string name="address">Address</string>
+
+    <string-array name="add_edit_ind">
+        <item>@string/district</item>
+        <item>@string/address</item>
+        <item>@string/type</item>
+        <item>@string/surface</item>
+        <item>@string/room_number</item>
+        <item>@string/bed_number</item>
+        <item>@string/bath_number</item>
+        <item>@string/kitchen_number</item>
+        <item>@string/description</item>
+        <item> </item>
+        <item>@string/currency</item>
+        <item>@string/price</item>
+        <item>@string/photos</item>
+        <item> </item>
+        <item>@string/points_of_interest</item>
+        <item>@string/status</item>
+        <item>@string/date_of_sale</item>
+        <item>@string/date_of_sold</item>
+        <item>@string/agent</item>
+    </string-array>
 
     <string name="add_symbol">+</string>
     <string name="minus_symbol">-</string>
@@ -96,7 +127,4 @@
         <item>Cellar</item>
         <item>Utility</item>
     </string-array>
-
-
-
 </resources>

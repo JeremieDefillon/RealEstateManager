@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="nav_header_height">175dp</dimen>
+    <dimen name="item_height">24dp</dimen>
+    <dimen name="item_margin">5dp</dimen>
+    <dimen name="item_padding">3dp</dimen>
+    <dimen name="item_textSize">15sp</dimen>
 </resources>

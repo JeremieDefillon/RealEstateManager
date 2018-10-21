@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/real_estate_button"
+    android:id="@+id/button"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center">
 
     <ImageView
-        android:id="@+id/real_estate_photo"
+        android:id="@+id/photo"
         android:layout_width="80dp"
         android:layout_height="80dp"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginStart="20dip"
@@ -21,7 +21,7 @@
         android:layout_marginTop="10dip"
         android:layout_marginBottom="10dip">
         <TextView
-            android:id="@+id/real_estate_type"
+            android:id="@+id/type"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -29,12 +29,44 @@
             android:textColor="@color/colorBlack"
             android:textSize="18sp"/>
         <TextView
-            android:id="@+id/real_estate_district"
+            android:id="@+id/district"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>
         <TextView
-            android:id="@+id/real_estate_price"
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textColor="@color/colorSecondary"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center|end"
+        android:gravity="end"
+        android:layout_marginStart="20dip"
+        android:layout_marginEnd="20dip"
+        android:layout_marginTop="10dip"
+        android:layout_marginBottom="10dip">
+        <TextView
+            android:id="@+id/nr"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/surface"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/ppm2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

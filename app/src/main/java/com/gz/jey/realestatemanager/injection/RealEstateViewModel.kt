@@ -5,13 +5,20 @@ import android.arch.lifecycle.ViewModel
 import com.gz.jey.realestatemanager.models.Photos
 import com.gz.jey.realestatemanager.models.PointsOfInterest
 import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.Settings
 import com.gz.jey.realestatemanager.repositories.PhotosDataRepository
 import com.gz.jey.realestatemanager.repositories.PointsOfInterestDataRepository
 import com.gz.jey.realestatemanager.repositories.RealEstateDataRepository
+import com.gz.jey.realestatemanager.repositories.SettingsDataRepository
 import java.util.concurrent.Executor
 
 class RealEstateViewModel(// REPOSITORIES
-        private val realEstateDataSource: RealEstateDataRepository, private val photosDataSource: PhotosDataRepository, private val poiDataSource: PointsOfInterestDataRepository, private val executor: Executor) : ViewModel() {
+        private val realEstateDataSource: RealEstateDataRepository,
+        private val photosDataSource: PhotosDataRepository,
+        private val poiDataSource: PointsOfInterestDataRepository,
+        private val settingsDataSource: SettingsDataRepository,
+        private val executor: Executor
+) : ViewModel() {
 
     // -------------
     // FOR REAL ESTATE
@@ -19,6 +26,14 @@ class RealEstateViewModel(// REPOSITORIES
 
     fun getAllRealEstate(): LiveData<List<RealEstate>> {
         return realEstateDataSource.getAllRealEstate()
+    }
+
+    fun getRealEstateBySelect(): LiveData<RealEstate>{
+        return realEstateDataSource.getRealEstateBySelect()
+    }
+
+    fun getRealEstate(id : Long): LiveData<RealEstate> {
+        return realEstateDataSource.getRealEstate(id)
     }
 
     fun createRealEstate(realEstate: RealEstate) {
@@ -71,5 +86,21 @@ class RealEstateViewModel(// REPOSITORIES
 
     fun updatePhotos(photos: Photos) {
         executor.execute { photosDataSource.updatePhotos(photos) }
+    }
+
+    // -------------
+    // FOR SETTINGS
+    // -------------
+
+    fun getSettings() : LiveData<Settings> {
+        return settingsDataSource.getSettings()
+    }
+
+    fun createSettings(settings: Settings) {
+        executor.execute {settingsDataSource.createSettings(settings) }
+    }
+
+    fun updateSettings(settings: Settings) {
+        executor.execute {settingsDataSource.updateSettings(settings) }
     }
 }

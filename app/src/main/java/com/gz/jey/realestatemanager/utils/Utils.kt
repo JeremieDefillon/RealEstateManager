@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
-import com.gz.jey.realestatemanager.models.Data
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -71,9 +70,9 @@ object Utils{
      * convert today date in string format
      * @return String as dd/mm/yyyy format
      */
-    fun convertedHighPrice(text : String): String {
+    fun convertedHighPrice(currency : Int, text : String): String {
         var hp : String
-        val s = if(Data.currency==0) "," else "."
+        val s = if(currency==0) "," else "."
         val end = text.length
         val step = 3
         val over = end-1

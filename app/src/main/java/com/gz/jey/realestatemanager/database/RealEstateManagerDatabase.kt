@@ -7,18 +7,21 @@ import android.content.Context
 import com.gz.jey.realestatemanager.database.dao.PhotosDao
 import com.gz.jey.realestatemanager.database.dao.PointsOfInterestDao
 import com.gz.jey.realestatemanager.database.dao.RealEstateDao
+import com.gz.jey.realestatemanager.database.dao.SettingsDao
 import com.gz.jey.realestatemanager.models.Photos
 import com.gz.jey.realestatemanager.models.PointsOfInterest
 import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.Settings
 
 
-@Database(entities = [RealEstate::class, Photos::class, PointsOfInterest::class], version = 1, exportSchema = false)
+@Database(entities = [RealEstate::class, Photos::class, PointsOfInterest::class, Settings::class], version = 1, exportSchema = false)
 abstract class RealEstateManagerDatabase : RoomDatabase() {
 
     // --- DAO ---
     abstract fun realEstateDao(): RealEstateDao
     abstract fun photosDao(): PhotosDao
     abstract fun pointsOfInterestDao(): PointsOfInterestDao
+    abstract fun settingsDao(): SettingsDao
 
     companion object {
 

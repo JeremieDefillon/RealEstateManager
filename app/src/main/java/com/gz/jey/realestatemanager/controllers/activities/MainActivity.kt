@@ -1,6 +1,9 @@
 package com.gz.jey.realestatemanager.controllers.activities
 
+import android.app.Application
 import android.arch.lifecycle.ViewModelProviders
+import android.arch.lifecycle.Observer
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -12,50 +15,46 @@ import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
+import com.gz.jey.realestatemanager.controllers.dialog.ToastMessage
+import com.gz.jey.realestatemanager.controllers.fragments.RealEstateDetails
 import com.gz.jey.realestatemanager.controllers.fragments.RealEstateList
-import com.gz.jey.realestatemanager.controllers.fragments.SetRealEstate
 import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
 import com.gz.jey.realestatemanager.injection.Injection
 import com.gz.jey.realestatemanager.injection.RealEstateViewModel
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.PointsOfInterest
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.*
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import java.util.*
-import kotlin.collections.ArrayList
 
-class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     // FRAGMENTS
     private val TAG = "MainActivity"
     var lastFragment: Fragment? = null
-    var setRealEstate: SetRealEstate? = null
     var realEstateList: RealEstateList? = null
-
+    var realEstateDetails: RealEstateDetails? = null
 
     // FOR DESIGN
-    private lateinit var enableSaveIcon : Drawable
-    private lateinit var disableSaveIcon : Drawable
-    private var toolMenu : Menu? = null
-    var fragmentContainer : FrameLayout? = null
+    private lateinit var enableEditIcon: Drawable
+    private lateinit var disableEditIcon: Drawable
+    private var toolMenu: Menu? = null
+    var fragmentContainer: FrameLayout? = null
     private var drawerLayout: DrawerLayout? = null
     var toolbar: Toolbar? = null
     private var navigationView: NavigationView? = null
-    var loading : FrameLayout? = null
-    private var loadingContent : TextView? = null
+    lateinit var editItem: MenuItem
+    var loading: FrameLayout? = null
+    private var loadingContent: TextView? = null
 
     // FOR DATA
-    lateinit var realEstateViewModel : RealEstateViewModel
-    lateinit var database : RealEstateManagerDatabase
-    private var changeMenu = false
-    var enableSave = false
-    private var existMenu : ArrayList<Boolean>? = null
+    lateinit var realEstateViewModel: RealEstateViewModel
+    lateinit var database: RealEstateManagerDatabase
+    private var settings : Settings? = null
+    private var existMenu: Boolean = false
 
     // FOR REALESTATE SELECTOR
     var realEstate: RealEstate? = null
@@ -66,7 +65,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
      * @param savedInstanceState Bundle
      * CREATE ACTIVITY
      */
-    override fun onCreate(savedInstanceState: Bundle?){
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
 
@@ -77,26 +76,25 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         //loadingContent!!.text = getString(R.string.initActivity)
         //setLoading(true, true)
         fragmentContainer = findViewById(R.id.fragmentContainer)
-        existMenu = arrayListOf(true, true, true, false)
 
         //Log.d("ENABLE NOTIF ???", Data.enableNotif.toString())
 
+        initActivity()
         if (savedInstanceState == null) {
             val extras = intent.extras
 
             // if(Data.enableNotif && !fromNotif)
-                // setNotification()
-            initActivity()
+            // setNotification()
         }
     }
 
-    private fun setLang(){
-       // Data.lang = if(Locale.getDefault().displayLanguage=="fr") 1 else 0
+    private fun setLang() {
+        // Data.lang = if(Locale.getDefault().displayLanguage=="fr") 1 else 0
     }
 
-    private fun setIcon(){
-        enableSaveIcon = SetImageColor.changeDrawableColor(this , R.drawable.save, ContextCompat.getColor(this, R.color.colorWhite))
-        disableSaveIcon = SetImageColor.changeDrawableColor(this , R.drawable.save, ContextCompat.getColor(this, R.color.colorGrey))
+    private fun setIcon() {
+        enableEditIcon = SetImageColor.changeDrawableColor(this, R.drawable.edit, ContextCompat.getColor(this, R.color.colorWhite))
+        disableEditIcon = SetImageColor.changeDrawableColor(this, R.drawable.edit, ContextCompat.getColor(this, R.color.colorGrey))
     }
 
     /**
@@ -118,15 +116,12 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
         toolMenu = menu
         // Inflate the menu and add it to the Toolbar
         menuInflater.inflate(R.menu.menu_toolbar, toolMenu)
-        if(changeMenu){
-            for (i in 0 until menu.size())
-                menu.getItem(i).isVisible = existMenu!![i]
-            changeMenu = false
-        }
+        for (i in 0 until menu.size())
+            menu.getItem(i).isVisible = existMenu
 
-        menu.getItem(3).isEnabled = enableSave
-        if(enableSave) menu.getItem(3).icon = enableSaveIcon
-        else menu.getItem(3).icon = disableSaveIcon
+        editItem = menu.getItem(1)
+        if(realEstate!=null) setEdit(true)
+        else setEdit(false)
         return true
     }
 
@@ -135,28 +130,29 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
      * @return boolean
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id= item.itemId
+        val id = item.itemId
         // Handle item selection
         return when (id) {
             R.id.add -> {
                 realEstate = null
-                addFragment(0, "Add")
+                settings!!.addOrEdit = false
+                settings!!.reId = null
+                realEstateViewModel.updateSettings(settings!!)
+                addOrEditActivity()
                 true
             }
             R.id.edit -> {
-                if(realEstate!=null){
-                    addFragment(0, "Edit")
-                    true
-                }else{
-                    Log.e("EDIT FAILED", "NULL ITEM")
-                    true
+                if (realEstate!=null) {
+                    settings!!.addOrEdit = true
+                    settings!!.reId = realEstate!!.id
+                    realEstateViewModel.updateSettings(settings!!)
+                    addOrEditActivity()
+                } else {
+                    ToastMessage().notifyMessage(this, Code.UNEDITABLE)
                 }
-            }
-            R.id.search_on -> {
                 true
             }
-            R.id.save -> {
-                setRealEstate!!.saveRealEstate()
+            R.id.search_on -> {
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -178,6 +174,18 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
         this.realEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel::class.java)
+        this.realEstateViewModel.getSettings().observe(this, Observer<Settings>{ s -> initSettings(s)})
+    }
+
+    private fun initSettings(set : Settings?){
+        if(set != null) {
+            settings = set
+            realEstateViewModel.updateSettings(settings!!)
+        }else{
+            val lang = if(Locale.getDefault().language == "fr") 1 else 0
+            settings = Settings(null,0,lang,null,false,true)
+            realEstateViewModel.createSettings(settings!!)
+        }
     }
 
     /**
@@ -194,7 +202,7 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
     /**
      * CONFIGURE NAVIGATION VIEW
      */
-    private fun setNavigationView(){
+    private fun setNavigationView() {
         navigationView = findViewById(R.id.activity_main_nav_view)
         navigationView!!.menu.clear()
         menuInflater.inflate(R.menu.menu_nav_drawer, navigationView!!.menu)
@@ -223,21 +231,28 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
      * @param index Int
      * CHANGE FRAGMENT
      */
-    private fun setFragment(index: Int){
-        changeToolBarMenu(1)
+    fun setFragment(index: Int) {
+        changeToolBarMenu(0)
         //loadingContent!!.text = getString(R.string.loadingView)
         //hideKeyboard()
-       // if (fromNotif) {
-         //   fromNotif=false
-          //  execRequest(CODE_DETAILS)
+        // if (fromNotif) {
+        //   fromNotif=false
+        //  execRequest(CODE_DETAILS)
         //}else {
         var fragment: Fragment? = null
         invalidateOptionsMenu()
-           // Data.tab = index
+        // Data.tab = index
         when (index) {
             0 -> {
+                changeToolBarMenu(1)
                 this.realEstateList = RealEstateList.newInstance(this)
                 fragment = this.realEstateList
+            }
+
+            1 -> {
+                changeToolBarMenu(2)
+                this.realEstateDetails = RealEstateDetails.newInstance(this)
+                fragment = this.realEstateDetails
             }
         }
 
@@ -246,79 +261,51 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
                 .commit()
     }
 
-    private fun addFragment(index: Int, func: String){
-        changeToolBarMenu(0)
-        var fragment: Fragment? = null
-        invalidateOptionsMenu()
-        // Data.tab = index
-        when (index) {
+    private fun addOrEditActivity() {
+        val intent = Intent(this, AddOrEditActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun changeToolBarMenu(em: Int) {
+        when (em) {
             0 -> {
-                this.setRealEstate = SetRealEstate.newInstance(this)
-                fragment = this.setRealEstate
-                supportActionBar!!.title = "$func Real Estate"
-            }
-        }
-        lastFragment = fragment
-        this.supportFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainer, fragment)
-                .commit()
-    }
-
-    private fun removeFragment(fragment : Fragment){
-        this.supportFragmentManager.beginTransaction()
-                .remove(fragment)
-                .commit()
-
-        changeToolBarMenu(1)
-    }
-
-
-    fun saveRealEstate(fragment : Fragment){
-        removeFragment(fragment)
-        realEstateList!!.initRealEstateList()
-    }
-
-    fun changeToolBarMenu(em : Int){
-        when(em){
-            0-> {
-                existMenu = arrayListOf(false,false,false,false)
+                existMenu = false
                 invalidateOptionsMenu()
                 Objects.requireNonNull<ActionBar>(supportActionBar).setHomeAsUpIndicator(R.drawable.back_button)
                 supportActionBar!!.setDisplayHomeAsUpEnabled(true)
                 toolbar!!.setNavigationOnClickListener {
                     //setLoading(true, true)
-                    removeFragment(lastFragment!!)
+                    setFragment(0)
                 }
             }
-            1-> {
-                existMenu = arrayListOf(true,true,true,false)
+            1 -> {
+                existMenu = true
                 invalidateOptionsMenu()
                 Objects.requireNonNull<ActionBar>(supportActionBar).setHomeAsUpIndicator(R.drawable.menu)
                 setDrawerLayout()
             }
-            2-> {
-                existMenu = arrayListOf(false,false,false,true)
-                invalidateOptionsMenu()
-                Objects.requireNonNull<ActionBar>(supportActionBar).setHomeAsUpIndicator(R.drawable.back_button)
-                supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-                toolbar!!.setNavigationOnClickListener {
-                    //setLoading(true, true)
-                    removeFragment(lastFragment!!)
-                }
-            }
         }
-
-        changeMenu = true
     }
 
-    fun setRE(re : RealEstate){
+    fun setRE(re: RealEstate) {
         this.realEstate = re
+        setEdit(true)
     }
 
-    fun unsetRE(){
+    fun unsetRE() {
+        setEdit(false)
+        if (realEstate != null) {
+            realEstate!!.isSelected = false
+            realEstateViewModel.updateRealEstate(realEstate!!)
+        }
         realEstate = null
         poi = null
         photos = null
+    }
+
+    private fun setEdit(bool: Boolean) {
+        if (bool) editItem.icon = enableEditIcon
+        else editItem.icon = disableEditIcon
     }
 
 }

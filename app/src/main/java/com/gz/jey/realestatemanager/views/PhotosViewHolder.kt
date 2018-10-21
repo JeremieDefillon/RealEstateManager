@@ -22,7 +22,7 @@ class PhotosViewHolder(photoView: View) : RecyclerView.ViewHolder(photoView), Vi
         val res = context.resources
         this.callbackWeakRef = WeakReference(callback)
 
-        this.legend.text =  res.getStringArray(R.array.rooms_ind)[photo.desc!!]
+        this.legend.text =  res.getStringArray(R.array.rooms_ind)[photo.legend!!]
         Glide.with(context)
                 .load(photo.image)
                 .into(this.photo)

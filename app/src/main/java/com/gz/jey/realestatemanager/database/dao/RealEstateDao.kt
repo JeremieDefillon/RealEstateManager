@@ -13,6 +13,9 @@ interface RealEstateDao {
     @Query("SELECT * FROM RealEstate WHERE id = :id")
     fun getRealEstate(id: Long): LiveData<RealEstate>
 
+    @Query("SELECT * FROM RealEstate WHERE isSelected = :get")
+    fun getRealEstateBySelect(get: Boolean = true): LiveData<RealEstate>
+
     @Query("SELECT * FROM RealEstate WHERE id = :id")
     fun getRealEstatesWithCursor(id: Long): Cursor
 
