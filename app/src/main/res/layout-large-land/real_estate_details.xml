@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/layout_border">
 
     <TextView
         android:id="@+id/no_real_estate"
@@ -21,7 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@color/colorWhite"
         android:orientation="vertical">
 
         <LinearLayout
@@ -29,7 +29,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dip"
             android:orientation="vertical">
-
 
             <TextView
                 android:layout_width="match_parent"
@@ -69,6 +68,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:orientation="horizontal">
+
+                <GridLayout
+                    android:id="@+id/stat_grid_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dip"
+                    android:layout_marginTop="10dip"
+                    android:layout_marginEnd="10dip"
+                    android:columnCount="2">
+
+                </GridLayout>
 
                 <GridLayout
                     android:layout_width="wrap_content"
@@ -131,17 +143,6 @@
                 </FrameLayout>
             </LinearLayout>
 
-            <GridLayout
-                android:id="@+id/stat_grid_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dip"
-                android:layout_marginTop="10dip"
-                android:layout_marginEnd="10dip"
-                android:columnCount="2">
-
-            </GridLayout>
 
 
         </LinearLayout>

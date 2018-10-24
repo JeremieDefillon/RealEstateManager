@@ -6,9 +6,7 @@ import android.net.Uri
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.Window
-import android.widget.Button
-import android.widget.ScrollView
-import android.widget.TextView
+import android.widget.*
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
 import com.gz.jey.realestatemanager.models.Code
@@ -21,8 +19,10 @@ class ViewDialogPhotoPicker {
 
     private lateinit var titleCanvas : TextView
     private lateinit var cancelBtn : Button
-    private lateinit var galleryBtn : Button
-    private lateinit var cameraBtn : Button
+    private lateinit var galleryBtn : LinearLayout
+    private lateinit var cameraBtn : LinearLayout
+    private lateinit var galleryImg : ImageView
+    private lateinit var cameraImg : ImageView
     private lateinit var galleryDraw : Drawable
     private lateinit var cameraDraw : Drawable
 
@@ -32,17 +32,19 @@ class ViewDialogPhotoPicker {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
-        dialog.setContentView(R.layout.dialog_photopicker)
+        dialog.setContentView(R.layout.dialog_photo_picker)
 
         titleCanvas = dialog.findViewById(R.id.title)
         cancelBtn = dialog.findViewById(R.id.cancel_btn)
         galleryBtn = dialog.findViewById(R.id.gallery_btn)
         cameraBtn = dialog.findViewById(R.id.camera_btn)
+        galleryImg = dialog.findViewById(R.id.gallery_img)
+        cameraImg = dialog.findViewById(R.id.camera_img)
 
         galleryDraw = SetImageColor.changeDrawableColor(activity.baseContext, R.drawable.gallery, ContextCompat.getColor(activity.baseContext, R.color.colorSecondary))
         cameraDraw = SetImageColor.changeDrawableColor(activity.baseContext, R.drawable.camera, ContextCompat.getColor(activity.baseContext, R.color.colorSecondary))
-        galleryBtn.background = galleryDraw
-        cameraBtn.background = cameraDraw
+        galleryImg.background = galleryDraw
+        cameraImg.background = cameraDraw
 
         cancelBtn.setOnClickListener {
             dialog.dismiss()

@@ -5,6 +5,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/layout_border"
     android:gravity="center">
 
     <ImageView
@@ -69,11 +70,7 @@
             android:id="@+id/ppm2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textColor="@color/colorSecondary"
-            android:textSize="18sp"/>
+            android:layout_weight="1"/>
     </LinearLayout>
-
-
 
 </LinearLayout>

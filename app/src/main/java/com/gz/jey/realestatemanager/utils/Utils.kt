@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
+import com.gz.jey.realestatemanager.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -70,30 +71,68 @@ object Utils{
      * convert today date in string format
      * @return String as dd/mm/yyyy format
      */
-    fun convertedHighPrice(currency : Int, text : String): String {
-        var hp : String
-        val s = if(currency==0) "," else "."
-        val end = text.length
-        val step = 3
-        val over = end-1
-        val mod = text.length%step
-        val start = mod+1
-        if(end>3){
-            hp = text.substring(0,mod)
-            for (i in start until end+1 step step){
-                val init = i-1
-                val max = i+2
-                hp += when {
-                    i==end && mod!=0 -> s + text.substring(init,over)
-                    mod==0 && i==start && i!=end -> text.substring(0,step)
-                    mod==0 && i!=start && i==end -> text.substring(init,over)
-                    mod==0 && i!=start && i!=end -> s + text.substring(init, max)
-                    else -> s + text.substring(init, max)
+    fun convertedHighPrice(context : Context, currency : Int?, price : Int?): String {
+        if(currency!=null && price!=null){
+            val text = price.toString()
+            var hp : String
+            val s = if(currency==0) "," else "."
+            val end = text.length
+            val step = 3
+            val over = end-1
+            val mod = text.length%step
+            val start = mod+1
+            if(end>3){
+                hp = text.substring(0,mod)
+                for (i in start until end+1 step step){
+                    val init = i-1
+                    val max = i+2
+                    hp += when {
+                        i==end && mod!=0 -> s + text.substring(init,over)
+                        mod==0 && i==start && i!=end -> text.substring(0,step)
+                        mod==0 && i!=start && i==end -> text.substring(init,over)
+                        mod==0 && i!=start && i!=end -> s + text.substring(init, max)
+                        else -> s + text.substring(init, max)
+                    }
                 }
-            }
-        }else
-            hp = text
+            }else
+                hp = text
 
-        return hp
+            return if(currency==1) hp + " " + context.getString(R.string.euro_symbol)
+            else context.getString(R.string.dollar_symbol) + " " + hp
+        }else
+            return context.getString(R.string.price) + " " + context.getString(R.string.nc)
+    }
+
+    fun getCurrencyFormat(context: Context, currency : Int?) : String{
+        val dl = context.getString(R.string.dollar_symbol) + " " + context.getString(R.string.dollar)
+        val er = context.getString(R.string.euro_symbol) + " " + context.getString(R.string.euro)
+        return if(currency!=null)
+            when(currency){
+                1-> er
+                else -> dl
+            }
+        else
+            ""
+    }
+
+    fun getSurfaceFormat(context: Context, surface : Int?) : String{
+        return if(surface!=null) surface.toString() + " " + context.getString(R.string.m2)
+        else context.getString(R.string.surface) + " " + context.getString(R.string.nc)
+    }
+
+    fun getRoomNumFormat(context : Context, room : Int?) : String{
+        return if(room!=null) "T"+room.toString()
+        else "T?"
+    }
+
+    fun getPPMFormat(context : Context, currency : Int?, price : Int?, surface : Int?) : String{
+        return if(currency!=null && price!=null && surface!=null){
+            val part : Int = price/surface
+            val str = this.convertedHighPrice(context,currency,part)
+           // val partStr = String.format("%.2f", str)
+             str + "/" + context.getString(R.string.m2)
+        }else{
+            context.getString(R.string.price)+"/"+context.getString(R.string.m2)+" "+context.getString(R.string.nc)
+        }
     }
 }

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
 
     <application
         android:allowBackup="true"
@@ -41,9 +42,17 @@
             android:authorities="com.gz.jey.realestatemanager.provider"
             android:exported="true"/>
         <provider
+            android:name=".provider.PhotosContentProvider"
+            android:authorities="com.gz.jey.realestatemanager.provider"
+            android:exported="true"/>
+        <provider
             android:name=".provider.SettingsContentProvider"
             android:authorities="com.gz.jey.realestatemanager.provider"
             android:exported="true"/>
     </application>
+
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="@string/google_maps_key" />
 
 </manifest>

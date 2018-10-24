@@ -22,56 +22,27 @@
             android:id="@+id/app_actionbar"
             layout="@layout/app_actionbar" />
 
-        <FrameLayout
-            android:id="@+id/fragment_container"
+        <LinearLayout
+           android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="?android:attr/actionBarSize">
-        </FrameLayout>
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_weight="30"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                />
+            <FrameLayout
+                android:id="@+id/fragment_details"
+                android:layout_weight="70"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                />
+        </LinearLayout>
 
     </FrameLayout>
-<!--
-    <FrameLayout
-        android:id="@+id/loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/login_screen"
-        android:visibility="gone">
 
-        <TextView
-            android:id="@+id/title_loading"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="@string/app_name"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textSize="30sp"
-            android:textColor="@color/colorWhite"/>
-
-        <TextView
-            android:id="@+id/label_loading"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:text="@string/inLoading"
-            android:textStyle="italic"
-            android:gravity="center"
-            android:textSize="25sp"
-            android:textColor="@color/colorPrimaryDark"/>
-
-        <TextView
-            android:id="@+id/content_loading"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:textStyle="italic"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="50dip"
-            android:gravity="center"
-            android:textSize="17sp"
-            android:textColor="@color/colorWhite"/>
-
-    </FrameLayout>
--->
     <!-- 2 | NavigationView -->
     <android.support.design.widget.NavigationView
         android:id="@+id/activity_main_nav_view"

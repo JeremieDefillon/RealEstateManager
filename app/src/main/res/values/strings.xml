@@ -20,8 +20,12 @@
     <string name="insert">Insert</string>
     <string name="legend">Legend</string>
     <string name="pick_up_photo">Pick up Photo</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
     <string name="loading">Loading ...</string>
+    <string name="search_address">Search Address</string>
     <string name="nc">NC</string>
+    <string name="m2">m²</string>
 
     <!-- ADD & UPDATE LABELS  -->
     <string name="currency">Currency</string>

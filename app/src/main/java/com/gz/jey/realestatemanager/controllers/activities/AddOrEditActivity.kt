@@ -1,12 +1,13 @@
 package com.gz.jey.realestatemanager.controllers.activities
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.lifecycle.Observer
 import android.content.Intent
-import android.graphics.Color
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
@@ -19,6 +20,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.places.GeoDataClient
+import com.google.android.gms.maps.model.LatLng
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.dialog.*
 import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
@@ -29,6 +33,7 @@ import com.gz.jey.realestatemanager.utils.ItemClickSupport
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
 import com.gz.jey.realestatemanager.views.PhotosAdapter
+import com.gz.jey.realestatemanager.views.PlacesAdapter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -41,6 +46,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
     private lateinit var disableSaveIcon: Drawable
     private var toolMenu: Menu? = null
     var toolbar: Toolbar? = null
+    private var saveItem: MenuItem? = null
     lateinit var container : LinearLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PhotosAdapter
@@ -54,21 +60,21 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
     private lateinit var addIcon : Drawable
     private lateinit var removeIcon : Drawable
     // FOR DATA
-    lateinit var realEstateViewModel: RealEstateViewModel
+    private lateinit var realEstateViewModel: RealEstateViewModel
     lateinit var database: RealEstateManagerDatabase
-    var enableSave = false
-    var changeMenu = false
-    private var oblArray : ArrayList<Int> = arrayListOf(0,2,11)
+    private var enableSave = false
+    private var oblArray : ArrayList<Int> = arrayListOf(0,2,11,12,15)
     private val poiList : ArrayList<Int> = ArrayList()
-    val photosList : ArrayList<Photos> = ArrayList()
+    private val photosList : ArrayList<Photos> = ArrayList()
     private val checks : ArrayList<ImageView?> = ArrayList()
     private val values : ArrayList<TextView?> = ArrayList()
+    private val marks : ArrayList<TextView?> = ArrayList()
     private val results : ArrayList<String> = ArrayList()
 
     private var phId : Long? = null
     // FOR REALESTATE SELECTOR
     var insert : Int? = null
-    var realEstate: RealEstate? = null
+    private var realEstate: RealEstate? = null
     var poi: List<PointsOfInterest>? = null
     var photos: List<Photos>? = null
 
@@ -86,6 +92,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
      * INIT ACTIVITY
      */
     private fun init() {
+        //
         this.configureToolBar()
         this.setIcon()
         this.setItems()
@@ -101,6 +108,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
                 9 -> {
                     val child : View = inflater.inflate(R.layout.add_edit_big_fields, null)
                     container.addView(child)
+                    marks.add(null)
                     checks.add(null)
                     values.add(child.findViewById(R.id.value_description))
                     results.add("")
@@ -110,6 +118,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
                     recyclerView = child.findViewById(R.id.photos_recycler_view)
                     configureRecyclerView()
                     container.addView(child)
+                    marks.add(null)
                     checks.add(null)
                     values.add(null)
                     results.add("")
@@ -117,25 +126,23 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
                 else ->{
                     val child : View = inflater.inflate(R.layout.add_edit_item, null)
                     container.addView(child)
-                    if(i==17)
-                        container.getChildAt(17).visibility = View.GONE
-                    val mark = child.findViewById<TextView>(R.id.mark)
+                    marks.add(child.findViewById(R.id.mark))
+                    values.add(child.findViewById(R.id.value))
+                    checks.add(child.findViewById(R.id.check))
+                    results.add("")
                     val label = child.findViewById<TextView>(R.id.label)
-                    val value = child.findViewById<TextView>(R.id.value)
                     val remove = child.findViewById<Button>(R.id.remove)
                     val edit = child.findViewById<Button>(R.id.edit)
-                    val check = child.findViewById<ImageView>(R.id.check)
 
-                    if(oblArray.contains(i)) mark.setTextColor(getC(R.color.colorAccent))
-                    else mark.setTextColor(getC(R.color.colorTransparent))
                     label.text = resources.getStringArray(R.array.add_edit_ind)[i]
                     remove.background = removeIcon
                     remove.visibility = View.GONE
                     edit.background = if(i==12)addIcon else editIcon
-                    check.background = unvalidIcon
-                    checks.add(check)
-                    values.add(value)
-                    results.add("")
+                    checks[i]!!.background = unvalidIcon
+
+                    if(oblArray.contains(i)) marks[i]!!.setTextColor(getC(R.color.colorPrimary))
+                    else marks[i]!!.setTextColor(getC(R.color.colorTransparent))
+
                     edit.setOnClickListener { openDialog(i) }
                     if(i==12){
                         removePhoto = remove
@@ -167,9 +174,8 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         toolMenu = menu
         // Inflate the menu and add it to the Toolbar
         menuInflater.inflate(R.menu.add_edit_menu, toolMenu)
-        if (enableSave) menu.getItem(0).icon = enableSaveIcon
-        else menu.getItem(0).icon = disableSaveIcon
-
+        saveItem = menu.getItem(0)
+        setSave(enableSave)
         return true
     }
 
@@ -249,7 +255,6 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
                     getDtbValue(index)
             }
         })
-        changeMenu = true
     }
 
     private fun openDialog(index : Int){
@@ -257,7 +262,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         val res : ArrayList<String> = ArrayList()
         when(index){
             0 -> {ViewDialogInputText().showDialog(this, Code.DISTRICT, res)}
-            1 -> {ViewDialogInputText().showDialog(this, Code.ADDRESS, res)}
+            1 -> {ViewDialogInputAddress().showDialog(this, this, res)}
             2 -> {ViewDialogMultiChoice().showDialog(this, Code.TYPE, res)}
             3 -> {ViewDialogInputText().showDialog(this, Code.SURFACE, res)}
             4 -> {ViewDialogInputText().showDialog(this, Code.ROOM_NUM, res)}
@@ -280,6 +285,8 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
 
     private fun saveRealEstate() {
         enableSave = false
+        setSave(enableSave)
+        //results[18] = "Jey"
         val re = RealEstate(realEstate!!.id,
                 if(results[0].isNotEmpty()) results[0] else null,
                 if(results[1].isNotEmpty()) results[1] else null,
@@ -298,6 +305,8 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
                 if(results[18].isNotEmpty()) results[18] else null,
                 false
         )
+
+        Log.d( "RE SAVE" , re.toString())
 
         if(realEstate!!.id!=null)
             realEstateViewModel.updateRealEstate(re)
@@ -341,7 +350,8 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
                 18 -> if(realEstate!!.agentName!=null) realEstate!!.agentName.toString() else ""
                 else -> return
             }
-            Log.d(code.toString(), result)
+           // Log.d("GET DTB "+code.toString(), result)
+            results[code] = result
             resArray.add(result)
             insertEditedValue(resArray)
         }else if(code== 12){
@@ -366,24 +376,10 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         }
     }
 
-    private fun setCurrency(n : Int){
-        val dl = getString(R.string.dollar_symbol) + " " + getString(R.string.dollar)
-        val er = getString(R.string.euro_symbol) + " " + getString(R.string.euro)
-        when(n){
-            0-> values[10]!!.text = dl
-            1-> values[10]!!.text = er
-        }
-        validate(10, true)
-    }
-
     private fun loadMainActivity() {
-        if(realEstate!=null){
-            this.realEstate!!.isSelected = false
-            realEstateViewModel.updateRealEstate(realEstate!!)
-        }
-
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun setIcon(){
@@ -399,48 +395,56 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
     }
 
     fun insertEditedValue(array : ArrayList<String>){
-        var str = ""
-        var add = 0
-        when(insert){
-            2 -> { if(array.isNotEmpty()){
-                    if(array[0].isNotEmpty()) str = resources.getStringArray(R.array.type_ind)[array[0].toInt()]
-                    results[insert!!] = array[0]
-                }else{
-                    str = ""
-                    results[insert!!] = ""
+        if(array.isNotEmpty() && array[0].isNotEmpty()){
+            results[insert!!] = array[0]
+            when(insert){
+                2 -> {values[2]!!.text = resources.getStringArray(R.array.type_ind)[array[0].toInt()]}
+                3 -> {values[3]!!.text = if(results[insert!!].isNotEmpty()) Utils.getSurfaceFormat(this, results[insert!!].toInt()) else ""}
+                8 -> {values[9]!!.text = results[insert!!]
+                    if(values[9]!!.text.isNotEmpty()) validate(8, true) else validate(8, false)
+                }
+                10 -> { results[insert!!] = if(results[insert!!].isNotEmpty()) results[insert!!] else "0"
+                    values[10]!!.text = Utils.getCurrencyFormat(this, results[insert!!].toInt())
+                }
+                12 -> {}
+                15 -> { results[insert!!] = if(results[insert!!].isNotEmpty()) results[insert!!] else "0"
+                    values[15]!!.text = resources.getStringArray(R.array.status_ind)[results[insert!!].toInt()]}
+                14 -> {
+                    poiList.clear()
+                    var str = ""
+                    for (i in 0 until array.size){
+                        poiList.add(array[i].toInt())
+                        val sent = resources.getStringArray(R.array.poi_ind)[array[i].toInt()]
+                        val coma = if (i==(array.size-1)) "" else ","
+                        str += "$sent$coma"
+                    }
+                }
+                else -> {val str = results[insert!!]
+                    if(str.length > 28)
+                        str.substring(0, 25) + " ..."
+                    values[insert!!]!!.text = str
                 }
             }
-            8 -> { add = 1
-                str = array[0]
-                results[insert!!] = array[0]
-            }
-            10 -> if(array[0].isNotEmpty()) setCurrency(array[0].toInt()) else setCurrency(0)
-            12 -> {}
-            15 -> { if(array[0].isNotEmpty()) str = resources.getStringArray(R.array.status_ind)[array[0].toInt()]}
-            14 -> {
-                poiList.clear()
-                for (i in 0 until array.size){
-                    poiList.add(array[i].toInt())
-                    val sent = resources.getStringArray(R.array.poi_ind)[array[i].toInt()]
-                    val coma = if (i==(array.size-1)) "" else ","
-                    str += "$sent$coma"
+            if(values[insert!!]!!.text.isNotEmpty()) validate(insert!!, true) else validate(insert!!, false)
+        }else{
+            results[insert!!] = ""
+            when(insert){
+                8 -> {values[9]!!.text = ""
+                    validate(8, false)
                 }
-            }
-            else -> {
-                if(array.size>0)
-                    str = array[0]
-                results[insert!!] = array[0]
+                12 -> {}
+                14 -> {
+                    poiList.clear()
+                    values[14]!!.text = ""
+                    validate(14, false)
+                }
+                else -> {
+                    values[insert!!]!!.text = ""
+                    validate(insert!!, false)
+                }
             }
         }
-        if(insert!=9 && insert!=13)
-            if(array.size>0 && str.isNotEmpty()) validate(insert!!, true) else validate(insert!!, false)
-        val ind = insert!! + add
-        if(str.length > 30 && add ==0)
-            str = str.substring(0, 26) + " ..."
-
-
-        if(insert!=12 && insert!=13)
-            values[ind]!!.text = str
+        insert = null
     }
 
     fun savePhoto(uri: String, legend : Int){
@@ -458,6 +462,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         }else
             recyclerView.visibility = View.GONE
 
+        if(photosList.isNotEmpty()) validate(12, true) else validate(12, false)
     }
 
     private fun selectPhoto( pos : Int){
@@ -467,7 +472,6 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         }else{
             removePhoto.visibility = View.GONE
         }
-
     }
 
     private fun getC(c : Int) : Int{
@@ -477,16 +481,90 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
 
     private fun validate(ind : Int, bool: Boolean){
         val icon = if(bool) validIcon else unvalidIcon
-        checks[ind]!!.setImageDrawable(icon)
+        checks[ind]!!.background = icon
+
+        when(results[15]){
+            "0" -> {oblArray.add(16)
+                    if(oblArray.contains(17))
+                        oblArray.remove(17)
+                    marks[16]!!.setTextColor(getC(R.color.colorPrimary))
+                    marks[17]!!.setTextColor(getC(R.color.colorTransparent))
+            }
+            "1"-> {oblArray.add(17)
+                    if(oblArray.contains(16))
+                        oblArray.remove(16)
+                marks[16]!!.setTextColor(getC(R.color.colorTransparent))
+                marks[17]!!.setTextColor(getC(R.color.colorPrimary))
+            }
+        }
+
         var c = 0
         for (i in oblArray){
-            if(checks[i]!!.drawable == unvalidIcon){
+            if(checks[i]!!.background == unvalidIcon){
                 c++
                 break
             }
         }
         enableSave = c == 0
-        changeMenu = true
+        setSave(enableSave)
+    }
+
+    private fun setSave(bool: Boolean) {
+        if(saveItem!=null){
+            if (bool) saveItem!!.icon = enableSaveIcon
+            else saveItem!!.icon = disableSaveIcon
+        }
+    }
+
+    /////////////////////////////////////////
+    ///// LOCATION //////////////////////////
+    /////////////////////////////////////////
+
+
+
+    // FOR PERMISSIONS
+    private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 34
+    var mLocationPermissionGranted: Boolean = false
+    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
+
+    var mLastKnownLocation: LatLng? = null
+
+    /**
+     * GET DEVICE LOCATION
+     */
+    @SuppressLint("MissingPermission")
+    fun getDeviceLocation() {
+        mFusedLocationProviderClient.lastLocation
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        Log.d(TAG, " TASK DEVICE LOCATION SUCCESS")
+                        mLastKnownLocation = (LatLng(task.result!!.latitude, task.result!!.longitude))
+
+                    } else {
+                        Log.e("MAP LOCATION", "Exception: %s", task.exception)
+                        // Prompt the user for permission.
+                        getLocationPermission()
+                    }
+                }
+    }
+
+    /**
+     * GET LOCATION PERMISSION
+     */
+    private fun getLocationPermission() {
+        /*
+     * Request location permission, so that we can get the location of the
+     * device. The result of the permission request is handled by a callback,
+     * onRequestPermissionsResult.
+     */
+        if (ContextCompat.checkSelfPermission(applicationContext,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true
+            getDeviceLocation()
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
+        }
     }
 
 }

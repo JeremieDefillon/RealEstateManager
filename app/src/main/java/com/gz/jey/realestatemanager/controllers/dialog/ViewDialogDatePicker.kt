@@ -28,7 +28,7 @@ class ViewDialogDatePicker {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
-        dialog.setContentView(R.layout.dialog_datepicker)
+        dialog.setContentView(R.layout.dialog_date_picker)
 
         titleCanvas = dialog.findViewById(R.id.title)
         inputDate = dialog.findViewById(R.id.date_picker)

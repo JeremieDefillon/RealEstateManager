@@ -9,13 +9,11 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.Window
 import android.widget.Button
-import android.widget.RadioButton
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.utils.Utils
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -34,7 +32,7 @@ class ViewDialogInputText {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
-        dialog.setContentView(R.layout.dialog_inputtext)
+        dialog.setContentView(R.layout.dialog_input_text)
 
         titleCanvas = dialog.findViewById(R.id.title)
         inputText = dialog.findViewById(R.id.input_text)
@@ -99,8 +97,8 @@ class ViewDialogInputText {
 
     private fun getPriceOverview(activity: Activity, ed: String): String {
         val sb = StringBuilder()
-        val edit = if (ed.isEmpty()) "0" else ed
-        val num = Utils.convertedHighPrice(0, edit)
+        val edit = if (ed.isEmpty()) 0 else ed.toInt()
+        val num = Utils.convertedHighPrice(activity, 0, edit)
         val overv = activity.getString(R.string.overview)
 
         val currency = 1

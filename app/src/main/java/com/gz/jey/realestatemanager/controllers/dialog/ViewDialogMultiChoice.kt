@@ -13,9 +13,7 @@ import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
 import com.gz.jey.realestatemanager.models.Code
 import java.util.*
 
-
 class ViewDialogMultiChoice {
-
     private lateinit var titleCanvas: TextView
     private lateinit var scrollView: ScrollView
     private lateinit var inputChoice: GridLayout
@@ -25,6 +23,9 @@ class ViewDialogMultiChoice {
 
     private val list: ArrayList<String> = ArrayList()
     private var result: ArrayList<String> = ArrayList()
+
+    private val chk: ArrayList<CheckBox> = ArrayList()
+    private val rdb: ArrayList<RadioButton> = ArrayList()
     private var uri: String? = null
 
     private var checkCode: Int? = null
@@ -89,7 +90,7 @@ class ViewDialogMultiChoice {
         }
 
         titleCanvas.text = "$editLbl $titleLbl"
-        setCheckList(activity, dialog, list)
+        setCheckList(activity, code, list)
         dialog.show()
 
     }
@@ -100,8 +101,7 @@ class ViewDialogMultiChoice {
                 editBtn.setOnClickListener {
                     for (i in 0 until list.size) {
                         result.clear()
-                        val resourceId = activity.resources.getIdentifier("check_$i", "id", activity.packageName)
-                        if ((dialog.findViewById(resourceId) as RadioButton).isChecked) {
+                        if (rdb[i].isChecked) {
                             result.add(i.toString())
                             break
                         }
@@ -114,10 +114,8 @@ class ViewDialogMultiChoice {
                 editBtn.setOnClickListener {
                     result.clear()
                     for (i in 0 until list.size) {
-                        val resourceId = activity.resources.getIdentifier("check_$i", "id", activity.packageName)
-                        if (dialog.findViewById<CheckBox>(resourceId).isChecked) {
+                        if (chk[i].isChecked)
                             result.add(i.toString())
-                        }
                     }
                     activity.insertEditedValue(result)
                     dialog.dismiss()
@@ -127,8 +125,7 @@ class ViewDialogMultiChoice {
                 editBtn.setOnClickListener {
                     for (i in 0 until list.size) {
                         result.clear()
-                        val resourceId = activity.resources.getIdentifier("check_$i", "id", activity.packageName)
-                        if ((dialog.findViewById(resourceId) as RadioButton).isChecked) {
+                        if (rdb[i].isChecked) {
                             activity.savePhoto(uri!!, i)
                             dialog.dismiss()
                             break
@@ -139,7 +136,7 @@ class ViewDialogMultiChoice {
         }
     }
 
-    private fun setCheckList(activity: AddOrEditActivity, dialog: Dialog, list: ArrayList<String>) {
+    private fun setCheckList(activity: AddOrEditActivity, code : Int, list: ArrayList<String>) {
         val params = scrollView.layoutParams
         when (activity.resources.configuration.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
@@ -150,6 +147,8 @@ class ViewDialogMultiChoice {
                 inputChoice.columnCount =  Math.ceil(list.size / 14.0).toInt()
                 Log.d("PORTRAIT", params.height.toString())}
         }
+        rdb.clear()
+        chk.clear()
 
         for (i in 0 until list.size) {
             lateinit var checkBtn: View
@@ -159,47 +158,37 @@ class ViewDialogMultiChoice {
                     checkBtn = LayoutInflater.from(activity).inflate(R.layout.radio_btn, null)
                     checkBtn.id = resourceId
                     inputChoice.addView(checkBtn)
-                    val rd = dialog.findViewById<RadioButton>(resourceId)
-                    rd.text = list[i]
-                    Log.d(rd.text.toString(),list[i])
-                    rd.setOnClickListener {
-                        checkedSingle(activity ,dialog, i, list.size)
-                    }
+                    rdb.add(inputChoice.getChildAt(i) as RadioButton)
+                    rdb[i].text = list[i]
+                    rdb[i].setOnClickListener { checkedSingle(i)}
                 }
                 Code.MULTICHECK -> {
                     checkBtn = LayoutInflater.from(activity).inflate(R.layout.check_btn, null)
                     checkBtn.id = resourceId
                     inputChoice.addView(checkBtn)
-                    val rd = dialog.findViewById<CheckBox>(resourceId)
-                    rd.text = list[i]
+                    chk.add(inputChoice.getChildAt(i) as CheckBox)
+                    chk[i].text = list[i]
                 }
             }
         }
 
-        for (i in 0 until result.size) {
-            val n: String? = result[i]
-            if (n != null) {
-                val resourceId = activity.resources.getIdentifier("check_$n", "id", activity.packageName)
-                when (checkCode) {
-                    Code.SOLOCHECK -> {
-                        val rd = dialog.findViewById<RadioButton>(resourceId)
-                        if (rd != null)
-                            rd.isChecked = true
-                    }
-                    Code.MULTICHECK -> {
-                        val rd = dialog.findViewById<CheckBox>(resourceId)
-                        rd.isChecked = true
+        if(code!=Code.LEGEND){
+            for (i in 0 until result.size) {
+                val n: Int? = if(result[i].isNotEmpty()) result[i].toInt() else null
+                if (n != null) {
+                    when (checkCode) {
+                        Code.SOLOCHECK -> { rdb[n].isChecked = true }
+                        Code.MULTICHECK -> { chk[n].isChecked = true }
                     }
                 }
             }
         }
     }
 
-    private fun checkedSingle(activity : AddOrEditActivity, dialog: Dialog ,c : Int, max :Int){
-        for (i in 0 until max){
-            val resourceId = activity.resources.getIdentifier("check_$i", "id", activity.packageName)
+    private fun checkedSingle(c : Int){
+        for (i in 0 until rdb.size){
             if(i!=c)
-                dialog.findViewById<RadioButton>(resourceId).isChecked = false
+                rdb[i].isChecked = false
         }
     }
 }

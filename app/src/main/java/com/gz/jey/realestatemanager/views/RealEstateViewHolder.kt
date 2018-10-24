@@ -1,5 +1,6 @@
 package com.gz.jey.realestatemanager.views
 
+import android.content.Context
 import android.net.Uri
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -30,19 +31,17 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     private var callbackWeakRef: WeakReference<RealEstateAdapter.Listener>? = null
 
 
-    fun updateWithRealEstate(item: RealEstate, img: Photos?, callback: RealEstateAdapter.Listener) {
+    fun updateWithRealEstate(context : Context, item: RealEstate, img: Photos, callback: RealEstateAdapter.Listener) {
         val res = itemView.context.resources
         this.callbackWeakRef = WeakReference(callback)
         this.type.text = if(item.type != null) res.getStringArray(R.array.type_ind)[item.type!!] else ""
         this.district.text = item.district
-        this.nr.text = if(item.room != null)"T" + item.room else "T?"
-        this.surface.text = if(item.surface != null) item.surface.toString() + "m2" else "surface : NC"
-        this.ppm2.text = if(item.surface!=null && item.price!=null) getPPM(item.price!!, item.surface!!).toString() + res.getString(R.string.euro_symbol) else "NC"
-        val currency = 1
-        this.price.text = if (currency==1) Utils.convertedHighPrice(currency,item.price.toString()) + res.getString(R.string.euro_symbol)
-                            else  res.getString(R.string.dollar_symbol)+Utils.convertedHighPrice(currency, item.price.toString())
+        this.nr.text = Utils.getRoomNumFormat(context, item.room)
+        this.surface.text = Utils.getSurfaceFormat(context, item.surface)
+        this.ppm2.text = Utils.getPPMFormat(context, item.currency, item.price, item.surface)
+        this.price.text = Utils.convertedHighPrice(context, item.currency, item.price)
 
-        if(img!=null)
+        if(img.id!=null)
             Glide.with(itemView.context)
                 .load(Uri.parse(img.image))
                 .into(this.photo)

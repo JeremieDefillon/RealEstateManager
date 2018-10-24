@@ -17,18 +17,17 @@ import com.gz.jey.realestatemanager.models.RealEstate
 import com.gz.jey.realestatemanager.utils.ItemClickSupport
 import com.gz.jey.realestatemanager.views.RealEstateAdapter
 
-class RealEstateList : Fragment(), RealEstateAdapter.Listener{
-    private var mView : View? = null
+class RealEstateList : Fragment(), RealEstateAdapter.Listener {
+    private var mView: View? = null
 
     var mainActivity: MainActivity? = null
     private var adapter: RealEstateAdapter? = null
-    private var recyclerView : RecyclerView? = null
-    private var infoText : TextView? = null
+    private var recyclerView: RecyclerView? = null
+    private var infoText: TextView? = null
+    private var itemPos: Int? = null
+    private var slct: Int = 0
+    private var maxClick = 1
 
-    private var photo : Photos? = null
-
-    private var selected = false
-    private var re : RealEstate? = null
 
     /**
      * CALLED ON INSTANCE OF THIS FRAGMENT TO CREATE VIEW
@@ -40,6 +39,7 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener{
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.real_estate_list, container, false)
         mainActivity = activity as MainActivity
+        maxClick = if (mainActivity!!.tabLand) 1 else 2
         return mView
     }
 
@@ -53,7 +53,7 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener{
         this.infoText = view.findViewById(R.id.re_text)
         this.recyclerView = view.findViewById(R.id.real_estate_recycler_view)
         configureRecyclerView()
-        initRealEstateList()
+        init()
     }
 
     override fun onClickDeleteButton(position: Int) {
@@ -62,14 +62,19 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener{
 
 
     private fun configureRecyclerView() {
-        this.adapter = RealEstateAdapter(this)
+        this.adapter = RealEstateAdapter(this.context!!, this)
         this.recyclerView!!.adapter = this.adapter
         this.recyclerView!!.layoutManager = LinearLayoutManager(this.context)
         ItemClickSupport.addTo(recyclerView, R.layout.real_estate_item)
-                .setOnItemClickListener { _, position, _ -> this.updateRealEstate(this.adapter!!.getRealEstate(position), this.adapter!!.getAllRealEstate())}
+                .setOnItemClickListener { _, position, _ ->
+                    if (itemPos != position && slct != maxClick) {
+                        itemPos = position
+                        this.updateRealEstate(this.adapter!!.getRealEstate(position), this.adapter!!.getAllRealEstate())
+                    }
+                }
     }
 
-    private fun initRealEstateList(){
+    private fun init() {
         Log.d("RE LIST", "OK")
         getRealEstates()
     }
@@ -78,43 +83,61 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener{
         mainActivity!!
                 .realEstateViewModel
                 .getAllRealEstate()
-                .observe(this, Observer<List<RealEstate>>{ re -> updateRealEstateList(re!!)})
+                .observe(this, Observer<List<RealEstate>> { re -> updateRealEstateList(re!!) })
     }
 
     private fun updateRealEstate(realEstate: RealEstate, realEstates: List<RealEstate>) {
-        for (r in realEstates){
-            if(r == realEstate) {
-                this.selected = r == mainActivity!!.realEstate
-                mainActivity!!.setRE(realEstate)
-                r.isSelected = true
-            }else{
+        realEstate.isSelected = true
+
+        for (r in realEstates) {
+            if (r != realEstate) {
                 r.isSelected = false
             }
             mainActivity!!.realEstateViewModel.updateRealEstate(r)
         }
 
-        if(realEstate.isSelected){
-            if(this.selected)
-                mainActivity!!.setFragment(1)
+        if(mainActivity!!.realEstate == realEstate && !mainActivity!!.tabLand){
+            slct = 2
         }else{
-            this.selected = false
-            mainActivity!!.unsetRE()
+            mainActivity!!.setRE(realEstate)
+            slct++
         }
 
+
+        if (slct == maxClick ) {
+            mainActivity!!.setRE(realEstate)
+            slct = 0
+            if (mainActivity!!.tabLand){
+                mainActivity!!.realEstateDetails!!.init()
+            }
+            else{
+                realEstate.isSelected = false
+                mainActivity!!.realEstateViewModel.updateRealEstate(realEstate)
+                mainActivity!!.setFragment(1)
+            }
+        }
     }
 
     private fun updateRealEstateList(items: List<RealEstate>) {
         Log.d("RE LIST", items.toString())
-        if(items.isEmpty())
+        if (items.isEmpty())
             infoText!!.text = "No Real Estate found !"
         else
             infoText!!.visibility = View.GONE
 
-        val photos : ArrayList<Photos?> = ArrayList()
-        for (it in items){
-            photos.add(getMainPhoto(it))
+        val photos: ArrayList<Photos?> = ArrayList()
+        for ((i, it) in items.withIndex()) {
+            mainActivity!!.realEstateViewModel.getAllPhotos(it.id!!).observe(this, Observer<List<Photos>> { p ->
+                if (p!!.isNotEmpty()) photos.add(p[0])
+                else {
+                    val ph = Photos(null, null, null, null)
+                    photos.add(ph)
+                }
+
+                if (i >= items.size - 1)
+                    this.adapter!!.updateData(items, photos as List<Photos>)
+            })
         }
-        this.adapter!!.updateData(items, photos as List<Photos>)
     }
 
     override fun onDestroy() {
@@ -122,25 +145,12 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener{
         this.mainActivity = null
     }
 
-    private fun getMainPhoto(it : RealEstate): Photos?{
-        mainActivity!!.realEstateViewModel.getAllPhotos(it.id!!).observe(this, Observer<List<Photos>>{
-            p -> this.photo = if(p!!.isNotEmpty()){
-                Log.d("IS", "NOT NULL")
-                p[0]
-            }else{
-                Log.d("IS", "NULL")
-                null
-            }
-        })
-        return this.photo
-    }
-
     companion object {
         /**
          * @param mainActivity MainActivity
          * @return new RealEstateList()
          */
-        fun newInstance(mainActivity : MainActivity): RealEstateList {
+        fun newInstance(mainActivity: MainActivity): RealEstateList {
             val fragment = RealEstateList()
             fragment.mainActivity = mainActivity
             return fragment

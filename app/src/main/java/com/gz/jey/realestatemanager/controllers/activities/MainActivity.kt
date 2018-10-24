@@ -1,6 +1,5 @@
 package com.gz.jey.realestatemanager.controllers.activities
 
-import android.app.Application
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.lifecycle.Observer
 import android.content.Intent
@@ -17,6 +16,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
@@ -55,6 +55,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var database: RealEstateManagerDatabase
     private var settings : Settings? = null
     private var existMenu: Boolean = false
+    var tabLand: Boolean = false
+
 
     // FOR REALESTATE SELECTOR
     var realEstate: RealEstate? = null
@@ -68,14 +70,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
-
+        tabLand = (findViewById<View>(R.id.fragment_details) != null)
         setLang()
         setIcon()
         //loading = findViewById(R.id.loading)
         //loadingContent = findViewById(R.id.content_loading)
         //loadingContent!!.text = getString(R.string.initActivity)
         //setLoading(true, true)
-        fragmentContainer = findViewById(R.id.fragmentContainer)
+        fragmentContainer = findViewById(R.id.fragment_container)
 
         //Log.d("ENABLE NOTIF ???", Data.enableNotif.toString())
 
@@ -105,6 +107,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         this.configureToolBar()
         this.setDrawerLayout()
         this.setViewModel()
+        this.realEstateList = RealEstateList.newInstance(this)
+        this.realEstateDetails = RealEstateDetails.newInstance(this)
         this.setFragment(0)
     }
 
@@ -239,31 +243,44 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //   fromNotif=false
         //  execRequest(CODE_DETAILS)
         //}else {
-        var fragment: Fragment? = null
-        invalidateOptionsMenu()
-        // Data.tab = index
-        when (index) {
-            0 -> {
-                changeToolBarMenu(1)
-                this.realEstateList = RealEstateList.newInstance(this)
-                fragment = this.realEstateList
+
+        //A - We only add DetailFragment in Tablet mode (If found frame_layout_detail)
+        if (tabLand) {
+            invalidateOptionsMenu()
+            changeToolBarMenu(1)
+            this.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, this.realEstateList)
+                    .commit()
+
+            this.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_details, this.realEstateDetails)
+                    .commit()
+        }else{
+            var fragment: Fragment? = null
+            invalidateOptionsMenu()
+            // Data.tab = index
+            when (index) {
+                0 -> {
+                    changeToolBarMenu(1)
+                    fragment = this.realEstateList
+                }
+
+                1 -> {
+                    changeToolBarMenu(2)
+                    fragment = this.realEstateDetails
+                }
             }
 
-            1 -> {
-                changeToolBarMenu(2)
-                this.realEstateDetails = RealEstateDetails.newInstance(this)
-                fragment = this.realEstateDetails
-            }
+            this.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit()
         }
-
-        this.supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, fragment)
-                .commit()
     }
 
     private fun addOrEditActivity() {
         val intent = Intent(this, AddOrEditActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun changeToolBarMenu(em: Int) {

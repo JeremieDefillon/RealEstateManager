@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
@@ -36,6 +37,9 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
     private lateinit var photos : List<Photos>
 
     // FOR VIEWS
+    private lateinit var noRe : TextView
+    private lateinit var scrv : ScrollView
+
     private lateinit var recyclerView : RecyclerView
     private lateinit var descriptionValue : TextView
     private lateinit var locationIcon : ImageView
@@ -43,11 +47,6 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
     private lateinit var mapReceiver : ImageView
     private lateinit var nfLocation : TextView
     private lateinit var statGridLayout : GridLayout
-    private lateinit var priceIcon : ImageView
-    private lateinit var priceValue : TextView
-    private lateinit var saleStatusIcon : ImageView
-    private lateinit var statusText : TextView
-    private lateinit var agentName : TextView
 
     private var photo : Photos? = null
 
@@ -72,6 +71,8 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         this.photos = ArrayList()
+        this.noRe = view.findViewById(R.id.no_real_estate)
+        this.scrv = view.findViewById(R.id.scroll_view)
         this.recyclerView = view.findViewById(R.id.media_recycler_view)
         this.descriptionValue = view.findViewById(R.id.description_value)
         this.locationIcon = view.findViewById(R.id.location_icon)
@@ -79,13 +80,8 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
         this.mapReceiver = view.findViewById(R.id.map_receiver)
         this.nfLocation = view.findViewById(R.id.nf_location)
         this.statGridLayout = view.findViewById(R.id.stat_grid_layout)
-        this.priceIcon = view.findViewById(R.id.price_icon)
-        this.priceValue = view.findViewById(R.id.price_value)
-        this.saleStatusIcon = view.findViewById(R.id.sale_status_icon)
-        this.statusText = view.findViewById(R.id.status_text)
-        this.agentName = view.findViewById(R.id.agent_name)
         configureRecyclerView()
-        initRealEstateDetails()
+        init()
     }
 
     private fun configureRecyclerView() {
@@ -95,17 +91,23 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
         this.recyclerView.layoutManager = llm
     }
 
-    private fun initRealEstateDetails(){
+    fun init(){
         Log.d("RE DETAILS", "OK")
         getRealEstate()
     }
 
     private fun getRealEstate() {
-        mainActivity!!.realEstateViewModel.getRealEstate(mainActivity!!.realEstate!!.id!!).observe(this, Observer<RealEstate>{ re -> updateRealEstateDetails(re!!)})
+        if(mainActivity!!.realEstate!=null) {
+            scrv.visibility = View.VISIBLE
+            noRe.visibility = View.GONE
+            mainActivity!!.realEstateViewModel.getRealEstate(mainActivity!!.realEstate!!.id!!).observe(this, Observer<RealEstate> { re -> updateRealEstateDetails(re!!) })
+        }else{
+            scrv.visibility = View.GONE
+            noRe.visibility = View.VISIBLE
+        }
     }
 
     private fun updateRealEstateDetails(item: RealEstate) {
-        mainActivity!!.unsetRE()
         val black = ContextCompat.getColor(view!!.context, R.color.colorBlack)
         val second = ContextCompat.getColor(view!!.context, R.color.colorSecondary)
         val grey = ContextCompat.getColor(view!!.context, R.color.colorGrey)
@@ -125,7 +127,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
             nfLocation.visibility = View.GONE
         }
         val inflater : LayoutInflater = LayoutInflater.from(view!!.context)
-        for (i in 0 until 7) {
+        for (i in 0 until 10) {
             val child : View = inflater.inflate(R.layout.stat_item, null)
             statGridLayout.addView(child)
             val g = statGridLayout.getChildAt(i) as GridLayout
@@ -165,9 +167,39 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
                     statValue.text = if(item.kitchen !=null)item.kitchen!!.toString() else getString(R.string.nc)
                 }
                 6 -> {
+                    val symb = if(item.currency !=null && item.currency==1) R.drawable.euro else R.drawable.dollar
+                    statIcon.background = SetImageColor.changeDrawableColor(child.context, symb, second)
+                    statLbl.text = getString(R.string.price)
+                    statValue.text = Utils.convertedHighPrice(this.context!!, item.currency,item.price) + "\r\n" +
+                            Utils.getPPMFormat(this.context!!, item.currency,item.price, item.surface)
+                }
+                7 -> {
+                    val status = if(item.status !=null)resources.getStringArray(R.array.status_ind)[item.status!!] else null
+                    statLbl.text = getString(R.string.status)
+                    when(item.status){
+                        0-> {
+                            statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.check_circle, grey)
+                            statValue.text = status + " since \r\n" + item.marketDate
+                        }
+                        1-> {
+                            statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.check_circle, second)
+                            statValue.text = status + " since \r\n" + item.soldDate
+                        }
+                        else ->{
+                            statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.close, grey)
+                            statValue.text = getString(R.string.nc)
+                        }
+                    }
+                }
+                8 -> {
+                    statIcon.background = SetImageColor.changeDrawableColor(child.context, R.drawable.perm_identity, black)
+                    statLbl.text = getString(R.string.agent)
+                    statValue.text = if(item.agentName !=null) item.agentName else getString(R.string.nc)
+                }
+                9 -> {
                     statIcon.background = SetImageColor.changeDrawableColor(child.context, R.drawable.poi, black)
                     statLbl.text = getString(R.string.points_of_interest)
-                    val poi = arrayListOf<Int>(0,1,3,6)
+                    val poi = arrayListOf(0,1,3,6)
                     val sb = StringBuilder()
                     for (p in poi)
                         sb.append(resources.getStringArray(R.array.poi_ind)[p]).append("\r\n")
@@ -176,23 +208,6 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
                 }
             }
         }
-
-        val symb = if(item.currency !=null && item.currency==1) R.drawable.euro else R.drawable.dollar
-        priceIcon.background = SetImageColor.changeDrawableColor(view!!.context, symb, second)
-        priceValue.text = if(item.currency !=null) Utils.convertedHighPrice(item.currency!!,item.price.toString())
-                    else Utils.convertedHighPrice(0,item.price.toString())
-        val status = if(item.status !=null)resources.getStringArray(R.array.status_ind)[item.status!!] else null
-
-        if(item.status == 0) {
-            sale_status_icon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.check_circle, grey)
-            statusText.text = status + " since " + item.marketDate
-        }else{
-            sale_status_icon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.check_circle, second)
-            statusText.text = status + " since " + item.soldDate
-        }
-
-        agentName.text = item.agentName
-
     }
 
     private fun getLocation(adr : String) : Drawable?{
@@ -202,19 +217,6 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
     override fun onDestroy() {
         super.onDestroy()
         this.mainActivity = null
-    }
-
-    private fun getMainPhoto(it : RealEstate): Photos?{
-        mainActivity!!.realEstateViewModel.getAllPhotos(it.id!!).observe(this, Observer<List<Photos>>{
-            p -> this.photo = if(p!!.isNotEmpty()){
-                Log.d("IS", "NOT NULL")
-                p[0]
-            }else{
-                Log.d("IS", "NULL")
-                null
-            }
-        })
-        return this.photo
     }
 
     companion object {
