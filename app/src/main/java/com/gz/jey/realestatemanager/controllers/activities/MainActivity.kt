@@ -139,18 +139,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return when (id) {
             R.id.add -> {
                 realEstate = null
-                settings!!.addOrEdit = false
-                settings!!.reId = null
-                realEstateViewModel.updateSettings(settings!!)
-                addOrEditActivity()
+                addOrEditActivity(false)
                 true
             }
             R.id.edit -> {
                 if (realEstate!=null) {
-                    settings!!.addOrEdit = true
-                    settings!!.reId = realEstate!!.id
-                    realEstateViewModel.updateSettings(settings!!)
-                    addOrEditActivity()
+                    addOrEditActivity(true)
                 } else {
                     ToastMessage().notifyMessage(this, Code.UNEDITABLE)
                 }
@@ -169,6 +163,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun configureToolBar() {
         this.toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        invalidateOptionsMenu()
     }
 
     // -------------------
@@ -277,11 +272,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun addOrEditActivity() {
+
+
+    private fun addOrEditActivity(isEdit: Boolean) {
         val intent = Intent(this, AddOrEditActivity::class.java)
+        intent.putExtra(Code.IS_EDIT, isEdit)
+        intent.putExtra(Code.RE_ID, realEstate?.id)
         startActivity(intent)
         finish()
     }
+
 
     private fun changeToolBarMenu(em: Int) {
         when (em) {

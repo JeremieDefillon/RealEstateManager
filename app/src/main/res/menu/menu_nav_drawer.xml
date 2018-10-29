@@ -7,7 +7,11 @@
             android:checkableBehavior="single">
         <item android:id="@+id/restaurant_menu"
             android:icon="@drawable/search"
-            android:title="@string/home">
+            android:title="@string/search">
+        </item>
+        <item android:id="@+id/loan"
+            android:icon="@drawable/dollar"
+            android:title="@string/loan_simulator">
         </item>
         <item android:id="@+id/settings"
             android:icon="@drawable/settings"

@@ -93,7 +93,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/location"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:textColor="@color/colorBlack" />
 
                         <TextView
                             android:id="@+id/location_value"
@@ -101,7 +102,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dip"
                             android:maxWidth="120dip"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:textColor="@color/colorBlack" />
                     </LinearLayout>
                 </GridLayout>
 

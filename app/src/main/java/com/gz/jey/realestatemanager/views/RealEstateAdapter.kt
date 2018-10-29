@@ -10,12 +10,11 @@ import com.gz.jey.realestatemanager.models.Photos
 import com.gz.jey.realestatemanager.models.RealEstate
 
 class RealEstateAdapter// CONSTRUCTOR
-(context: Context, private val callback: Listener) : RecyclerView.Adapter<RealEstateViewHolder>() {
+(private val callback: Listener) : RecyclerView.Adapter<RealEstateViewHolder>() {
 
     // FOR DATA
     private lateinit var context : Context
     private var realEstates: List<RealEstate>
-    private var photos: List<Photos>
 
     // CALLBACK
     interface Listener {
@@ -23,7 +22,6 @@ class RealEstateAdapter// CONSTRUCTOR
     }
 
     init {
-        this.photos = ArrayList()
         this.realEstates = ArrayList()
     }
 
@@ -38,9 +36,8 @@ class RealEstateAdapter// CONSTRUCTOR
     override fun onBindViewHolder(viewHolder: RealEstateViewHolder, position: Int) {
         Log.d("RE ADAPTER", "POSITION = $position")
         val re = this.realEstates[position]
-        val ph = this.photos[position]
 
-        viewHolder.updateWithRealEstate(this.context, re, ph, this.callback)
+        viewHolder.updateWithRealEstate(this.context, re, this.callback)
     }
 
     override fun getItemCount(): Int {
@@ -55,8 +52,7 @@ class RealEstateAdapter// CONSTRUCTOR
         return this.realEstates[position]
     }
 
-    fun updateData(realEstates: List<RealEstate>, photos : List<Photos>) {
-        this.photos = photos
+    fun updateData(realEstates: List<RealEstate>) {
         this.realEstates = realEstates
         this.notifyDataSetChanged()
     }

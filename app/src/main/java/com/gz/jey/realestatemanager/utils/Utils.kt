@@ -1,6 +1,7 @@
 package com.gz.jey.realestatemanager.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
@@ -67,11 +68,15 @@ object Utils{
         return activeNetwork.isConnectedOrConnecting
     }
 
+    fun isLandscape(context: Context): Boolean{
+        return context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    }
+
     /**
      * convert today date in string format
      * @return String as dd/mm/yyyy format
      */
-    fun convertedHighPrice(context : Context, currency : Int?, price : Int?): String {
+    fun convertedHighPrice(context : Context, currency : Int?, price : Long?): String {
         if(currency!=null && price!=null){
             val text = price.toString()
             var hp : String
@@ -125,9 +130,9 @@ object Utils{
         else "T?"
     }
 
-    fun getPPMFormat(context : Context, currency : Int?, price : Int?, surface : Int?) : String{
+    fun getPPMFormat(context : Context, currency : Int?, price : Long?, surface : Int?) : String{
         return if(currency!=null && price!=null && surface!=null){
-            val part : Int = price/surface
+            val part : Long = (price/surface)
             val str = this.convertedHighPrice(context,currency,part)
            // val partStr = String.format("%.2f", str)
              str + "/" + context.getString(R.string.m2)

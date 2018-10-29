@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
+import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.Window
 import android.widget.*
@@ -36,7 +38,7 @@ class ViewDialogInputAddress {
     private lateinit var placesAdapter: PlacesAdapter
 
 
-    fun showDialog(activity: AddOrEditActivity, context: Context, actualValue: ArrayList<String>) {
+    fun showDialog(activity: AddOrEditActivity, context: Context, code : Int, actualValue: ArrayList<String>) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
@@ -61,8 +63,12 @@ class ViewDialogInputAddress {
 
         val typeFilter = AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                .setCountry("France")
                 .build()
         mGeoDataClient = Places.getGeoDataClient(context.applicationContext)
+
+        Log.d("FILTER" , typeFilter.toString())
+        Log.d("GEOD" , mGeoDataClient.toString())
 
         val bounds = if(activity.mLastKnownLocation!=null)
             LatLngBounds(LatLng(activity.mLastKnownLocation!!.latitude-0.01, activity.mLastKnownLocation!!.longitude-0.01), LatLng(activity.mLastKnownLocation!!.latitude+0.01, activity.mLastKnownLocation!!.longitude+0.01))
@@ -76,10 +82,13 @@ class ViewDialogInputAddress {
             Log.d("DIALOG ADDRESS", item.toString())
         }
 
+        val editable = SpannableStringBuilder(result)
+        inputAddress.text = editable
+
         editBtn.setOnClickListener {
             val res : ArrayList<String> = ArrayList()
             res.add(inputAddress.text.toString())
-            activity.insertEditedValue(res)
+            activity.insertEditedValue(code, res)
             dialog.dismiss()
         }
         titleCanvas.text = "$editLbl $titleLbl"

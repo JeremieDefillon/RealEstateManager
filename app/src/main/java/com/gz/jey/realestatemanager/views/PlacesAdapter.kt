@@ -5,10 +5,12 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.data.DataBufferUtils
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.AutocompletePrediction
 import com.google.android.gms.location.places.GeoDataClient
+import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.tasks.RuntimeExecutionException
 import com.google.android.gms.tasks.Tasks
@@ -123,7 +125,6 @@ class PlacesAdapter(context: Context, resourceId: Int, geoData: GeoDataClient, f
      */
     private fun getAutocomplete(constraint: CharSequence): ArrayList<AutocompletePrediction>? {
         Log.i(TAG, "Starting autocomplete query for:$constraint")
-
         // Submit the query to the autocomplete API and retrieve a PendingResult that will
         // contain the results when the query completes.
         val results = geoDataClient.getAutocompletePredictions(constraint.toString(), bounds,
@@ -151,9 +152,7 @@ class PlacesAdapter(context: Context, resourceId: Int, geoData: GeoDataClient, f
             DataBufferUtils.freezeAndClose<AutocompletePrediction, AutocompletePrediction>(autocompletePredictions)
         } catch (e: RuntimeExecutionException) {
             // If the query did not complete successfully return null
-            Toast.makeText(mContext, "Error contacting API: " + e.toString(),
-
-                    Toast.LENGTH_SHORT).show()
+            Toast.makeText(mContext, "Error contacting API: " + e.toString(), Toast.LENGTH_SHORT).show()
             Log.e(TAG, "Error getting autocomplete prediction API call", e)
             null
         }

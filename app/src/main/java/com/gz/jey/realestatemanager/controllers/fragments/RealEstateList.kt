@@ -62,15 +62,13 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
 
 
     private fun configureRecyclerView() {
-        this.adapter = RealEstateAdapter(this.context!!, this)
+        this.adapter = RealEstateAdapter(this)
         this.recyclerView!!.adapter = this.adapter
         this.recyclerView!!.layoutManager = LinearLayoutManager(this.context)
         ItemClickSupport.addTo(recyclerView, R.layout.real_estate_item)
                 .setOnItemClickListener { _, position, _ ->
-                    if (itemPos != position && slct != maxClick) {
-                        itemPos = position
-                        this.updateRealEstate(this.adapter!!.getRealEstate(position), this.adapter!!.getAllRealEstate())
-                    }
+                    itemPos = position
+                    this.updateRealEstate(this.adapter!!.getRealEstate(position), this.adapter!!.getAllRealEstate())
                 }
     }
 
@@ -96,21 +94,20 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
             mainActivity!!.realEstateViewModel.updateRealEstate(r)
         }
 
-        if(mainActivity!!.realEstate == realEstate && !mainActivity!!.tabLand){
+        if (mainActivity!!.realEstate == realEstate && !mainActivity!!.tabLand) {
             slct = 2
-        }else{
+        } else {
             mainActivity!!.setRE(realEstate)
             slct++
         }
+        Log.d("SLC", slct.toString() + " " + maxClick)
 
-
-        if (slct == maxClick ) {
+        if (slct == maxClick) {
             mainActivity!!.setRE(realEstate)
             slct = 0
-            if (mainActivity!!.tabLand){
+            if (mainActivity!!.tabLand) {
                 mainActivity!!.realEstateDetails!!.init()
-            }
-            else{
+            } else {
                 realEstate.isSelected = false
                 mainActivity!!.realEstateViewModel.updateRealEstate(realEstate)
                 mainActivity!!.setFragment(1)
@@ -125,19 +122,7 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
         else
             infoText!!.visibility = View.GONE
 
-        val photos: ArrayList<Photos?> = ArrayList()
-        for ((i, it) in items.withIndex()) {
-            mainActivity!!.realEstateViewModel.getAllPhotos(it.id!!).observe(this, Observer<List<Photos>> { p ->
-                if (p!!.isNotEmpty()) photos.add(p[0])
-                else {
-                    val ph = Photos(null, null, null, null)
-                    photos.add(ph)
-                }
-
-                if (i >= items.size - 1)
-                    this.adapter!!.updateData(items, photos as List<Photos>)
-            })
-        }
+        this.adapter!!.updateData(items)
     }
 
     override fun onDestroy() {

@@ -49,46 +49,6 @@ class RealEstateViewModel(// REPOSITORIES
     }
 
     // -------------
-    // FOR POINTS OF INTEREST
-    // -------------
-
-    fun getAllPOI(realEstateId: Long): LiveData<List<PointsOfInterest>> {
-        return poiDataSource.getAllPOI(realEstateId)
-    }
-
-    fun createPOI(poi: PointsOfInterest) {
-        executor.execute { poiDataSource.createPOI(poi) }
-    }
-
-    fun deletePOI(realEstateId: Long) {
-        executor.execute { poiDataSource.deletePOI(realEstateId) }
-    }
-
-    fun updatePOI(poi: PointsOfInterest) {
-        executor.execute { poiDataSource.updatePOI(poi) }
-    }
-
-    // -------------
-    // FOR PHOTOS
-    // -------------
-
-    fun getAllPhotos(reId: Long): LiveData<List<Photos>> {
-        return photosDataSource.getAllPhotos(reId)
-    }
-
-    fun createPhotos(photos: Photos) {
-        executor.execute { photosDataSource.createPhotos(photos) }
-    }
-
-    fun deletePhotos(reId: Long) {
-        executor.execute { photosDataSource.deletePhotos(reId) }
-    }
-
-    fun updatePhotos(photos: Photos) {
-        executor.execute { photosDataSource.updatePhotos(photos) }
-    }
-
-    // -------------
     // FOR SETTINGS
     // -------------
 

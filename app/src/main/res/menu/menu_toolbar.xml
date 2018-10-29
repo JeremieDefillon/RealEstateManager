@@ -25,14 +25,4 @@
             app:showAsAction="ifRoom"
             android:title="@string/search">
         </item>
-
-        <item
-            android:visible="true"
-            android:id="@+id/save"
-            android:icon="@drawable/save"
-            app:showAsAction="ifRoom"
-            android:title="@string/save">
-        </item>
-
-
 </menu>

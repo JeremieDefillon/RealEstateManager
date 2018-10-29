@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.support.design.widget.TextInputEditText
 import android.text.Editable
 import android.text.InputType
+import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.view.View
 import android.view.Window
@@ -15,7 +16,6 @@ import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.utils.Utils
 import kotlin.collections.ArrayList
-
 
 class ViewDialogInputText {
 
@@ -42,6 +42,7 @@ class ViewDialogInputText {
         result = if(actualValue.isNotEmpty()) actualValue[0] else ""
 
         cancelBtn.setOnClickListener { dialog.dismiss() }
+
 
         val editLbl = activity.getString(R.string.insert)
         var titleLbl = ""
@@ -84,11 +85,13 @@ class ViewDialogInputText {
             }
             Code.AGENT -> { titleLbl = activity.getString(R.string.agent) }
         }
+        val editable = SpannableStringBuilder(result)
+        inputText.text = editable
 
         editBtn.setOnClickListener {
             val res : ArrayList<String> = ArrayList()
             res.add(inputText.text.toString())
-            activity.insertEditedValue(res)
+            activity.insertEditedValue(code, res)
             dialog.dismiss()
         }
         titleCanvas.text = "$editLbl $titleLbl"
@@ -97,7 +100,7 @@ class ViewDialogInputText {
 
     private fun getPriceOverview(activity: Activity, ed: String): String {
         val sb = StringBuilder()
-        val edit = if (ed.isEmpty()) 0 else ed.toInt()
+        val edit = if (ed.isEmpty()) 0 else ed.toLong()
         val num = Utils.convertedHighPrice(activity, 0, edit)
         val overv = activity.getString(R.string.overview)
 

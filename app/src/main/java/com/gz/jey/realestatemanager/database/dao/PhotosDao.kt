@@ -8,12 +8,8 @@ import android.arch.persistence.room.Query
 import android.database.Cursor
 import com.gz.jey.realestatemanager.models.Photos
 
-
 @Dao
 interface PhotosDao {
-
-    @Query("SELECT * FROM Photos WHERE reId = :reId")
-    fun getPhotos(reId: Long): LiveData<List<Photos>>
 
     @Query("SELECT * FROM Photos WHERE id = :id")
     fun getPhotosWithCursor(id: Long): Cursor

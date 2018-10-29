@@ -1,20 +1,22 @@
 package com.gz.jey.realestatemanager.models
 
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.PrimaryKey
+import android.content.ContentValues
 
-@Entity(foreignKeys = [ForeignKey(
-        entity = RealEstate::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("reId")
-)]
-)
+@Entity(tableName = "PointsOfInterest")
 data class PointsOfInterest(
         @PrimaryKey(autoGenerate = true)
         var id : Long?,
-        var value : Int?,
-        var reId : Long?
+        var value : Int?
 ){
-    constructor():this(null,null,null)
+    companion object {
+        // --- UTILS ---
+        fun fromContentValues(values: ContentValues): PointsOfInterest {
+            val poi = PointsOfInterest()
+            if (values.containsKey("value")) poi.value = values.getAsInteger("value")
+            return poi
+        }
+    }
+    constructor():this(null,null)
 }

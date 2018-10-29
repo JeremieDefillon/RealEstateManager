@@ -60,7 +60,7 @@ class ViewDialogDatePicker {
             val date = format.format(calendar.time)
             Log.d("Date", date)
             result.add(date)
-            activity.insertEditedValue(result)
+            activity.insertEditedValue(code, result)
             dialog.dismiss()
         }
         titleCanvas.text = "$editLbl $titleLbl"

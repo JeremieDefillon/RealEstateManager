@@ -56,25 +56,25 @@ class ViewDialogMultiChoice {
                 titleLbl = activity.getString(R.string.type)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.type_ind))
-                setOnClick(activity, 0, dialog)
+                setOnClick(activity, code, 0, dialog)
             }
             Code.CURRENCY -> {
                 titleLbl = activity.getString(R.string.currency)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.currency_ind))
-                setOnClick(activity, 0, dialog)
+                setOnClick(activity, code,0, dialog)
             }
             Code.POI -> {
                 titleLbl = activity.getString(R.string.points_of_interest)
                 checkCode = Code.MULTICHECK
                 list.addAll(activity.resources.getStringArray(R.array.poi_ind))
-                setOnClick(activity, 1, dialog)
+                setOnClick(activity, code,1, dialog)
             }
             Code.STATUS -> {
                 titleLbl = activity.getString(R.string.status)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.status_ind))
-                setOnClick(activity, 0, dialog)
+                setOnClick(activity, code,0, dialog)
             }
             Code.LEGEND -> {
                 titleLbl = activity.getString(R.string.legend)
@@ -85,7 +85,7 @@ class ViewDialogMultiChoice {
                         .into(image)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.rooms_ind))
-                setOnClick(activity, 2, dialog)
+                setOnClick(activity, code,2, dialog)
             }
         }
 
@@ -95,8 +95,8 @@ class ViewDialogMultiChoice {
 
     }
 
-    private fun setOnClick(activity: AddOrEditActivity, code: Int, dialog: Dialog) {
-        when (code) {
+    private fun setOnClick(activity: AddOrEditActivity, code: Int, type:Int,  dialog: Dialog) {
+        when (type) {
             0 -> {
                 editBtn.setOnClickListener {
                     for (i in 0 until list.size) {
@@ -106,7 +106,7 @@ class ViewDialogMultiChoice {
                             break
                         }
                     }
-                    activity.insertEditedValue(result)
+                    activity.insertEditedValue(code, result)
                     dialog.dismiss()
                 }
             }
@@ -117,7 +117,7 @@ class ViewDialogMultiChoice {
                         if (chk[i].isChecked)
                             result.add(i.toString())
                     }
-                    activity.insertEditedValue(result)
+                    activity.insertEditedValue(code, result)
                     dialog.dismiss()
                 }
             }
@@ -140,11 +140,11 @@ class ViewDialogMultiChoice {
         val params = scrollView.layoutParams
         when (activity.resources.configuration.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
-                inputChoice.columnCount =  Math.ceil(list.size / 7.0).toInt()
+                inputChoice.columnCount =  Math.ceil(list.size / 6.0).toInt()
                 Log.d("LANDSCAPE", params.height.toString())
             }
             Configuration.ORIENTATION_PORTRAIT -> {
-                inputChoice.columnCount =  Math.ceil(list.size / 14.0).toInt()
+                inputChoice.columnCount =  Math.ceil(list.size / 12.0).toInt()
                 Log.d("PORTRAIT", params.height.toString())}
         }
         rdb.clear()
@@ -160,6 +160,9 @@ class ViewDialogMultiChoice {
                     inputChoice.addView(checkBtn)
                     rdb.add(inputChoice.getChildAt(i) as RadioButton)
                     rdb[i].text = list[i]
+                    if(result.contains(i.toString()))
+                        rdb[i].isChecked = true
+
                     rdb[i].setOnClickListener { checkedSingle(i)}
                 }
                 Code.MULTICHECK -> {
@@ -168,6 +171,8 @@ class ViewDialogMultiChoice {
                     inputChoice.addView(checkBtn)
                     chk.add(inputChoice.getChildAt(i) as CheckBox)
                     chk[i].text = list[i]
+                    if(result.contains(i.toString()))
+                        chk[i].isChecked = true
                 }
             }
         }

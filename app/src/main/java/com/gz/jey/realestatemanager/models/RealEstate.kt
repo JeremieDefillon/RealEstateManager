@@ -2,28 +2,35 @@ package com.gz.jey.realestatemanager.models
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.TypeConverters
 import android.content.ContentValues
+import com.gz.jey.realestatemanager.utils.PhotosConverter
+import com.gz.jey.realestatemanager.utils.PointsOfInterestConverter
 
 
 @Entity(tableName = "RealEstate")
 data class RealEstate(
         @PrimaryKey(autoGenerate = true) var id: Long?,
-        var district: String?,
-        var address: String?,
-        var type: Int?,
-        var surface: Int?,
-        var room: Int?,
-        var bed: Int?,
-        var bath: Int?,
-        var kitchen: Int?,
-        var description: String?,
-        var currency: Int?,
-        var price: Int?,
-        var status: Int?,
-        var marketDate: String?,
-        var soldDate: String?,
-        var agentName: String?,
-        var isSelected: Boolean = false
+        var district: String? = null,
+        var address: String? = null,
+        var type: Int? = null,
+        var surface: Int? = null,
+        var room: Int? = null,
+        var bed: Int? = null,
+        var bath: Int? = null,
+        var kitchen: Int? = null,
+        var description: String? = null,
+        var currency: Int? = null,
+        var price: Long? = null,
+        var status: Int? = null,
+        var marketDate: String? = null,
+        var soldDate: String? = null,
+        var agentName: String? = null,
+        var isSelected: Boolean = false,
+        @TypeConverters(PhotosConverter::class)
+        var photos: List<Photos>? = null,
+        @TypeConverters(PointsOfInterestConverter::class)
+        var poi: List<PointsOfInterest>? = null
 ) {
     companion object {
         // --- UTILS ---
@@ -31,7 +38,7 @@ data class RealEstate(
             val re = RealEstate()
             if (values.containsKey("district")) re.district = values.getAsString("district")
             if (values.containsKey("type")) re.type = values.getAsInteger("type")
-            if (values.containsKey("price")) re.price = values.getAsInteger("price")
+            if (values.containsKey("price")) re.price = values.getAsLong("price")
             if (values.containsKey("surface")) re.surface = values.getAsInteger("surface")
             if (values.containsKey("room")) re.room = values.getAsInteger("room")
             if (values.containsKey("bed")) re.bed = values.getAsInteger("bed")
@@ -47,6 +54,24 @@ data class RealEstate(
         }
     }
 
-    constructor() : this(null, "", null, null, null, null, null, null, null, "", 0, null, 0, "", "", "", false)
+    constructor() : this(null,
+            "",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "",
+            0,
+            null,
+            0,
+            "",
+            "",
+            "",
+            false,
+            null,
+            null)
 
 }

@@ -19,6 +19,7 @@ import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
 import com.gz.jey.realestatemanager.models.Photos
+import com.gz.jey.realestatemanager.models.PointsOfInterest
 import com.gz.jey.realestatemanager.models.RealEstate
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
@@ -111,9 +112,8 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
         val black = ContextCompat.getColor(view!!.context, R.color.colorBlack)
         val second = ContextCompat.getColor(view!!.context, R.color.colorSecondary)
         val grey = ContextCompat.getColor(view!!.context, R.color.colorGrey)
-        mainActivity!!.realEstateViewModel.getAllPhotos(item.id!!)
-            .observe(this, Observer<List<Photos>>{ p -> this.photos = p!! })
-        this.adapter.updateData(photos)
+
+        this.adapter.updateData(item.photos as List<Photos>)
 
         descriptionValue.text = if(item.description!=null && item.description!!.isNotEmpty()) item.description
                                 else getString(R.string.nc)
@@ -199,10 +199,11 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
                 9 -> {
                     statIcon.background = SetImageColor.changeDrawableColor(child.context, R.drawable.poi, black)
                     statLbl.text = getString(R.string.points_of_interest)
-                    val poi = arrayListOf(0,1,3,6)
                     val sb = StringBuilder()
-                    for (p in poi)
-                        sb.append(resources.getStringArray(R.array.poi_ind)[p]).append("\r\n")
+                    if(item.poi != null && item.poi!!.isNotEmpty()){
+                        for (p in item.poi!!)
+                            sb.append(resources.getStringArray(R.array.poi_ind)[p.value!!]).append("\r\n")
+                    }
 
                     statValue.text = sb.toString()
                 }

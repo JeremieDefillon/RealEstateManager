@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.Surface
 import android.view.View
 import android.widget.ImageView
@@ -31,7 +32,7 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     private var callbackWeakRef: WeakReference<RealEstateAdapter.Listener>? = null
 
 
-    fun updateWithRealEstate(context : Context, item: RealEstate, img: Photos, callback: RealEstateAdapter.Listener) {
+    fun updateWithRealEstate(context : Context, item: RealEstate, callback: RealEstateAdapter.Listener) {
         val res = itemView.context.resources
         this.callbackWeakRef = WeakReference(callback)
         this.type.text = if(item.type != null) res.getStringArray(R.array.type_ind)[item.type!!] else ""
@@ -41,11 +42,12 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
         this.ppm2.text = Utils.getPPMFormat(context, item.currency, item.price, item.surface)
         this.price.text = Utils.convertedHighPrice(context, item.currency, item.price)
 
-        if(img.id!=null)
+
+        if(item.photos != null && item.photos!!.isNotEmpty()) {
             Glide.with(itemView.context)
-                .load(Uri.parse(img.image))
-                .into(this.photo)
-        else{
+                    .load(Uri.parse(item.photos!![0].image))
+                    .into(this.photo)
+        }else{
             val npic = ContextCompat.getDrawable(itemView.context, R.drawable.no_pict)
             Glide.with(itemView.context)
                     .load(npic)
