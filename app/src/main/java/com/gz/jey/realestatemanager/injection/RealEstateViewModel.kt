@@ -2,10 +2,8 @@ package com.gz.jey.realestatemanager.injection
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.PointsOfInterest
-import com.gz.jey.realestatemanager.models.RealEstate
-import com.gz.jey.realestatemanager.models.Settings
+import com.gz.jey.realestatemanager.models.sql.RealEstate
+import com.gz.jey.realestatemanager.models.sql.Settings
 import com.gz.jey.realestatemanager.repositories.PhotosDataRepository
 import com.gz.jey.realestatemanager.repositories.PointsOfInterestDataRepository
 import com.gz.jey.realestatemanager.repositories.RealEstateDataRepository

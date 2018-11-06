@@ -12,8 +12,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.ItemClickSupport
 import com.gz.jey.realestatemanager.views.RealEstateAdapter
 

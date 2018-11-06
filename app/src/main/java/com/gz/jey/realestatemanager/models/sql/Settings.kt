@@ -1,4 +1,4 @@
-package com.gz.jey.realestatemanager.models
+package com.gz.jey.realestatemanager.models.sql
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey

@@ -5,8 +5,8 @@ import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
-import com.gz.jey.realestatemanager.models.PointsOfInterest
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.sql.PointsOfInterest
+import com.gz.jey.realestatemanager.models.sql.RealEstate
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -34,13 +34,13 @@ class RealEstateDaoTest {
 
     // DATA SET FOR TEST
     private val RE_ID : Long = 1
-    private val RE_DEMO : RealEstate = RealEstate(RE_ID, 0, 1000000, 540, 6, 5, 2, 1, "","",0,"","","Jey")
+    private val RE_DEMO : RealEstate = RealEstate(RE_ID, 0, 1000000, 540, 6, 5, 2, 1, "", "", 0, "", "", "Jey")
 
     private val POI_DEMO : ArrayList<PointsOfInterest> = arrayListOf(
-        PointsOfInterest(null, 1, RE_ID),
-        PointsOfInterest(null, 4, RE_ID),
-        PointsOfInterest(null, 5, RE_ID),
-        PointsOfInterest(null, 6, RE_ID)
+            PointsOfInterest(null, 1, RE_ID),
+            PointsOfInterest(null, 4, RE_ID),
+            PointsOfInterest(null, 5, RE_ID),
+            PointsOfInterest(null, 6, RE_ID)
     )
 
     private val POI_EXPECTED : ArrayList<Int> = arrayListOf(1,4,5,6)

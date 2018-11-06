@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
-import com.gz.jey.realestatemanager.models.Photos
+import com.gz.jey.realestatemanager.models.sql.Photos
 import java.lang.ref.WeakReference
 
 class PhotosViewHolder(photoView: View) : RecyclerView.ViewHolder(photoView), View.OnClickListener {

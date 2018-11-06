@@ -3,8 +3,7 @@ package com.gz.jey.realestatemanager.utils
 import android.arch.persistence.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.PointsOfInterest
+import com.gz.jey.realestatemanager.models.sql.PointsOfInterest
 import java.util.*
 
 

@@ -7,7 +7,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.sql.RealEstate
 
 /**
  * Created by Jey on 10/10/2018.

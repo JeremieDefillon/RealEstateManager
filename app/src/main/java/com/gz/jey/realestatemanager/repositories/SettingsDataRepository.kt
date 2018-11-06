@@ -2,7 +2,7 @@ package com.gz.jey.realestatemanager.repositories
 
 import android.arch.lifecycle.LiveData
 import com.gz.jey.realestatemanager.database.dao.SettingsDao
-import com.gz.jey.realestatemanager.models.Settings
+import com.gz.jey.realestatemanager.models.sql.Settings
 
 class SettingsDataRepository(private val settingsDao: SettingsDao) {
 

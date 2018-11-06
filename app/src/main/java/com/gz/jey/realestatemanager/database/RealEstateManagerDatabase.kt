@@ -9,10 +9,10 @@ import com.gz.jey.realestatemanager.database.dao.PhotosDao
 import com.gz.jey.realestatemanager.database.dao.PointsOfInterestDao
 import com.gz.jey.realestatemanager.database.dao.RealEstateDao
 import com.gz.jey.realestatemanager.database.dao.SettingsDao
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.PointsOfInterest
-import com.gz.jey.realestatemanager.models.RealEstate
-import com.gz.jey.realestatemanager.models.Settings
+import com.gz.jey.realestatemanager.models.sql.Photos
+import com.gz.jey.realestatemanager.models.sql.PointsOfInterest
+import com.gz.jey.realestatemanager.models.sql.RealEstate
+import com.gz.jey.realestatemanager.models.sql.Settings
 import com.gz.jey.realestatemanager.utils.PhotosConverter
 import com.gz.jey.realestatemanager.utils.PointsOfInterestConverter
 

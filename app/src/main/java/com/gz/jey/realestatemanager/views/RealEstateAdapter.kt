@@ -6,8 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.gz.jey.realestatemanager.R
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.sql.RealEstate
 
 class RealEstateAdapter// CONSTRUCTOR
 (private val callback: Listener) : RecyclerView.Adapter<RealEstateViewHolder>() {

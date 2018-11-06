@@ -41,7 +41,6 @@ class ViewDialogInputAddress {
 
     private val list: ArrayList<String> = ArrayList()
     private lateinit var resultFullAddress: String
-    private lateinit var resultPlaceId: String
     private lateinit var resultDistrict: String
 
     private lateinit var validIcon : Drawable
@@ -64,8 +63,7 @@ class ViewDialogInputAddress {
         cancelBtn = dialog.findViewById(R.id.cancel_btn)
         editBtn = dialog.findViewById(R.id.edit_btn)
         resultFullAddress = if(actualValue.size>0) actualValue[0] else ""
-        resultPlaceId = if(actualValue.size>1) actualValue[1] else ""
-        resultDistrict = if(actualValue.size>2) actualValue[2] else ""
+        resultDistrict = if(actualValue.size>1) actualValue[1] else ""
 
         unvalidIcon = SetImageColor.changeDrawableColor(context , R.drawable.check_circle, ContextCompat.getColor(context, R.color.colorGrey))
         validIcon = SetImageColor.changeDrawableColor(context , R.drawable.check_circle, ContextCompat.getColor(context, R.color.colorSecondary))
@@ -96,7 +94,6 @@ class ViewDialogInputAddress {
             val item = parent.getItemAtPosition(position) as AutocompletePrediction
             Log.d("DIALOG ADDRESS", item.toString())
             resultFullAddress = item.getFullText(null).toString()
-            resultPlaceId = item.placeId.toString()
             resultDistrict = item.getSecondaryText(null).toString()
             checkValidate()
         }
@@ -114,7 +111,8 @@ class ViewDialogInputAddress {
 
         editBtn.setOnClickListener {
             val res : ArrayList<String> = ArrayList()
-            res.add(inputAddress.text.toString())
+            res.add(resultFullAddress)
+            res.add(resultDistrict)
             activity.insertEditedValue(code, res)
             dialog.dismiss()
         }

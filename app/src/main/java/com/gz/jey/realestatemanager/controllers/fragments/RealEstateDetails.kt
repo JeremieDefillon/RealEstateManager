@@ -18,13 +18,11 @@ import android.widget.ScrollView
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.PointsOfInterest
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.sql.Photos
+import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
 import com.gz.jey.realestatemanager.views.PhotosAdapter
-import kotlinx.android.synthetic.main.real_estate_details.*
 
 class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
     override fun onClickDeleteButton(position: Int) {

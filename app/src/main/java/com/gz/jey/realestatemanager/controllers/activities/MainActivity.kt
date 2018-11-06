@@ -27,6 +27,10 @@ import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
 import com.gz.jey.realestatemanager.injection.Injection
 import com.gz.jey.realestatemanager.injection.RealEstateViewModel
 import com.gz.jey.realestatemanager.models.*
+import com.gz.jey.realestatemanager.models.sql.Photos
+import com.gz.jey.realestatemanager.models.sql.PointsOfInterest
+import com.gz.jey.realestatemanager.models.sql.RealEstate
+import com.gz.jey.realestatemanager.models.sql.Settings
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import java.util.*
 
@@ -183,7 +187,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             realEstateViewModel.updateSettings(settings!!)
         }else{
             val lang = if(Locale.getDefault().language == "fr") 1 else 0
-            settings = Settings(null,0,lang,null,false,true)
+            settings = Settings(null, 0, lang, null, false, true)
             realEstateViewModel.createSettings(settings!!)
         }
     }

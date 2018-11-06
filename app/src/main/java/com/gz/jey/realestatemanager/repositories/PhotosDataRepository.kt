@@ -1,7 +1,7 @@
 package com.gz.jey.realestatemanager.repositories
 
 import com.gz.jey.realestatemanager.database.dao.PhotosDao
-import com.gz.jey.realestatemanager.models.Photos
+import com.gz.jey.realestatemanager.models.sql.Photos
 
 class PhotosDataRepository(private val photosDao: PhotosDao) {
 

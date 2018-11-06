@@ -39,9 +39,9 @@ import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
 import com.gz.jey.realestatemanager.injection.Injection
 import com.gz.jey.realestatemanager.injection.RealEstateViewModel
 import com.gz.jey.realestatemanager.models.Code
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.PointsOfInterest
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.sql.Photos
+import com.gz.jey.realestatemanager.models.sql.PointsOfInterest
+import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
 import com.gz.jey.realestatemanager.views.PhotosAdapter
@@ -79,6 +79,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
     lateinit var database: RealEstateManagerDatabase
     private var enableSave = false
     var oblArray: ArrayList<Int> = arrayListOf(0, 1, 9, 10, 11, 14)
+    private var resDist : String? = null
     private val poiList: ArrayList<PointsOfInterest> = ArrayList()
     private val photosList: ArrayList<Photos> = ArrayList()
     private val checks: ArrayList<ImageView?> = ArrayList()
@@ -265,7 +266,6 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
         this.realEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel::class.java)
-
     }
 
     /**
@@ -280,17 +280,17 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
                 Log.d("EDIT RE => ", re.toString())
                 if (re != null) {
                     this.realEstate = re
-                    for (index in 0 until 19)
+                    for (index in 0 until 18)
                         getDtbValue(index)
                 } else {
                     ToastMessage().notifyMessage(this, Code.ERROR_NOT_FOUND)
-                    for (index in 0 until 19)
+                    for (index in 0 until 18)
                         getDtbValue(index)
                 }
             })
         } else {
             toolbar!!.title = "Add Real Estate"
-            for (index in 0 until 19)
+            for (index in 0 until 18)
                 getDtbValue(index)
         }
     }
@@ -331,8 +331,8 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
         setSave(enableSave)
         //results[18] = "Jey"
         val re = RealEstate(realEstate!!.id,
-                if (address!=null) address.get("secondaryText").asString else null,
-                if (address!=null) address.get("fullText").asString else null,
+                if (resDist!!.isNotEmpty()) resDist else null,
+                if (results[0].isNotEmpty()) results[0] else null,
                 if (results[1].isNotEmpty()) results[1].toInt() else null,
                 if (results[2].isNotEmpty()) results[2].toInt() else null,
                 if (results[3].isNotEmpty()) results[3].toInt() else null,
@@ -380,9 +380,14 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
                 17 -> if (realEstate!!.agentName != null) realEstate!!.agentName.toString() else ""
                 else -> return
             }
+
             // Log.d("GET DTB "+code.toString(), result)
             results[code] = result
             resArray.add(result)
+            if(code==0){
+                resDist = if (realEstate!!.district != null) realEstate!!.district.toString() else ""
+                resArray.add(resDist!!)
+            }
             insertEditedValue(code, resArray)
         } else if (code == 11) {
             if (realEstate!!.id != null) {
@@ -429,6 +434,10 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
             Log.d("RESULTS $code", results[code])
             results[code] = array[0]
             when (code) {
+                0 -> {
+                    resDist = array[1]
+                    values[0]!!.text = results[code]
+                }
                 1 -> {
                     values[1]!!.text = resources.getStringArray(R.array.type_ind)[array[0].toInt()]
                 }
@@ -471,6 +480,11 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
         } else {
             results[code] = ""
             when (code) {
+                0 -> {
+                    resDist = ""
+                    values[0]!!.text = ""
+                    validate(code, false)
+                }
                 7 -> {
                     values[8]!!.text = ""
                     validate(code, false)

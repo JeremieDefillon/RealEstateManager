@@ -2,7 +2,7 @@ package com.gz.jey.realestatemanager.repositories
 
 import android.arch.lifecycle.LiveData
 import com.gz.jey.realestatemanager.database.dao.RealEstateDao
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.sql.RealEstate
 
 class RealEstateDataRepository(private val realEstateDao: RealEstateDao) {
 

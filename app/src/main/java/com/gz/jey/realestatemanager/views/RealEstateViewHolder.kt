@@ -4,16 +4,13 @@ import android.content.Context
 import android.net.Uri
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
-import android.util.Log
-import android.view.Surface
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.Utils
 import java.lang.ref.WeakReference
 

@@ -22,9 +22,9 @@ import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
 import com.gz.jey.realestatemanager.injection.Injection
 import com.gz.jey.realestatemanager.injection.RealEstateViewModel
 import com.gz.jey.realestatemanager.models.Code
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.PointsOfInterest
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.sql.Photos
+import com.gz.jey.realestatemanager.models.sql.PointsOfInterest
+import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
 import com.gz.jey.realestatemanager.views.PhotosAdapter

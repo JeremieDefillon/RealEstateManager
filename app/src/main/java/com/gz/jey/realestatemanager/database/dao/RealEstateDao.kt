@@ -3,8 +3,7 @@ package com.gz.jey.realestatemanager.database.dao
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.database.Cursor
-import com.gz.jey.realestatemanager.models.Photos
-import com.gz.jey.realestatemanager.models.RealEstate
+import com.gz.jey.realestatemanager.models.sql.RealEstate
 
 
 @Dao

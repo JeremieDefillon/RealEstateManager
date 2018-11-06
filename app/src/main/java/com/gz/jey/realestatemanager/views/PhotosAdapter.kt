@@ -5,8 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.gz.jey.realestatemanager.R
-import com.gz.jey.realestatemanager.controllers.activities.MainActivity
-import com.gz.jey.realestatemanager.models.Photos
+import com.gz.jey.realestatemanager.models.sql.Photos
 import java.util.ArrayList
 
 class PhotosAdapter// CONSTRUCTOR
