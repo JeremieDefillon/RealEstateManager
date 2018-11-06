@@ -7,24 +7,30 @@ object Code{
     val UNEDITABLE = 846
     val UNSAVABLE = 543
 
-    val DISTRICT = 0
-    val ADDRESS = 1
-    val TYPE = 2
-    val SURFACE = 3
-    val ROOM_NUM = 4
-    val BED_NUM = 5
-    val BATH_NUM = 6
-    val KITCHEN_NUM = 7
-    val DESCRIPTION = 8
-    val CURRENCY = 10
-    val PRICE = 11
-    val PHOTOS = 12
-    val POI = 14
-    val STATUS = 15
-    val SALE_DATE = 16
-    val SOLD_DATE = 17
-    val AGENT = 18
+    val ADDRESS = 0
+    val TYPE = 1
+    val SURFACE = 2
+    val ROOM_NUM = 3
+    val BED_NUM = 4
+    val BATH_NUM = 5
+    val KITCHEN_NUM = 6
+    val DESCRIPTION = 7
+    val CURRENCY = 9
+    val PRICE = 10
+    val PHOTOS = 11
+    val POI = 13
+    val STATUS = 14
+    val SALE_DATE = 15
+    val SOLD_DATE = 16
+    val AGENT = 17
     val LEGEND = 83
+
+    val FILTER_TYPE = 94
+    val FILTER_SURFACE = 95
+    val FILTER_POI = 96
+    val FILTER_SINCE = 97
+    val FILTER_PHOTO = 98
+    val FILTER_PRICE = 99
 
     val MULTICHECK = 487
     val SOLOCHECK = 548

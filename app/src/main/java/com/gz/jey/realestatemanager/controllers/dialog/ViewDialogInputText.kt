@@ -28,7 +28,7 @@ class ViewDialogInputText {
     private val list: ArrayList<String> = ArrayList()
     private lateinit var result: String
 
-    fun showDialog(activity: AddOrEditActivity, code: Int, actualValue: ArrayList<String>) {
+    fun showDialog(activity: Activity, code: Int, actualValue: ArrayList<String>) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
@@ -48,7 +48,6 @@ class ViewDialogInputText {
         var titleLbl = ""
 
         when (code) {
-            Code.DISTRICT -> { titleLbl = activity.getString(R.string.district) }
             Code.ADDRESS -> { titleLbl = activity.getString(R.string.address) }
             Code.SURFACE -> {
                 titleLbl = activity.getString(R.string.surface)
@@ -91,7 +90,8 @@ class ViewDialogInputText {
         editBtn.setOnClickListener {
             val res : ArrayList<String> = ArrayList()
             res.add(inputText.text.toString())
-            activity.insertEditedValue(code, res)
+            val act = activity as AddOrEditActivity
+            act.insertEditedValue(code, res)
             dialog.dismiss()
         }
         titleCanvas.text = "$editLbl $titleLbl"

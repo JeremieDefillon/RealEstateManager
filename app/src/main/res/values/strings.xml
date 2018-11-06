@@ -6,7 +6,12 @@
     <string name="navigation_drawer_open">Open</string>
 
     <string name="colon">:</string>
+    <string name="suspens">...</string>
     <string name="obl">*</string>
+    <string name="min_label">Min</string>
+    <string name="max_label">Max</string>
+    <string name="start_label">Start</string>
+    <string name="end_label">End</string>
     <string name="search">Search</string>
     <string name="edit">Edit</string>
     <string name="cancel">Cancel</string>
@@ -54,7 +59,6 @@
     <string name="address">Address</string>
 
     <string-array name="add_edit_ind">
-        <item>@string/district</item>
         <item>@string/address</item>
         <item>@string/type</item>
         <item>@string/surface</item>
@@ -132,4 +136,14 @@
         <item>Cellar</item>
         <item>Utility</item>
     </string-array>
+
+    // FILTERS
+
+    <string name="filter_type">Filters : set Type</string>
+    <string name="filter_surface">Filters : set Surface\'s Min and Max</string>
+    <string name="filter_poi">Filters : set Points of Interest</string>
+    <string name="filter_date">Filters : set Date</string>
+    <string name="filter_photos">Filters : set amount of Photos</string>
+    <string name="filter_price">Filters : set Price\'s range</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

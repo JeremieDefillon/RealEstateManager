@@ -151,6 +151,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 true
             }
             R.id.search_on -> {
+                filtersActivity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -272,8 +273,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-
-
     private fun addOrEditActivity(isEdit: Boolean) {
         val intent = Intent(this, AddOrEditActivity::class.java)
         intent.putExtra(Code.IS_EDIT, isEdit)
@@ -282,6 +281,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         finish()
     }
 
+    private fun filtersActivity() {
+        val intent = Intent(this, SetFilters::class.java)
+        startActivity(intent)
+        finish()
+    }
 
     private fun changeToolBarMenu(em: Int) {
         when (em) {

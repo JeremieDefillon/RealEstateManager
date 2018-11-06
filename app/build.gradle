@@ -29,12 +29,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField ("String", "GOOGLE_MAPS_KEY", "\"${google_maps_key}\"")
-            resValue ("string", "google_maps_key", "\"${google_maps_key}\"")
+            buildConfigField("String", "GOOGLE_MAPS_KEY", "\"${google_maps_key}\"")
+            resValue("string", "google_maps_key", "\"${google_maps_key}\"")
         }
-        debug{
-            buildConfigField ("String", "GOOGLE_MAPS_KEY", "\"${google_maps_key}\"")
-            resValue ("string", "google_maps_key", "\"${google_maps_key}\"")
+        debug {
+            buildConfigField("String", "GOOGLE_MAPS_KEY", "\"${google_maps_key}\"")
+            resValue("string", "google_maps_key", "\"${google_maps_key}\"")
         }
     }
     compileOptions {
@@ -104,7 +104,7 @@ dependencies {
     // Google Place Service
     implementation 'com.google.android.gms:play-services-places:16.0.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+    // PLAY SERVICES
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
 }
-
-

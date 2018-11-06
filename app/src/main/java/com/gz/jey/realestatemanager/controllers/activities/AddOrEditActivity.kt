@@ -23,8 +23,16 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.places.GeoDataClient
+import com.google.android.gms.location.places.PlaceDetectionClient
+import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.JsonObject
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.dialog.*
 import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
@@ -40,7 +48,11 @@ import com.gz.jey.realestatemanager.views.PhotosAdapter
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
+class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnectionFailedListener {
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun onClickDeleteButton(position: Int) {}
     // FRAGMENTS
     val TAG = "AddOrEditActivity"
@@ -66,13 +78,21 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
     lateinit var realEstateViewModel: RealEstateViewModel
     lateinit var database: RealEstateManagerDatabase
     private var enableSave = false
-    var oblArray: ArrayList<Int> = arrayListOf(0, 2, 11, 12, 15)
+    var oblArray: ArrayList<Int> = arrayListOf(0, 1, 9, 10, 11, 14)
     private val poiList: ArrayList<PointsOfInterest> = ArrayList()
     private val photosList: ArrayList<Photos> = ArrayList()
     private val checks: ArrayList<ImageView?> = ArrayList()
     private val values: ArrayList<TextView?> = ArrayList()
     private val marks: ArrayList<TextView?> = ArrayList()
     private val results: ArrayList<String> = ArrayList()
+
+    private val address : JsonObject? = null
+
+    // FOR POSITION
+    lateinit var mGoogleApiClient: GoogleApiClient
+    private var mGeoDataClient : GeoDataClient? = null
+    private var mPlaceDetectionClient : PlaceDetectionClient? = null
+    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
 
     private var photoSelected: Photos? = null
     // FOR REALESTATE SELECTOR
@@ -91,8 +111,14 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         super.onCreate(savedInstanceState)
         intent.extras["IS_EDIT"]
         this.setContentView(R.layout.activity_add_or_edit)
+        mGoogleApiClient = GoogleApiClient.Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build()
         init()
     }
+
 
     /**
      * INIT ACTIVITY
@@ -100,18 +126,33 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
     private fun init() {
         this.landscape = Utils.isLandscape(this)
         this.configureToolBar()
+        this.setLocalisationData()
         this.setIcon()
         this.setItems()
         this.setViewModel()
         this.setAddOrEdit()
     }
 
+    /**
+     * SET LOCALISATION DATA
+     */
+    private fun setLocalisationData(){
+        // Construct a GeoDataClient.
+        mGeoDataClient = Places.getGeoDataClient(applicationContext)
+        // Construct a PlaceDetectionClient.
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(applicationContext)
+        // Construct a FusedLocationProviderClient.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(applicationContext)
+        getDeviceLocation()
+    }
+
+
     private fun setItems() {
         val inflater: LayoutInflater = LayoutInflater.from(this)
         container = findViewById(R.id.container)
-        for (i in 0 until 19) {
+        for (i in 0 until 18) {
             when (i) {
-                9 -> {
+                8 -> {
                     val child: View = inflater.inflate(R.layout.add_edit_big_fields, null)
                     container.addView(child)
                     marks.add(null)
@@ -119,7 +160,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
                     values.add(child.findViewById(R.id.value_description))
                     results.add("")
                 }
-                13 -> {
+                12 -> {
                     val child: View = inflater.inflate(R.layout.horizontal_recycler_view, null)
                     recyclerView = child.findViewById(R.id.photos_recycler_view)
                     configureRecyclerView()
@@ -150,7 +191,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
                     else marks[i]!!.setTextColor(getC(R.color.colorTransparent))
 
                     edit.setOnClickListener { openDialog(i) }
-                    if (i == 12) {
+                    if (i == 11) {
                         removePhoto = remove
                         removePhoto.setOnClickListener {
                             if (photoSelected != null)
@@ -259,30 +300,29 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         val res: ArrayList<String> = ArrayList()
         res.add(results[index])
         when (index) {
-            0 -> ViewDialogInputText().showDialog(this, Code.DISTRICT, res)
-            1 -> ViewDialogInputAddress().showDialog(this, this, Code.ADDRESS, res)
-            2 -> ViewDialogMultiChoice().showDialog(this, Code.TYPE, res)
-            3 -> ViewDialogInputText().showDialog(this, Code.SURFACE, res)
-            4 -> ViewDialogInputText().showDialog(this, Code.ROOM_NUM, res)
-            5 -> ViewDialogInputText().showDialog(this, Code.BED_NUM, res)
-            6 -> ViewDialogInputText().showDialog(this, Code.BATH_NUM, res)
-            7 -> ViewDialogInputText().showDialog(this, Code.KITCHEN_NUM, res)
-            8 -> ViewDialogInputText().showDialog(this, Code.DESCRIPTION, res)
-            //9 -> { HUGE FIELDS }
-            10 -> ViewDialogMultiChoice().showDialog(this, Code.CURRENCY, res)
-            11 -> ViewDialogInputText().showDialog(this, Code.PRICE, res)
-            12 -> ViewDialogPhotoPicker().showDialog(this)
-            //13 -> { RECYCLER VIEW}
-            14 -> {
+            0 -> ViewDialogInputAddress().showDialog(mGeoDataClient!!, this, this, Code.ADDRESS, res)
+            1 -> ViewDialogMultiChoice().showDialog(this, Code.TYPE, res)
+            2 -> ViewDialogInputText().showDialog(this, Code.SURFACE, res)
+            3 -> ViewDialogInputText().showDialog(this, Code.ROOM_NUM, res)
+            4 -> ViewDialogInputText().showDialog(this, Code.BED_NUM, res)
+            5 -> ViewDialogInputText().showDialog(this, Code.BATH_NUM, res)
+            6 -> ViewDialogInputText().showDialog(this, Code.KITCHEN_NUM, res)
+            7 -> ViewDialogInputText().showDialog(this, Code.DESCRIPTION, res)
+            //8 -> { HUGE FIELDS }
+            9 -> ViewDialogMultiChoice().showDialog(this, Code.CURRENCY, res)
+            10 -> ViewDialogInputText().showDialog(this, Code.PRICE, res)
+            11 -> ViewDialogPhotoPicker().showDialog(this)
+            //12 -> { RECYCLER VIEW}
+            13 -> {
                 res.clear()
                 for (p in poiList)
                     res.add(p.toString())
                 ViewDialogMultiChoice().showDialog(this, Code.POI, res)
             }
-            15 -> ViewDialogMultiChoice().showDialog(this, Code.STATUS, res)
-            16 -> ViewDialogDatePicker().showDialog(this, Code.SALE_DATE, res)
-            17 -> ViewDialogDatePicker().showDialog(this, Code.SOLD_DATE, res)
-            18 -> ViewDialogInputText().showDialog(this, Code.AGENT, res)
+            14 -> ViewDialogMultiChoice().showDialog(this, Code.STATUS, res)
+            15 -> ViewDialogDatePicker().showDialog(this, Code.SALE_DATE, res)
+            16 -> ViewDialogDatePicker().showDialog(this, Code.SOLD_DATE, res)
+            17 -> ViewDialogInputText().showDialog(this, Code.AGENT, res)
         }
     }
 
@@ -291,21 +331,21 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         setSave(enableSave)
         //results[18] = "Jey"
         val re = RealEstate(realEstate!!.id,
-                if (results[0].isNotEmpty()) results[0] else null,
-                if (results[1].isNotEmpty()) results[1] else null,
+                if (address!=null) address.get("secondaryText").asString else null,
+                if (address!=null) address.get("fullText").asString else null,
+                if (results[1].isNotEmpty()) results[1].toInt() else null,
                 if (results[2].isNotEmpty()) results[2].toInt() else null,
                 if (results[3].isNotEmpty()) results[3].toInt() else null,
                 if (results[4].isNotEmpty()) results[4].toInt() else null,
                 if (results[5].isNotEmpty()) results[5].toInt() else null,
                 if (results[6].isNotEmpty()) results[6].toInt() else null,
-                if (results[7].isNotEmpty()) results[7].toInt() else null,
-                if (results[8].isNotEmpty()) results[8] else null,
-                if (results[10].isNotEmpty()) results[10].toInt() else null,
-                if (results[11].isNotEmpty()) results[11].toLong() else null,
-                if (results[15].isNotEmpty()) results[15].toInt() else null,
+                if (results[7].isNotEmpty()) results[7] else null,
+                if (results[9].isNotEmpty()) results[9].toInt() else null,
+                if (results[10].isNotEmpty()) results[10].toLong() else null,
+                if (results[14].isNotEmpty()) results[14].toInt() else null,
+                if (results[15].isNotEmpty()) results[15] else null,
                 if (results[16].isNotEmpty()) results[16] else null,
                 if (results[17].isNotEmpty()) results[17] else null,
-                if (results[18].isNotEmpty()) results[18] else null,
                 false,
                 if (photosList.isNotEmpty()) photosList else null,
                 if (poiList.isNotEmpty()) poiList else null
@@ -322,36 +362,35 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
     private fun getDtbValue(code: Int) {
         val resArray: ArrayList<String> = ArrayList()
         insert = code
-        if (code != 9 && code != 12 && code != 14) {
+        if (code != 8 && code != 11 && code != 13) {
             val result = when (code) {
-                0 -> if (realEstate!!.district != null) realEstate!!.district.toString() else ""
-                1 -> if (realEstate!!.address != null) realEstate!!.address.toString() else ""
-                2 -> if (realEstate!!.type != null) realEstate!!.type.toString() else ""
-                3 -> if (realEstate!!.surface != null) realEstate!!.surface.toString() else ""
-                4 -> if (realEstate!!.room != null) realEstate!!.room.toString() else ""
-                5 -> if (realEstate!!.bed != null) realEstate!!.bed.toString() else ""
-                6 -> if (realEstate!!.bath != null) realEstate!!.bath.toString() else ""
-                7 -> if (realEstate!!.kitchen != null) realEstate!!.kitchen.toString() else ""
-                8 -> if (realEstate!!.description != null) realEstate!!.description.toString() else ""
-                10 -> if (realEstate!!.currency != null) realEstate!!.currency.toString() else ""
-                11 -> if (realEstate!!.price != null) realEstate!!.price.toString() else ""
-                15 -> if (realEstate!!.status != null) realEstate!!.status.toString() else ""
-                16 -> if (realEstate!!.marketDate != null) realEstate!!.marketDate.toString() else ""
-                17 -> if (realEstate!!.soldDate != null) realEstate!!.soldDate.toString() else ""
-                18 -> if (realEstate!!.agentName != null) realEstate!!.agentName.toString() else ""
+                0 -> if (realEstate!!.address != null) realEstate!!.address.toString() else ""
+                1 -> if (realEstate!!.type != null) realEstate!!.type.toString() else ""
+                2 -> if (realEstate!!.surface != null) realEstate!!.surface.toString() else ""
+                3 -> if (realEstate!!.room != null) realEstate!!.room.toString() else ""
+                4 -> if (realEstate!!.bed != null) realEstate!!.bed.toString() else ""
+                5 -> if (realEstate!!.bath != null) realEstate!!.bath.toString() else ""
+                6 -> if (realEstate!!.kitchen != null) realEstate!!.kitchen.toString() else ""
+                7 -> if (realEstate!!.description != null) realEstate!!.description.toString() else ""
+                9 -> if (realEstate!!.currency != null) realEstate!!.currency.toString() else ""
+                10 -> if (realEstate!!.price != null) realEstate!!.price.toString() else ""
+                14 -> if (realEstate!!.status != null) realEstate!!.status.toString() else ""
+                15 -> if (realEstate!!.marketDate != null) realEstate!!.marketDate.toString() else ""
+                16 -> if (realEstate!!.soldDate != null) realEstate!!.soldDate.toString() else ""
+                17 -> if (realEstate!!.agentName != null) realEstate!!.agentName.toString() else ""
                 else -> return
             }
             // Log.d("GET DTB "+code.toString(), result)
             results[code] = result
             resArray.add(result)
             insertEditedValue(code, resArray)
-        } else if (code == 12) {
+        } else if (code == 11) {
             if (realEstate!!.id != null) {
                 photosList.clear()
                 photosList.addAll(realEstate!!.photos as ArrayList<Photos>)
                 setEditedPhoto()
             }
-        } else if (code == 14) {
+        } else if (code == 13) {
             if (realEstate!!.id != null) {
                 poiList.clear()
                 if(realEstate!!.poi != null)
@@ -386,31 +425,31 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
 
     fun insertEditedValue(code: Int, array: ArrayList<String>) {
         if (array.isNotEmpty() && array[0].isNotEmpty()) {
-            Log.d("ARRAY " + code, array[0])
-            Log.d("RESULTS " + code, results[code])
+            Log.d("ARRAY $code", array[0])
+            Log.d("RESULTS $code", results[code])
             results[code] = array[0]
             when (code) {
+                1 -> {
+                    values[1]!!.text = resources.getStringArray(R.array.type_ind)[array[0].toInt()]
+                }
                 2 -> {
-                    values[2]!!.text = resources.getStringArray(R.array.type_ind)[array[0].toInt()]
+                    values[2]!!.text = if (results[code].isNotEmpty()) Utils.getSurfaceFormat(this, results[code].toInt()) else ""
                 }
-                3 -> {
-                    values[3]!!.text = if (results[code].isNotEmpty()) Utils.getSurfaceFormat(this, results[code].toInt()) else ""
+                7 -> {
+                    values[8]!!.text = results[code]
+                    if (values[8]!!.text.isNotEmpty()) validate(code, true) else validate(code, false)
                 }
-                8 -> {
-                    values[9]!!.text = results[code]
-                    if (values[9]!!.text.isNotEmpty()) validate(8, true) else validate(8, false)
+                9 -> {
+                    results[code] = if (results[code].isNotEmpty()) results[code] else "0"
+                    values[code]!!.text = Utils.getCurrencyFormat(this, results[code].toInt())
                 }
                 10 -> {
-                    results[10] = if (results[10].isNotEmpty()) results[10] else "0"
-                    values[10]!!.text = Utils.getCurrencyFormat(this, results[10].toInt())
+                    results[code] = if (results[code].isNotEmpty()) results[code] else ""
+                    values[code]!!.text = Utils.convertedHighPrice(this, results[9].toInt(), results[code].toLong())
                 }
                 11 -> {
-                    results[11] = if (results[11].isNotEmpty()) results[11] else ""
-                    values[11]!!.text = Utils.convertedHighPrice(this, results[10].toInt(), results[11].toLong())
                 }
-                12 -> {
-                }
-                14 -> {
+                13 -> {
                     poiList.clear()
                     var str = ""
                     for (i in 0 until array.size) {
@@ -420,11 +459,11 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
                         val coma = if (i == (array.size - 1)) "" else ","
                         str += "$sent$coma"
                     }
-                    values[14]!!.text = shortCutStr(str)
+                    values[code]!!.text = shortCutStr(str)
                 }
-                15 -> {
-                    results[code] = if (results[15].isNotEmpty()) results[15] else "0"
-                    values[15]!!.text = resources.getStringArray(R.array.status_ind)[results[15].toInt()]
+                14 -> {
+                    results[code] = if (results[code].isNotEmpty()) results[code] else "0"
+                    values[code]!!.text = resources.getStringArray(R.array.status_ind)[results[code].toInt()]
                 }
                 else -> values[code]!!.text = shortCutStr(results[code])
             }
@@ -432,16 +471,16 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         } else {
             results[code] = ""
             when (code) {
-                8 -> {
-                    values[9]!!.text = ""
-                    validate(8, false)
+                7 -> {
+                    values[8]!!.text = ""
+                    validate(code, false)
                 }
-                12 -> {
+                11 -> {
                 }
-                14 -> {
+                13 -> {
                     poiList.clear()
-                    values[14]!!.text = ""
-                    validate(14, false)
+                    values[code]!!.text = ""
+                    validate(code, false)
                 }
                 else -> {
                     values[code]!!.text = ""
@@ -466,7 +505,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         } else
             recyclerView.visibility = View.GONE
 
-        if (photosList.isNotEmpty()) validate(12, true) else validate(12, false)
+        if (photosList.isNotEmpty()) validate(11, true) else validate(11, false)
     }
 
     private fun getC(c: Int): Int {
@@ -477,20 +516,20 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         val icon = if (bool) validIcon else unvalidIcon
         checks[ind]!!.background = icon
 
-        when (results[15]) {
+        when (results[14]) {
             "0" -> {
-                oblArray.add(16)
-                if (oblArray.contains(17))
-                    oblArray.remove(17)
-                marks[16]!!.setTextColor(getC(R.color.colorPrimary))
-                marks[17]!!.setTextColor(getC(R.color.colorTransparent))
-            }
-            "1" -> {
-                oblArray.add(17)
+                oblArray.add(15)
                 if (oblArray.contains(16))
                     oblArray.remove(16)
+                marks[15]!!.setTextColor(getC(R.color.colorPrimary))
                 marks[16]!!.setTextColor(getC(R.color.colorTransparent))
-                marks[17]!!.setTextColor(getC(R.color.colorPrimary))
+            }
+            "1" -> {
+                oblArray.add(16)
+                if (oblArray.contains(15))
+                    oblArray.remove(15)
+                marks[15]!!.setTextColor(getC(R.color.colorTransparent))
+                marks[16]!!.setTextColor(getC(R.color.colorPrimary))
             }
         }
 
@@ -526,7 +565,6 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
     // FOR PERMISSIONS
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 34
     var mLocationPermissionGranted: Boolean = false
-    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
 
     var mLastKnownLocation: LatLng? = null
 
@@ -538,8 +576,9 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         mFusedLocationProviderClient.lastLocation
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful && task.result != null) {
-                        Log.d(TAG, " TASK DEVICE LOCATION SUCCESS")
                         mLastKnownLocation = (LatLng(task.result!!.latitude, task.result!!.longitude))
+                        Log.d(TAG, " TASK DEVICE LOCATION SUCCESS")
+                        Log.d(TAG, mLastKnownLocation.toString())
 
                     } else {
                         Log.e("MAP LOCATION", "Exception: %s", task.exception)
@@ -568,4 +607,25 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener {
         }
     }
 
+
+    /**
+     * ON REQUEST PERMISSION RESULT
+     * @param requestCode Int
+     * @param permissions Array<String>
+     * @param grantResults IntArray
+     */
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        mLocationPermissionGranted = false
+        when (requestCode) {
+            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true
+                    getDeviceLocation()
+                }
+            }
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.gz.jey.realestatemanager.controllers.dialog
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.res.Configuration
 import android.util.Log
@@ -30,7 +31,7 @@ class ViewDialogMultiChoice {
 
     private var checkCode: Int? = null
 
-    fun showDialog(activity: AddOrEditActivity, code: Int, actualValue: ArrayList<String>) {
+    fun showDialog(activity: Activity, code: Int, actualValue: ArrayList<String>) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
@@ -95,7 +96,7 @@ class ViewDialogMultiChoice {
 
     }
 
-    private fun setOnClick(activity: AddOrEditActivity, code: Int, type:Int,  dialog: Dialog) {
+    private fun setOnClick(activity: Activity, code: Int, type:Int,  dialog: Dialog) {
         when (type) {
             0 -> {
                 editBtn.setOnClickListener {
@@ -106,7 +107,8 @@ class ViewDialogMultiChoice {
                             break
                         }
                     }
-                    activity.insertEditedValue(code, result)
+                    val act = activity as AddOrEditActivity
+                    act.insertEditedValue(code, result)
                     dialog.dismiss()
                 }
             }
@@ -117,7 +119,8 @@ class ViewDialogMultiChoice {
                         if (chk[i].isChecked)
                             result.add(i.toString())
                     }
-                    activity.insertEditedValue(code, result)
+                    val act = activity as AddOrEditActivity
+                    act.insertEditedValue(code, result)
                     dialog.dismiss()
                 }
             }
@@ -126,7 +129,8 @@ class ViewDialogMultiChoice {
                     for (i in 0 until list.size) {
                         result.clear()
                         if (rdb[i].isChecked) {
-                            activity.savePhoto(uri!!, i)
+                            val act = activity as AddOrEditActivity
+                            act.savePhoto(uri!!, i)
                             dialog.dismiss()
                             break
                         }
@@ -136,7 +140,7 @@ class ViewDialogMultiChoice {
         }
     }
 
-    private fun setCheckList(activity: AddOrEditActivity, code : Int, list: ArrayList<String>) {
+    private fun setCheckList(activity: Activity, code : Int, list: ArrayList<String>) {
         val params = scrollView.layoutParams
         when (activity.resources.configuration.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
