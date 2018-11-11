@@ -6,7 +6,7 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
-import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
+import com.gz.jey.realestatemanager.database.ItemDatabase
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.models.sql.Settings
 
@@ -23,7 +23,7 @@ class SettingsContentProvider : ContentProvider() {
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
 
         if (context != null) {
-            val cursor : Cursor = RealEstateManagerDatabase.getInstance(context)!!.settingsDao().getSettingsWithCursor()
+            val cursor : Cursor = ItemDatabase.getInstance(context)!!.settingsDao().getSettingsWithCursor()
             cursor.setNotificationUri(context!!.contentResolver, uri)
             return cursor
         }
@@ -38,7 +38,7 @@ class SettingsContentProvider : ContentProvider() {
     override fun insert(uri: Uri, contentValues: ContentValues): Uri? {
 
         if (context != null) {
-            val id = RealEstateManagerDatabase.getInstance(context)!!.settingsDao().insertSettings(Settings.fromContentValues(contentValues))
+            val id = ItemDatabase.getInstance(context)!!.settingsDao().insertSettings(Settings.fromContentValues(contentValues))
             if (id != 0L) {
                 context!!.contentResolver.notifyChange(uri, null)
                 return ContentUris.withAppendedId(uri, id)
@@ -50,7 +50,7 @@ class SettingsContentProvider : ContentProvider() {
 
     override fun delete(uri: Uri, s: String?, strings: Array<String>?): Int {
         if (context != null) {
-            val count = RealEstateManagerDatabase.getInstance(context)!!.settingsDao().deleteSettings()
+            val count = ItemDatabase.getInstance(context)!!.settingsDao().deleteSettings()
             context!!.contentResolver.notifyChange(uri, null)
             return count
         }
@@ -59,7 +59,7 @@ class SettingsContentProvider : ContentProvider() {
 
     override fun update(uri: Uri, contentValues: ContentValues, s: String?, strings: Array<String>?): Int {
         if (context != null) {
-            val count = RealEstateManagerDatabase.getInstance(context)!!.settingsDao().updateSettings(Settings.fromContentValues(contentValues))
+            val count = ItemDatabase.getInstance(context)!!.settingsDao().updateSettings(Settings.fromContentValues(contentValues))
             context!!.contentResolver.notifyChange(uri, null)
             return count
         }

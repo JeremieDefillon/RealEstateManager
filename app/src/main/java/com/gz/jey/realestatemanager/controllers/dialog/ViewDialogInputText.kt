@@ -7,14 +7,17 @@ import android.text.Editable
 import android.text.InputType
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
+import com.gz.jey.realestatemanager.controllers.activities.SetFilters
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.utils.Utils
+import java.lang.Exception
 import kotlin.collections.ArrayList
 
 class ViewDialogInputText {
@@ -83,6 +86,54 @@ class ViewDialogInputText {
                 })
             }
             Code.AGENT -> { titleLbl = activity.getString(R.string.agent) }
+            Code.FILTER_MIN_PRICE -> {
+                titleLbl = activity.getString(R.string.price)
+                overview.visibility = View.VISIBLE
+                inputText.inputType = InputType.TYPE_CLASS_NUMBER
+                inputText.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+                    override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+                    override fun afterTextChanged(editable: Editable) {
+                        overview.text = getPriceOverview(activity, editable.toString())
+                    }
+                })
+            }
+            Code.FILTER_MAX_PRICE -> {
+                titleLbl = activity.getString(R.string.price)
+                overview.visibility = View.VISIBLE
+                inputText.inputType = InputType.TYPE_CLASS_NUMBER
+                inputText.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+                    override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+                    override fun afterTextChanged(editable: Editable) {
+                        overview.text = getPriceOverview(activity, editable.toString())
+                    }
+                })
+            }
+            Code.FILTER_PHOTO -> {
+                titleLbl = activity.getString(R.string.photo_number)
+                inputText.inputType = InputType.TYPE_CLASS_NUMBER
+            }
+            Code.FILTER_DISTANCE -> {
+                titleLbl = activity.getString(R.string.distance) + " (Km)"
+                inputText.inputType = InputType.TYPE_CLASS_NUMBER
+            }
+            Code.FILTER_MIN_ROOMS -> {
+                titleLbl = activity.getString(R.string.room_number)
+                inputText.inputType = InputType.TYPE_CLASS_NUMBER
+            }
+            Code.FILTER_MAX_ROOMS -> {
+                titleLbl = activity.getString(R.string.room_number)
+                inputText.inputType = InputType.TYPE_CLASS_NUMBER
+            }
+            Code.FILTER_MIN_SURFACE -> {
+                titleLbl = activity.getString(R.string.surface)
+                inputText.inputType = InputType.TYPE_CLASS_NUMBER
+            }
+            Code.FILTER_MAX_SURFACE -> {
+                titleLbl = activity.getString(R.string.surface)
+                inputText.inputType = InputType.TYPE_CLASS_NUMBER
+            }
         }
         val editable = SpannableStringBuilder(result)
         inputText.text = editable
@@ -90,8 +141,14 @@ class ViewDialogInputText {
         editBtn.setOnClickListener {
             val res : ArrayList<String> = ArrayList()
             res.add(inputText.text.toString())
-            val act = activity as AddOrEditActivity
-            act.insertEditedValue(code, res)
+            if(code >= 200){
+                val act = activity as SetFilters
+                act.insertEditedValue(code, res)
+            }else{
+                val act = activity as AddOrEditActivity
+                act.insertEditedValue(code, res)
+            }
+
             dialog.dismiss()
         }
         titleCanvas.text = "$editLbl $titleLbl"
@@ -100,14 +157,18 @@ class ViewDialogInputText {
 
     private fun getPriceOverview(activity: Activity, ed: String): String {
         val sb = StringBuilder()
-        val edit = if (ed.isEmpty()) 0 else ed.toLong()
-        val num = Utils.convertedHighPrice(activity, 0, edit)
-        val overv = activity.getString(R.string.overview)
+        try {
+            val edit = if (ed.isEmpty()) 0 else ed.toLong()
+            val num = Utils.convertedHighPrice(activity, 0, edit)
+            val overv = activity.getString(R.string.overview)
 
-        val currency = 1
-        when (currency) {
-            0 -> sb.append(overv).append(" : ").append(activity.getString(R.string.dollar_symbol)).append(" ").append(num)
-            1 -> sb.append(overv).append(" : ").append(num).append(" ").append(activity.getString(R.string.euro_symbol))
+            val currency = 1
+            when (currency) {
+                0 -> sb.append(overv).append(" : ").append(activity.getString(R.string.dollar_symbol)).append(" ").append(num)
+                1 -> sb.append(overv).append(" : ").append(num).append(" ").append(activity.getString(R.string.euro_symbol))
+            }
+        }catch (e : Exception){
+            Log.e("OVERVIEW FAILED ", e.toString())
         }
 
         return sb.toString()

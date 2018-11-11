@@ -1,6 +1,6 @@
 package com.gz.jey.realestatemanager
 
-import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
+import com.gz.jey.realestatemanager.database.ItemDatabase
 import com.gz.jey.realestatemanager.provider.RealEstateContentProvider
 
 import android.arch.persistence.room.Room
@@ -33,7 +33,7 @@ class RealEstateContentProviderTest {
     @Before
     fun setUp() {
         Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(),
-                RealEstateManagerDatabase::class.java)
+                ItemDatabase::class.java)
                 .allowMainThreadQueries()
                 .build()
         mContentResolver = InstrumentationRegistry.getContext().contentResolver

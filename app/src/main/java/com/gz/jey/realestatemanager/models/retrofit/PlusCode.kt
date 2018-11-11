@@ -1,6 +1,6 @@
 package com.gz.jey.realestatemanager.models.retrofit
 
 class PlusCode(
-    var compoundCode: String? = null,
-    var globalCode: String? = null
+    val compound_code: String? = null,
+    val global_code: String? = null
 )

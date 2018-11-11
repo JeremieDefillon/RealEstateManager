@@ -2,7 +2,6 @@ package com.gz.jey.realestatemanager.controllers.fragments
 
 import android.arch.lifecycle.Observer
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -16,7 +15,10 @@ import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.google.android.gms.maps.model.LatLng
 import com.gz.jey.realestatemanager.R
+import com.gz.jey.realestatemanager.api.ApiStreams
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
 import com.gz.jey.realestatemanager.models.sql.Photos
 import com.gz.jey.realestatemanager.models.sql.RealEstate
@@ -99,7 +101,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
         if(mainActivity!!.realEstate!=null) {
             scrv.visibility = View.VISIBLE
             noRe.visibility = View.GONE
-            mainActivity!!.realEstateViewModel.getRealEstate(mainActivity!!.realEstate!!.id!!).observe(this, Observer<RealEstate> { re -> updateRealEstateDetails(re!!) })
+            mainActivity!!.itemViewModel.getRealEstate(mainActivity!!.realEstate!!.id!!).observe(this, Observer<RealEstate> { re -> updateRealEstateDetails(re!!) })
         }else{
             scrv.visibility = View.GONE
             noRe.visibility = View.VISIBLE
@@ -120,8 +122,12 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
         locationIcon.background = locIc
         locationValue.text = if(item.address!=null && item.address!!.isNotEmpty()) item.address else getString(R.string.nc)
         locationValue.typeface = if(item.address!=null && item.address!!.isNotEmpty()) Typeface.DEFAULT else Typeface.DEFAULT
-        if(item.address!=null && getLocation(item.address!!)!=null){
-            mapReceiver.background = getLocation(item.address!!)
+        if(item.address!=null){
+            val pos = LatLng(item.latitude!!, item.longitude!!)
+            val url = ApiStreams.getStaticMap(item.address!!, 200, pos)
+            Glide.with(context!!)
+                    .load(url)
+                    .into(mapReceiver)
             nfLocation.visibility = View.GONE
         }
         val inflater : LayoutInflater = LayoutInflater.from(view!!.context)
@@ -168,8 +174,11 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
                     val symb = if(item.currency !=null && item.currency==1) R.drawable.euro else R.drawable.dollar
                     statIcon.background = SetImageColor.changeDrawableColor(child.context, symb, second)
                     statLbl.text = getString(R.string.price)
-                    statValue.text = Utils.convertedHighPrice(this.context!!, item.currency,item.price) + "\r\n" +
-                            Utils.getPPMFormat(this.context!!, item.currency,item.price, item.surface)
+                    val sb = StringBuilder()
+                            .append(Utils.convertedHighPrice(this.context!!, item.currency,item.price))
+                            .append("\r\n")
+                            .append(Utils.getPPMFormat(this.context!!, item.currency,item.price, item.surface))
+                    statValue.text = sb.toString()
                 }
                 7 -> {
                     val status = if(item.status !=null)resources.getStringArray(R.array.status_ind)[item.status!!] else null
@@ -177,11 +186,19 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
                     when(item.status){
                         0-> {
                             statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.check_circle, grey)
-                            statValue.text = status + " since \r\n" + item.marketDate
+                            val sb = StringBuilder()
+                                    .append(status)
+                                    .append(" since \r\n")
+                                    .append(item.marketDate)
+                            statValue.text = sb.toString()
                         }
                         1-> {
                             statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.check_circle, second)
-                            statValue.text = status + " since \r\n" + item.soldDate
+                            val sb = StringBuilder()
+                                    .append(status)
+                                    .append(" since \r\n")
+                                    .append(item.soldDate)
+                            statValue.text = sb.toString()
                         }
                         else ->{
                             statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.close, grey)
@@ -197,20 +214,25 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
                 9 -> {
                     statIcon.background = SetImageColor.changeDrawableColor(child.context, R.drawable.poi, black)
                     statLbl.text = getString(R.string.points_of_interest)
+                    val poi : ArrayList<Boolean> = arrayListOf(false, false, false, false, false, false, false, false)
                     val sb = StringBuilder()
-                    if(item.poi != null && item.poi!!.isNotEmpty()){
-                        for (p in item.poi!!)
-                            sb.append(resources.getStringArray(R.array.poi_ind)[p.value!!]).append("\r\n")
-                    }
+                    poi[0] = item.poiSchool
+                    poi[1] = item.poiShops
+                    poi[2] = item.poiPark
+                    poi[3] = item.poiSubway
+                    poi[4] = item.poiBus
+                    poi[5] = item.poiTrain
+                    poi[6] = item.poiHospital
+                    poi[7] = item.poiAirport
+                    for ((i,p) in poi.withIndex())
+                            if(p)
+                                sb.append(resources.getStringArray(R.array.poi_ind)[i]).append("\r\n")
+
 
                     statValue.text = sb.toString()
                 }
             }
         }
-    }
-
-    private fun getLocation(adr : String) : Drawable?{
-        return null
     }
 
     override fun onDestroy() {

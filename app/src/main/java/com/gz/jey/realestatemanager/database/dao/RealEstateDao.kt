@@ -1,10 +1,10 @@
 package com.gz.jey.realestatemanager.database.dao
 
 import android.arch.lifecycle.LiveData
+import android.arch.persistence.db.SupportSQLiteQuery
 import android.arch.persistence.room.*
 import android.database.Cursor
 import com.gz.jey.realestatemanager.models.sql.RealEstate
-
 
 @Dao
 interface RealEstateDao {
@@ -12,8 +12,8 @@ interface RealEstateDao {
     @Query("SELECT * FROM RealEstate WHERE id = :id")
     fun getRealEstate(id: Long): LiveData<RealEstate>
 
-    @Query("SELECT * FROM RealEstate WHERE :req")
-    fun getFilteredRealEstate(req: String): LiveData<RealEstate>
+    @RawQuery(observedEntities = [RealEstate::class])
+    fun getFilteredRealEstate(query: SupportSQLiteQuery): LiveData<List<RealEstate>>
 
     @Query("SELECT * FROM RealEstate WHERE isSelected = :get")
     fun getRealEstateBySelect(get: Boolean = true): LiveData<RealEstate>

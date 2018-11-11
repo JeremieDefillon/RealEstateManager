@@ -23,12 +23,11 @@ import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.dialog.ToastMessage
 import com.gz.jey.realestatemanager.controllers.fragments.RealEstateDetails
 import com.gz.jey.realestatemanager.controllers.fragments.RealEstateList
-import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
+import com.gz.jey.realestatemanager.database.ItemDatabase
 import com.gz.jey.realestatemanager.injection.Injection
-import com.gz.jey.realestatemanager.injection.RealEstateViewModel
+import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.*
 import com.gz.jey.realestatemanager.models.sql.Photos
-import com.gz.jey.realestatemanager.models.sql.PointsOfInterest
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.models.sql.Settings
 import com.gz.jey.realestatemanager.utils.SetImageColor
@@ -55,8 +54,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var loadingContent: TextView? = null
 
     // FOR DATA
-    lateinit var realEstateViewModel: RealEstateViewModel
-    lateinit var database: RealEstateManagerDatabase
+    lateinit var itemViewModel: ItemViewModel
+    lateinit var database: ItemDatabase
     private var settings : Settings? = null
     private var existMenu: Boolean = false
     var tabLand: Boolean = false
@@ -64,7 +63,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     // FOR REALESTATE SELECTOR
     var realEstate: RealEstate? = null
-    var poi: ArrayList<PointsOfInterest>? = null
+    var poi: ArrayList<Int>? = null
     var photos: ArrayList<Photos>? = null
 
     /**
@@ -74,24 +73,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
+        initActivity()
+    }
+
+    /**
+     * INIT ACTIVITY
+     */
+    private fun initActivity() {
         tabLand = (findViewById<View>(R.id.fragment_details) != null)
         setLang()
         setIcon()
-        //loading = findViewById(R.id.loading)
-        //loadingContent = findViewById(R.id.content_loading)
-        //loadingContent!!.text = getString(R.string.initActivity)
-        //setLoading(true, true)
         fragmentContainer = findViewById(R.id.fragment_container)
-
-        //Log.d("ENABLE NOTIF ???", Data.enableNotif.toString())
-
-        initActivity()
-        if (savedInstanceState == null) {
-            val extras = intent.extras
-
-            // if(Data.enableNotif && !fromNotif)
-            // setNotification()
-        }
+        //saveDatas()
+        this.configureToolBar()
+        this.setDrawerLayout()
+        this.setViewModel()
+        this.realEstateList = RealEstateList.newInstance(this)
+        this.realEstateDetails = RealEstateDetails.newInstance(this)
+        this.setFragment(0)
     }
 
     private fun setLang() {
@@ -101,19 +100,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setIcon() {
         enableEditIcon = SetImageColor.changeDrawableColor(this, R.drawable.edit, ContextCompat.getColor(this, R.color.colorWhite))
         disableEditIcon = SetImageColor.changeDrawableColor(this, R.drawable.edit, ContextCompat.getColor(this, R.color.colorGrey))
-    }
-
-    /**
-     * INIT ACTIVITY
-     */
-    private fun initActivity() {
-        //saveDatas()
-        this.configureToolBar()
-        this.setDrawerLayout()
-        this.setViewModel()
-        this.realEstateList = RealEstateList.newInstance(this)
-        this.realEstateDetails = RealEstateDetails.newInstance(this)
-        this.setFragment(0)
     }
 
     /**
@@ -177,18 +163,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
-        this.realEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel::class.java)
-        this.realEstateViewModel.getSettings().observe(this, Observer<Settings>{ s -> initSettings(s)})
+        this.itemViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ItemViewModel::class.java)
+        this.itemViewModel.getSettings().observe(this, Observer<Settings>{ s -> initSettings(s)})
     }
 
     private fun initSettings(set : Settings?){
         if(set != null) {
             settings = set
-            realEstateViewModel.updateSettings(settings!!)
+            itemViewModel.updateSettings(settings!!)
         }else{
             val lang = if(Locale.getDefault().language == "fr") 1 else 0
             settings = Settings(null, 0, lang, null, false, true)
-            realEstateViewModel.createSettings(settings!!)
+            itemViewModel.createSettings(settings!!)
         }
     }
 
@@ -222,9 +208,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle Navigation Item Click
         item.isChecked = true
         when (item.itemId) {
-            R.id.restaurant_menu -> {
 
-            }
             R.id.settings -> setFragment(5)
         }
         this.drawerLayout!!.closeDrawer(GravityCompat.START)
@@ -277,7 +261,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun addOrEditActivity(isEdit: Boolean) {
+    fun addOrEditActivity(isEdit: Boolean) {
         val intent = Intent(this, AddOrEditActivity::class.java)
         intent.putExtra(Code.IS_EDIT, isEdit)
         intent.putExtra(Code.RE_ID, realEstate?.id)
@@ -285,7 +269,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         finish()
     }
 
-    private fun filtersActivity() {
+    fun filtersActivity() {
         val intent = Intent(this, SetFilters::class.java)
         startActivity(intent)
         finish()
@@ -321,7 +305,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setEdit(false)
         if (realEstate != null) {
             realEstate!!.isSelected = false
-            realEstateViewModel.updateRealEstate(realEstate!!)
+            itemViewModel.updateRealEstate(realEstate!!)
         }
         realEstate = null
         poi = null

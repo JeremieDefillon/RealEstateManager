@@ -11,6 +11,7 @@ import android.widget.*
 import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
+import com.gz.jey.realestatemanager.controllers.activities.SetFilters
 import com.gz.jey.realestatemanager.models.Code
 import java.util.*
 
@@ -63,19 +64,19 @@ class ViewDialogMultiChoice {
                 titleLbl = activity.getString(R.string.currency)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.currency_ind))
-                setOnClick(activity, code,0, dialog)
+                setOnClick(activity, code, 0, dialog)
             }
             Code.POI -> {
                 titleLbl = activity.getString(R.string.points_of_interest)
                 checkCode = Code.MULTICHECK
                 list.addAll(activity.resources.getStringArray(R.array.poi_ind))
-                setOnClick(activity, code,1, dialog)
+                setOnClick(activity, code, 1, dialog)
             }
             Code.STATUS -> {
                 titleLbl = activity.getString(R.string.status)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.status_ind))
-                setOnClick(activity, code,0, dialog)
+                setOnClick(activity, code, 0, dialog)
             }
             Code.LEGEND -> {
                 titleLbl = activity.getString(R.string.legend)
@@ -86,7 +87,25 @@ class ViewDialogMultiChoice {
                         .into(image)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.rooms_ind))
-                setOnClick(activity, code,2, dialog)
+                setOnClick(activity, code, 2, dialog)
+            }
+            Code.FILTER_TYPE -> {
+                titleLbl = activity.getString(R.string.type)
+                checkCode = Code.MULTICHECK
+                list.addAll(activity.resources.getStringArray(R.array.type_ind))
+                setOnClick(activity, code, 3, dialog)
+            }
+            Code.FILTER_POI -> {
+                titleLbl = activity.getString(R.string.points_of_interest)
+                checkCode = Code.MULTICHECK
+                list.addAll(activity.resources.getStringArray(R.array.poi_ind))
+                setOnClick(activity, code, 3, dialog)
+            }
+            Code.FILTER_STATUS -> {
+                titleLbl = activity.getString(R.string.status)
+                checkCode = Code.SOLOCHECK
+                list.addAll(activity.resources.getStringArray(R.array.status_ind))
+                setOnClick(activity, code, 4, dialog)
             }
         }
 
@@ -96,7 +115,7 @@ class ViewDialogMultiChoice {
 
     }
 
-    private fun setOnClick(activity: Activity, code: Int, type:Int,  dialog: Dialog) {
+    private fun setOnClick(activity: Activity, code: Int, type: Int, dialog: Dialog) {
         when (type) {
             0 -> {
                 editBtn.setOnClickListener {
@@ -137,19 +156,46 @@ class ViewDialogMultiChoice {
                     }
                 }
             }
+            3 -> {
+                editBtn.setOnClickListener {
+                    result.clear()
+                    for (i in 0 until list.size) {
+                        if (chk[i].isChecked)
+                            result.add(i.toString())
+                    }
+                    val act = activity as SetFilters
+                    act.insertEditedValue(code, result)
+                    dialog.dismiss()
+                }
+            }
+            4 -> {
+                editBtn.setOnClickListener {
+                    for (i in 0 until list.size) {
+                        result.clear()
+                        if (rdb[i].isChecked) {
+                            result.add(i.toString())
+                            break
+                        }
+                    }
+                    val act = activity as SetFilters
+                    act.insertEditedValue(code, result)
+                    dialog.dismiss()
+                }
+            }
         }
     }
 
-    private fun setCheckList(activity: Activity, code : Int, list: ArrayList<String>) {
+    private fun setCheckList(activity: Activity, code: Int, list: ArrayList<String>) {
         val params = scrollView.layoutParams
         when (activity.resources.configuration.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
-                inputChoice.columnCount =  Math.ceil(list.size / 6.0).toInt()
+                inputChoice.columnCount = Math.ceil(list.size / 6.0).toInt()
                 Log.d("LANDSCAPE", params.height.toString())
             }
             Configuration.ORIENTATION_PORTRAIT -> {
-                inputChoice.columnCount =  Math.ceil(list.size / 12.0).toInt()
-                Log.d("PORTRAIT", params.height.toString())}
+                inputChoice.columnCount = Math.ceil(list.size / 12.0).toInt()
+                Log.d("PORTRAIT", params.height.toString())
+            }
         }
         rdb.clear()
         chk.clear()
@@ -164,10 +210,10 @@ class ViewDialogMultiChoice {
                     inputChoice.addView(checkBtn)
                     rdb.add(inputChoice.getChildAt(i) as RadioButton)
                     rdb[i].text = list[i]
-                    if(result.contains(i.toString()))
+                    if (result.contains(i.toString()))
                         rdb[i].isChecked = true
 
-                    rdb[i].setOnClickListener { checkedSingle(i)}
+                    rdb[i].setOnClickListener { checkedSingle(i) }
                 }
                 Code.MULTICHECK -> {
                     checkBtn = LayoutInflater.from(activity).inflate(R.layout.check_btn, null)
@@ -175,28 +221,28 @@ class ViewDialogMultiChoice {
                     inputChoice.addView(checkBtn)
                     chk.add(inputChoice.getChildAt(i) as CheckBox)
                     chk[i].text = list[i]
-                    if(result.contains(i.toString()))
+                    if (result.contains(i.toString()))
                         chk[i].isChecked = true
                 }
             }
         }
 
-        if(code!=Code.LEGEND){
+        if (code != Code.LEGEND) {
             for (i in 0 until result.size) {
-                val n: Int? = if(result[i].isNotEmpty()) result[i].toInt() else null
+                val n: Int? = if (result[i].isNotEmpty()) result[i].toInt() else null
                 if (n != null) {
                     when (checkCode) {
-                        Code.SOLOCHECK -> { rdb[n].isChecked = true }
-                        Code.MULTICHECK -> { chk[n].isChecked = true }
+                        Code.SOLOCHECK -> rdb[n].isChecked = true
+                        Code.MULTICHECK -> chk[n].isChecked = true
                     }
                 }
             }
         }
     }
 
-    private fun checkedSingle(c : Int){
-        for (i in 0 until rdb.size){
-            if(i!=c)
+    private fun checkedSingle(c: Int) {
+        for (i in 0 until rdb.size) {
+            if (i != c)
                 rdb[i].isChecked = false
         }
     }

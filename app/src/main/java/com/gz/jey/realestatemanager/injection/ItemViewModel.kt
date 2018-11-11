@@ -1,20 +1,20 @@
 package com.gz.jey.realestatemanager.injection
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.arch.persistence.db.SupportSQLiteQuery
+import com.gz.jey.realestatemanager.models.sql.Filters
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.models.sql.Settings
-import com.gz.jey.realestatemanager.repositories.PhotosDataRepository
-import com.gz.jey.realestatemanager.repositories.PointsOfInterestDataRepository
-import com.gz.jey.realestatemanager.repositories.RealEstateDataRepository
-import com.gz.jey.realestatemanager.repositories.SettingsDataRepository
+import com.gz.jey.realestatemanager.repositories.*
 import java.util.concurrent.Executor
 
-class RealEstateViewModel(// REPOSITORIES
+class ItemViewModel(// REPOSITORIES
         private val realEstateDataSource: RealEstateDataRepository,
         private val photosDataSource: PhotosDataRepository,
-        private val poiDataSource: PointsOfInterestDataRepository,
         private val settingsDataSource: SettingsDataRepository,
+        private val filtersDataSource: FiltersDataRepository,
         private val executor: Executor
 ) : ViewModel() {
 
@@ -24,6 +24,10 @@ class RealEstateViewModel(// REPOSITORIES
 
     fun getAllRealEstate(): LiveData<List<RealEstate>> {
         return realEstateDataSource.getAllRealEstate()
+    }
+
+    fun getFilteredRealEstate(req : SupportSQLiteQuery): LiveData<List<RealEstate>> {
+        return realEstateDataSource.getFilteredRealEstate(req)
     }
 
     fun getRealEstateBySelect(): LiveData<RealEstate>{
@@ -60,5 +64,22 @@ class RealEstateViewModel(// REPOSITORIES
 
     fun updateSettings(settings: Settings) {
         executor.execute {settingsDataSource.updateSettings(settings) }
+    }
+
+
+    // -------------
+    // FOR FILTERS
+    // -------------
+
+    fun getFilters(id : Long) : LiveData<Filters> {
+        return filtersDataSource.getFilters(id)
+    }
+
+    fun createFilters(filters: Filters) {
+        executor.execute {filtersDataSource.createFilters(filters) }
+    }
+
+    fun updateFilters(filters: Filters) {
+        executor.execute {filtersDataSource.updateFilters(filters) }
     }
 }

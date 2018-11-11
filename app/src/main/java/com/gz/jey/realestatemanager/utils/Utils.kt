@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager
 import com.gz.jey.realestatemanager.R
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 object Utils{
 
@@ -139,5 +140,20 @@ object Utils{
         }else{
             context.getString(R.string.price)+"/"+context.getString(R.string.m2)+" "+context.getString(R.string.nc)
         }
+    }
+
+    fun getPoiAsString(ar : ArrayList<String>) : String{
+        val sb = StringBuilder()
+        for (a in ar)
+            sb.append("$a,")
+        return sb.substring(0, sb.length-1)
+    }
+
+    fun getPoiAsArrayInt(s : String) : ArrayList<Int>{
+        val ns = s.split(",")
+        val li : ArrayList<Int> = ArrayList()
+        for (v in ns)
+            li.add(v.toInt())
+        return li
     }
 }

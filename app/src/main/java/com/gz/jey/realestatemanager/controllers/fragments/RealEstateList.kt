@@ -1,6 +1,8 @@
 package com.gz.jey.realestatemanager.controllers.fragments
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import android.arch.persistence.db.SimpleSQLiteQuery
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -12,9 +14,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
+import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogNoResults
+import com.gz.jey.realestatemanager.models.Code
+import com.gz.jey.realestatemanager.models.sql.Filters
 import com.gz.jey.realestatemanager.models.sql.RealEstate
+import com.gz.jey.realestatemanager.utils.BuildRequestSQL
 import com.gz.jey.realestatemanager.utils.ItemClickSupport
 import com.gz.jey.realestatemanager.views.RealEstateAdapter
+import io.reactivex.annotations.Nullable
 
 class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     private var mView: View? = null
@@ -77,10 +84,12 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     }
 
     private fun getRealEstates() {
-        mainActivity!!
-                .realEstateViewModel
-                .getAllRealEstate()
-                .observe(this, Observer<List<RealEstate>> { re -> updateRealEstateList(re!!) })
+        if (mainActivity!!.intent.hasExtra(Code.FILTERS) && mainActivity!!.intent.getBooleanExtra(Code.FILTERS, false))
+            mainActivity!!.itemViewModel.getFilters(Code.FILTERS_DATA)
+                    .observe(this, Observer<Filters> { fi -> setFilters(fi!!) })
+        else
+            mainActivity!!.itemViewModel.getAllRealEstate()
+                    .observe(this, Observer<List<RealEstate>> { re -> updateRealEstateList(re!!) })
     }
 
     private fun updateRealEstate(realEstate: RealEstate, realEstates: List<RealEstate>) {
@@ -90,7 +99,7 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
             if (r != realEstate) {
                 r.isSelected = false
             }
-            mainActivity!!.realEstateViewModel.updateRealEstate(r)
+            mainActivity!!.itemViewModel.updateRealEstate(r)
         }
 
         if (mainActivity!!.realEstate == realEstate && !mainActivity!!.tabLand) {
@@ -108,21 +117,50 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
                 mainActivity!!.realEstateDetails!!.init()
             } else {
                 realEstate.isSelected = false
-                mainActivity!!.realEstateViewModel.updateRealEstate(realEstate)
+                mainActivity!!.itemViewModel.updateRealEstate(realEstate)
                 mainActivity!!.setFragment(1)
             }
         }
     }
 
+    private fun setFilters(fi : Filters) {
+        val query : SimpleSQLiteQuery? = BuildRequestSQL().setBuild(fi)
+        if(query != null){
+            mainActivity!!.itemViewModel.getFilteredRealEstate(query)
+                .observe(this, Observer<List<RealEstate>> { re ->
+                if(re!=null && re.isNotEmpty()) {
+                    if (re.size == 1 && re[0].id == null){
+                        infoText!!.text = getString(R.string.filters_failed)
+                        infoText!!.visibility = View.VISIBLE
+                        ViewDialogNoResults().showDialog(mainActivity!!, Code.FILTERS_FAILED)
+                    }else{
+                        updateRealEstateList(re)
+                    }
+                }else {
+                    infoText!!.text = getString(R.string.filters_failed)
+                    infoText!!.visibility = View.VISIBLE
+                    ViewDialogNoResults().showDialog(mainActivity!!, Code.FILTERS_FAILED)
+                }
+            })
+        }else{
+            mainActivity!!.intent.putExtra(Code.FILTERS, false)
+            getRealEstates()
+        }
+    }
+
     private fun updateRealEstateList(items: List<RealEstate>) {
         Log.d("RE LIST", items.toString())
-        if (items.isEmpty())
-            infoText!!.text = "No Real Estate found !"
-        else
+        if (items.isNotEmpty()) {
             infoText!!.visibility = View.GONE
+        }else{
+            infoText!!.visibility = View.VISIBLE
+            infoText!!.text = getString(R.string.no_results)
+            ViewDialogNoResults().showDialog(mainActivity!!, Code.NO_RESULTS)
+        }
 
         this.adapter!!.updateData(items)
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

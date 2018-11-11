@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.text.style.CharacterStyle
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View
 import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -63,7 +64,6 @@ class ViewDialogInputAddress {
         cancelBtn = dialog.findViewById(R.id.cancel_btn)
         editBtn = dialog.findViewById(R.id.edit_btn)
         resultFullAddress = if(actualValue.size>0) actualValue[0] else ""
-        resultDistrict = if(actualValue.size>1) actualValue[1] else ""
 
         unvalidIcon = SetImageColor.changeDrawableColor(context , R.drawable.check_circle, ContextCompat.getColor(context, R.color.colorGrey))
         validIcon = SetImageColor.changeDrawableColor(context , R.drawable.check_circle, ContextCompat.getColor(context, R.color.colorSecondary))
@@ -94,7 +94,6 @@ class ViewDialogInputAddress {
             val item = parent.getItemAtPosition(position) as AutocompletePrediction
             Log.d("DIALOG ADDRESS", item.toString())
             resultFullAddress = item.getFullText(null).toString()
-            resultDistrict = item.getSecondaryText(null).toString()
             checkValidate()
         }
 
@@ -112,7 +111,6 @@ class ViewDialogInputAddress {
         editBtn.setOnClickListener {
             val res : ArrayList<String> = ArrayList()
             res.add(resultFullAddress)
-            res.add(resultDistrict)
             activity.insertEditedValue(code, res)
             dialog.dismiss()
         }
@@ -121,9 +119,12 @@ class ViewDialogInputAddress {
     }
 
     private fun checkValidate(){
-        if(resultFullAddress == inputAddress.text.toString() && resultFullAddress.isNotEmpty())
+        if(resultFullAddress == inputAddress.text.toString() && resultFullAddress.isNotEmpty()) {
             checkAC.background = validIcon
-        else
+            editBtn.visibility = View.VISIBLE
+        }else {
             checkAC.background = unvalidIcon
+            editBtn.visibility = View.GONE
+        }
     }
 }

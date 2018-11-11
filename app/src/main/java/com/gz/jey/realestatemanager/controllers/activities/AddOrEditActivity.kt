@@ -34,17 +34,20 @@ import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.JsonObject
 import com.gz.jey.realestatemanager.R
+import com.gz.jey.realestatemanager.api.ApiStreams
 import com.gz.jey.realestatemanager.controllers.dialog.*
-import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
+import com.gz.jey.realestatemanager.database.ItemDatabase
 import com.gz.jey.realestatemanager.injection.Injection
-import com.gz.jey.realestatemanager.injection.RealEstateViewModel
+import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Code
+import com.gz.jey.realestatemanager.models.retrofit.GeoCode
 import com.gz.jey.realestatemanager.models.sql.Photos
-import com.gz.jey.realestatemanager.models.sql.PointsOfInterest
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
 import com.gz.jey.realestatemanager.views.PhotosAdapter
+import io.reactivex.disposables.Disposable
+import io.reactivex.observers.DisposableObserver
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -75,12 +78,14 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
     private lateinit var addIcon: Drawable
     private lateinit var removeIcon: Drawable
     // FOR DATA
-    lateinit var realEstateViewModel: RealEstateViewModel
-    lateinit var database: RealEstateManagerDatabase
+    lateinit var itemViewModel: ItemViewModel
+    lateinit var database: ItemDatabase
     private var enableSave = false
     var oblArray: ArrayList<Int> = arrayListOf(0, 1, 9, 10, 11, 14)
     private var resDist : String? = null
-    private val poiList: ArrayList<PointsOfInterest> = ArrayList()
+    private var location : LatLng? = null
+    private var disposable : Disposable? = null
+    private val poiList: ArrayList<Int> = ArrayList()
     private val photosList: ArrayList<Photos> = ArrayList()
     private val checks: ArrayList<ImageView?> = ArrayList()
     private val values: ArrayList<TextView?> = ArrayList()
@@ -99,7 +104,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
     // FOR REALESTATE SELECTOR
     var insert: Int? = null
     var realEstate: RealEstate? = null
-    var poi: List<PointsOfInterest>? = null
+    var poi: List<Int>? = null
     var photos: List<Photos>? = null
 
     private var landscape = false
@@ -110,7 +115,6 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        intent.extras["IS_EDIT"]
         this.setContentView(R.layout.activity_add_or_edit)
         mGoogleApiClient = GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -119,7 +123,6 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
                 .build()
         init()
     }
-
 
     /**
      * INIT ACTIVITY
@@ -265,7 +268,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
 
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
-        this.realEstateViewModel = ViewModelProviders.of(this, mViewModelFactory).get(RealEstateViewModel::class.java)
+        this.itemViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ItemViewModel::class.java)
     }
 
     /**
@@ -276,7 +279,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
         this.realEstate = RealEstate()
         if (intent.getBooleanExtra(Code.IS_EDIT, false)) {
             toolbar!!.title = "Edit Real Estate"
-            this.realEstateViewModel.getRealEstate(intent.getLongExtra(Code.RE_ID, 0)).observe(this, Observer<RealEstate> { re ->
+            this.itemViewModel.getRealEstate(intent.getLongExtra(Code.RE_ID, 0)).observe(this, Observer<RealEstate> { re ->
                 Log.d("EDIT RE => ", re.toString())
                 if (re != null) {
                     this.realEstate = re
@@ -333,6 +336,8 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
         val re = RealEstate(realEstate!!.id,
                 if (resDist!!.isNotEmpty()) resDist else null,
                 if (results[0].isNotEmpty()) results[0] else null,
+                if (location!=null) location!!.latitude else null,
+                if (location!=null) location!!.longitude else null,
                 if (results[1].isNotEmpty()) results[1].toInt() else null,
                 if (results[2].isNotEmpty()) results[2].toInt() else null,
                 if (results[3].isNotEmpty()) results[3].toInt() else null,
@@ -346,16 +351,22 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
                 if (results[15].isNotEmpty()) results[15] else null,
                 if (results[16].isNotEmpty()) results[16] else null,
                 if (results[17].isNotEmpty()) results[17] else null,
+                poiList.contains(0),
+                poiList.contains(1),
+                poiList.contains(2),
+                poiList.contains(3),
+                poiList.contains(4),
+                poiList.contains(5),
+                poiList.contains(6),
+                poiList.contains(7),
                 false,
-                if (photosList.isNotEmpty()) photosList else null,
-                if (poiList.isNotEmpty()) poiList else null
+                if (photosList.isNotEmpty()) photosList else null
         )
 
         Log.d("RE SAVE", re.toString())
 
-        if (realEstate!!.id != null) realEstateViewModel.updateRealEstate(re)
-        else realEstateViewModel.createRealEstate(re)
-
+        if (re.id != null) itemViewModel.updateRealEstate(re)
+        else itemViewModel.createRealEstate(re)
         loadMainActivity()
     }
 
@@ -396,13 +407,25 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
                 setEditedPhoto()
             }
         } else if (code == 13) {
+            poiList.clear()
             if (realEstate!!.id != null) {
-                poiList.clear()
-                if(realEstate!!.poi != null)
-                    poiList.addAll(realEstate!!.poi as ArrayList<PointsOfInterest>)
+                for (i in 0 until 8){
+                    when(i){
+                        0 -> if(realEstate!!.poiSchool) poiList.add(0)
+                        1 -> if(realEstate!!.poiShops) poiList.add(1)
+                        2 -> if(realEstate!!.poiPark) poiList.add(2)
+                        3 -> if(realEstate!!.poiSubway) poiList.add(3)
+                        4 -> if(realEstate!!.poiBus) poiList.add(4)
+                        5 -> if(realEstate!!.poiTrain) poiList.add(5)
+                        6 -> if(realEstate!!.poiHospital) poiList.add(6)
+                        7 -> if(realEstate!!.poiAirport) poiList.add(7)
+                    }
+                }
+
+                Log.d("POI LIST ", poiList.toString())
                 resArray.clear()
                 for (p in poiList)
-                    resArray.add(p.value.toString())
+                    resArray.add(p.toString())
                 insertEditedValue(code, resArray)
             }
         } else {
@@ -435,8 +458,18 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
             results[code] = array[0]
             when (code) {
                 0 -> {
-                    resDist = array[1]
-                    values[0]!!.text = results[code]
+                    disposable = ApiStreams.streamGeoCode(array[0])
+                            .subscribeWith(object : DisposableObserver<GeoCode>() {
+                                override fun onNext(gc: GeoCode) {
+                                    setAddress(gc)
+                                }
+
+                                override fun onError(e: Throwable) {
+                                    Log.e("GC RX", e.toString())
+                                }
+
+                                override fun onComplete() {}
+                            })
                 }
                 1 -> {
                     values[1]!!.text = resources.getStringArray(R.array.type_ind)[array[0].toInt()]
@@ -460,13 +493,13 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
                 }
                 13 -> {
                     poiList.clear()
+                    for (a in array)
+                        poiList.add(a.toInt())
                     var str = ""
-                    for (i in 0 until array.size) {
-                        val poi = PointsOfInterest(null, array[i].toInt())
-                        poiList.add(poi)
-                        val sent = resources.getStringArray(R.array.poi_ind)[array[i].toInt()]
-                        val coma = if (i == (array.size - 1)) "" else ","
-                        str += "$sent$coma"
+                    for (i in poiList) {
+                            val sent = resources.getStringArray(R.array.poi_ind)[i]
+                            val coma = if (i == (poiList.size - 1)) "" else ","
+                            str += "$sent$coma"
                     }
                     values[code]!!.text = shortCutStr(str)
                 }
@@ -558,7 +591,7 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
         setSave(enableSave)
     }
 
-    fun setSave(bool: Boolean) {
+    private fun setSave(bool: Boolean) {
         if (saveItem != null) {
             if (bool) saveItem!!.icon = enableSaveIcon
             else saveItem!!.icon = disableSaveIcon
@@ -571,10 +604,22 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
         else str
     }
 
+    private fun setAddress(gc : GeoCode){
+        Log.d("ADDEDIT GC" , gc.toString())
+        if(gc.results!=null && gc.results.isNotEmpty()){
+            values[0]!!.text = gc.results[0].formatted_address
+            for (ac in gc.results[0].address_components!!){
+                if(ac.types!!.contains("locality"))
+                    resDist = ac.long_name
+            }
+
+            location = LatLng(gc.results[0].geometry!!.location!!.lat!!, gc.results[0].geometry!!.location!!.lng!!)
+        }
+    }
+
     /////////////////////////////////////////
     ///// LOCATION //////////////////////////
     /////////////////////////////////////////
-
 
     // FOR PERMISSIONS
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 34
@@ -620,7 +665,6 @@ class AddOrEditActivity : AppCompatActivity(), PhotosAdapter.Listener, OnConnect
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
         }
     }
-
 
     /**
      * ON REQUEST PERMISSION RESULT

@@ -3,6 +3,11 @@ package com.gz.jey.realestatemanager.models
 object Code{
     val RE_ID = "RE_ID"
     val IS_EDIT = "IS_EDIT"
+    val FILTERS = "FILTERS"
+    val ARGS = "ARGS"
+    val NO_RESULTS = "NO_RESULTS"
+    val FILTERS_FAILED = "FILTERS_FAILED"
+    val FILTERS_DATA : Long = 1986
 
     val UNEDITABLE = 846
     val UNSAVABLE = 543
@@ -25,12 +30,19 @@ object Code{
     val AGENT = 17
     val LEGEND = 83
 
-    val FILTER_TYPE = 94
-    val FILTER_SURFACE = 95
-    val FILTER_POI = 96
-    val FILTER_SINCE = 97
-    val FILTER_PHOTO = 98
-    val FILTER_PRICE = 99
+    val FILTER_TYPE = 200
+    val FILTER_POI = 201
+    val FILTER_MIN_ROOMS = 202
+    val FILTER_MAX_ROOMS = 203
+    val FILTER_LOCALITY = 204
+    val FILTER_DISTANCE = 205
+    val FILTER_STATUS = 206
+    val FILTER_DATE = 207
+    val FILTER_MIN_PRICE = 208
+    val FILTER_MAX_PRICE = 209
+    val FILTER_MIN_SURFACE = 210
+    val FILTER_MAX_SURFACE = 211
+    val FILTER_PHOTO = 212
 
     val MULTICHECK = 487
     val SOLOCHECK = 548

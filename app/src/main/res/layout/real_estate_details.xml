@@ -116,8 +116,11 @@
                         android:id="@+id/map_receiver"
                         android:layout_width="140dip"
                         android:layout_height="140dip"
-                        android:background="@color/colorSecondary"
-                        android:contentDescription="@string/location"></ImageView>
+                        android:background="@drawable/layout_border"
+                        android:padding="1dp"
+                        android:scaleType="centerCrop"
+                        android:cropToPadding="true"
+                        android:contentDescription="@string/location"/>
 
                     <TextView
                         android:id="@+id/nf_location"
@@ -128,7 +131,7 @@
                         android:gravity="center"
                         android:text="@string/nf_on_map"
                         android:textAlignment="center"
-                        android:textColor="@color/colorWhite"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textStyle="bold" />
                 </FrameLayout>
             </LinearLayout>

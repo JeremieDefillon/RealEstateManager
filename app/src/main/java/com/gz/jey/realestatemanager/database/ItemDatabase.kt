@@ -5,41 +5,34 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.content.Context
-import com.gz.jey.realestatemanager.database.dao.PhotosDao
-import com.gz.jey.realestatemanager.database.dao.PointsOfInterestDao
-import com.gz.jey.realestatemanager.database.dao.RealEstateDao
-import com.gz.jey.realestatemanager.database.dao.SettingsDao
-import com.gz.jey.realestatemanager.models.sql.Photos
-import com.gz.jey.realestatemanager.models.sql.PointsOfInterest
-import com.gz.jey.realestatemanager.models.sql.RealEstate
-import com.gz.jey.realestatemanager.models.sql.Settings
+import com.gz.jey.realestatemanager.database.dao.*
+import com.gz.jey.realestatemanager.models.sql.*
+import com.gz.jey.realestatemanager.utils.IntConverter
 import com.gz.jey.realestatemanager.utils.PhotosConverter
-import com.gz.jey.realestatemanager.utils.PointsOfInterestConverter
 
-
-@Database(entities = [RealEstate::class, Photos::class, PointsOfInterest::class, Settings::class], version = 1, exportSchema = false)
-@TypeConverters(PhotosConverter::class,PointsOfInterestConverter::class)
-abstract class RealEstateManagerDatabase : RoomDatabase() {
+@Database(entities = [RealEstate::class, Photos::class, Settings::class, Filters::class], version = 1, exportSchema = false)
+@TypeConverters(PhotosConverter::class, IntConverter::class)
+abstract class ItemDatabase : RoomDatabase() {
 
     // --- DAO ---
     abstract fun realEstateDao(): RealEstateDao
     abstract fun photosDao(): PhotosDao
-    abstract fun pointsOfInterestDao(): PointsOfInterestDao
     abstract fun settingsDao(): SettingsDao
+    abstract fun filtersDao(): FiltersDao
 
     companion object {
 
         // --- SINGLETON ---
         @Volatile
-        private var INSTANCE: RealEstateManagerDatabase? = null
+        private var INSTANCE: ItemDatabase? = null
 
         // --- INSTANCE ---
-        fun getInstance(context: Context): RealEstateManagerDatabase? {
+        fun getInstance(context: Context): ItemDatabase? {
             if (INSTANCE == null) {
-                synchronized(RealEstateManagerDatabase::class) {
+                synchronized(ItemDatabase::class) {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(context.applicationContext,
-                                RealEstateManagerDatabase::class.java, "RealEstateDatabase.db")
+                                ItemDatabase::class.java, "RealEstateDatabase.db")
                                 //.addCallback(prepopulateDatabase())
                                 .build()
                     }

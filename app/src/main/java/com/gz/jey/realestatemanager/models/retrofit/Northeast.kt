@@ -1,6 +1,6 @@
 package com.gz.jey.realestatemanager.models.retrofit
 
 class Northeast (
-    var lat: Double? = null,
-    var lng: Double? = null
+    val lat: Double? = null,
+    val lng: Double? = null
 )

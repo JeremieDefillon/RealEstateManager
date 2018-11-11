@@ -6,7 +6,7 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
-import com.gz.jey.realestatemanager.database.RealEstateManagerDatabase
+import com.gz.jey.realestatemanager.database.ItemDatabase
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 
 /**
@@ -23,7 +23,7 @@ class RealEstateContentProvider : ContentProvider() {
 
         if (context != null) {
             val reId = ContentUris.parseId(uri)
-            val cursor : Cursor = RealEstateManagerDatabase.getInstance(context)!!.realEstateDao().getRealEstatesWithCursor(reId)
+            val cursor : Cursor = ItemDatabase.getInstance(context)!!.realEstateDao().getRealEstatesWithCursor(reId)
             cursor.setNotificationUri(context!!.contentResolver, uri)
             return cursor
         }
@@ -38,7 +38,7 @@ class RealEstateContentProvider : ContentProvider() {
     override fun insert(uri: Uri, contentValues: ContentValues): Uri? {
 
         if (context != null) {
-            val id = RealEstateManagerDatabase.getInstance(context)!!.realEstateDao().insertRealEstate(RealEstate.fromContentValues(contentValues))
+            val id = ItemDatabase.getInstance(context)!!.realEstateDao().insertRealEstate(RealEstate.fromContentValues(contentValues))
             if (id != 0L) {
                 context!!.contentResolver.notifyChange(uri, null)
                 return ContentUris.withAppendedId(uri, id)
@@ -50,7 +50,7 @@ class RealEstateContentProvider : ContentProvider() {
 
     override fun delete(uri: Uri, s: String?, strings: Array<String>?): Int {
         if (context != null) {
-            val count = RealEstateManagerDatabase.getInstance(context)!!.realEstateDao().deleteRealEstate(ContentUris.parseId(uri))
+            val count = ItemDatabase.getInstance(context)!!.realEstateDao().deleteRealEstate(ContentUris.parseId(uri))
             context!!.contentResolver.notifyChange(uri, null)
             return count
         }
@@ -59,7 +59,7 @@ class RealEstateContentProvider : ContentProvider() {
 
     override fun update(uri: Uri, contentValues: ContentValues, s: String?, strings: Array<String>?): Int {
         if (context != null) {
-            val count = RealEstateManagerDatabase.getInstance(context)!!.realEstateDao().updateRealEstate(RealEstate.fromContentValues(contentValues))
+            val count = ItemDatabase.getInstance(context)!!.realEstateDao().updateRealEstate(RealEstate.fromContentValues(contentValues))
             context!!.contentResolver.notifyChange(uri, null)
             return count
         }

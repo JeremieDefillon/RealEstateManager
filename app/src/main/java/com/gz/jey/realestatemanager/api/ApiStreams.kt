@@ -2,6 +2,7 @@ package com.gz.jey.realestatemanager.api
 
 import com.google.android.gms.maps.model.LatLng
 import com.gz.jey.realestatemanager.BuildConfig
+import com.gz.jey.realestatemanager.models.retrofit.GeoCode
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -31,20 +32,12 @@ object ApiStreams {
      * @param lang Int
      * @return Observable<Place>
      */
-    fun streamGeoCode(loc: LatLng): Observable<GeoCode> {
-        val location = loc.latitude.toString()+","+loc.longitude.toString()
-        //location = "45.750000,4.850000"
-        val radius = "8000"
-        val rankby = "distance"
-        val language = if (Data.lang==1) "fr" else "en"
-        val type = "restaurant"
-
+    fun streamGeoCode(address: String): Observable<GeoCode> {
         val apiService = this.retrofit.create(ApiService::class.java)
-
-        return apiService.getRestaurants(type, location, radius, rankby, language, BuildConfig.GOOGLE_MAPS_KEY)
+        return apiService.getGeoCode(address, BuildConfig.GEOCODE_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .timeout(20, TimeUnit.SECONDS)
+                .timeout(200, TimeUnit.SECONDS)
     }
 
     /**
@@ -53,10 +46,11 @@ object ApiStreams {
      * @param lang Int
      * @return Observable<Details>
      */
-    fun getStaticMap(address : String, dimen :Int, pos :LatLng, key : String ) : String{
-        val max = dimen.toString()
+    fun getStaticMap(address : String, dimen :Int, pos :LatLng) : String{
+        val max = dimen.toString()+"x"+dimen.toString()
         val lat = pos.latitude
         val lng = pos.longitude
+        val key = BuildConfig.GEOCODE_KEY
 
         val url = StringBuilder()
         url.append("https://maps.googleapis.com/maps/api/staticmap?")

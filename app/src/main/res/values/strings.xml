@@ -30,8 +30,31 @@
     <string name="camera">Camera</string>
     <string name="loading">Loading ...</string>
     <string name="search_address">Search Address</string>
+    <string name="set_filters_by">Set Filters by</string>
+    <string name="sector">Sector</string>
+    <string name="since_date">Since Date</string>
+    <string name="locality">Locality</string>
+    <string name="distance">Distance</string>
+    <string name="since">Since</string>
+    <string name="photo_number">Photo\'s number</string>
+    <string name="reset_filters">Reset Filters</string>
+    <string name="search_filters">Search with Filters</string>
     <string name="nc">NC</string>
     <string name="m2">m²</string>
+    <string name="km">km</string>
+
+    // FAIL
+    <string name="no_results">There is any Real Estate registered !</string>
+    <string name="filters_failed">Any Real Estate found with filters !</string>
+
+    <string name="no_results_title">No Real Estate registered !</string>
+    <string name="filters_failed_title">Any Real Estate found !</string>
+    <string name="no_results_message">There is any Real Estate registered, you have to add at least one for the application can start list em, Click on \"CREATE\" for implement your first Real Estate !</string>
+    <string name="filters_failed_message">There is any Real Estate found with those filters\'s set , you can either change yours settings on clicking \"REEDIT\" either just step aside filters and reload all yours Real Estates by clicking \"CANCEL\" !</string>
+    <string name="no_results_cancel">Do Anything</string>
+    <string name="filters_failed_cancel">Cancel Filters</string>
+    <string name="no_results_edit">Create</string>
+    <string name="filters_failed_edit">Reedit Filters</string>
 
     <!-- ADD & UPDATE LABELS  -->
     <string name="currency">Currency</string>
