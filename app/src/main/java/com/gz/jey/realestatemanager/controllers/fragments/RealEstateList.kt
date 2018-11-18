@@ -1,6 +1,5 @@
 package com.gz.jey.realestatemanager.controllers.fragments
 
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.persistence.db.SimpleSQLiteQuery
 import android.os.Bundle
@@ -18,10 +17,10 @@ import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogNoResults
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.sql.Filters
 import com.gz.jey.realestatemanager.models.sql.RealEstate
+import com.gz.jey.realestatemanager.models.sql.Settings
 import com.gz.jey.realestatemanager.utils.BuildRequestSQL
 import com.gz.jey.realestatemanager.utils.ItemClickSupport
 import com.gz.jey.realestatemanager.views.RealEstateAdapter
-import io.reactivex.annotations.Nullable
 
 class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     private var mView: View? = null
@@ -33,6 +32,8 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     private var itemPos: Int? = null
     private var slct: Int = 0
     private var maxClick = 1
+    private var currency = 0
+    private var position : Int? = null
 
 
     /**
@@ -74,12 +75,16 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
         ItemClickSupport.addTo(recyclerView, R.layout.real_estate_item)
                 .setOnItemClickListener { _, position, _ ->
                     itemPos = position
-                    this.updateRealEstate(this.adapter!!.getRealEstate(position), this.adapter!!.getAllRealEstate())
+                    this.updateRealEstate(this.adapter!!.getRealEstate(position), position, this.adapter!!.getAllRealEstate())
                 }
     }
 
     private fun init() {
         Log.d("RE LIST", "OK")
+        mainActivity!!.itemViewModel.getSettings(Code.SETTINGS)
+                .observe(this, Observer<Settings> { st ->
+                    currency = st?.currency ?: 0
+                })
         getRealEstates()
     }
 
@@ -92,16 +97,9 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
                     .observe(this, Observer<List<RealEstate>> { re -> updateRealEstateList(re!!) })
     }
 
-    private fun updateRealEstate(realEstate: RealEstate, realEstates: List<RealEstate>) {
-        realEstate.isSelected = true
-
-        for (r in realEstates) {
-            if (r != realEstate) {
-                r.isSelected = false
-            }
-            mainActivity!!.itemViewModel.updateRealEstate(r)
-        }
-
+    private fun updateRealEstate(realEstate: RealEstate, position: Int, allRE: List<RealEstate>) {
+        this.position = position
+        updateRealEstateList(allRE)
         if (mainActivity!!.realEstate == realEstate && !mainActivity!!.tabLand) {
             slct = 2
         } else {
@@ -116,8 +114,8 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
             if (mainActivity!!.tabLand) {
                 mainActivity!!.realEstateDetails!!.init()
             } else {
-                realEstate.isSelected = false
-                mainActivity!!.itemViewModel.updateRealEstate(realEstate)
+                this.position = null
+                updateRealEstateList(allRE)
                 mainActivity!!.setFragment(1)
             }
         }
@@ -158,7 +156,12 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
             ViewDialogNoResults().showDialog(mainActivity!!, Code.NO_RESULTS)
         }
 
-        this.adapter!!.updateData(items)
+        updateData(items, currency)
+    }
+
+    private fun updateData(items: List<RealEstate>, cur : Int){
+        Log.d("RE LIST","UPDATE DATA $items")
+        this.adapter!!.updateData(items, cur, position)
     }
 
 

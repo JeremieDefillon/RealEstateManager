@@ -9,7 +9,9 @@ data class Photos(
         @PrimaryKey(autoGenerate = true)
         var id: Long?,
         var image: String?,
-        var legend: Int?
+        var legend: Int?,
+        var num: Int?,
+        var main: Boolean = false
 ) {
     companion object {
         // --- UTILS ---
@@ -17,9 +19,11 @@ data class Photos(
             val ph = Photos()
             if (values.containsKey("image")) ph.image = values.getAsString("image")
             if (values.containsKey("legend")) ph.legend = values.getAsInteger("legend")
+            if (values.containsKey("num")) ph.num = values.getAsInteger("num")
+            if (values.containsKey("main")) ph.main = values.getAsBoolean("main")
             return ph
         }
     }
 
-    constructor() : this(null, null, null)
+    constructor() : this(null, null, null, null, false)
 }

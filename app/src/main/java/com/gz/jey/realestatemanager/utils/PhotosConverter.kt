@@ -20,7 +20,10 @@ class PhotosConverter {
     
 
     @TypeConverter
-    fun ListToString(someObjects: List<Photos>): String {
+    fun ListToString(someObjects: List<Photos>?): String? {
+        if(someObjects==null)
+            return null
+
         return gson.toJson(someObjects)
     }
 }

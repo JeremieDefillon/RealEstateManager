@@ -5,10 +5,10 @@ import android.widget.Toast
 import com.gz.jey.realestatemanager.models.Code
 
 class ToastMessage{
-    fun notifyMessage(context: Context, code : Int){
+    fun notifyMessage(context: Context, code : String){
         val msg = when(code){
-            Code.UNEDITABLE -> "Can't Edit, please select a realEstate first !"
-            Code.UNSAVABLE -> "Can't Save until you've edited all the \"*\" marked fields !"
+            Code.UNEDITABLE -> "Can't Edit, please select a re first !"
+            Code.UNSAVABLE -> "Can't Save until you've edited \r\n all the \"blue\" colored fields !"
             Code.ERROR_NOT_FOUND -> "[ERROR] : The content expected couldn't load cause it doesn't exist in the database !"
             else -> ""
         }

@@ -106,6 +106,7 @@ dependencies {
 
     // RX Image Picker
     implementation "com.github.qingmei2:rximagepicker_support:2.2.0"
+    implementation 'com.github.qingmei2:rximagepicker_support_zhihu:2.2.0'
     // Google Map Service
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.google.maps.android:android-maps-utils:0.5'

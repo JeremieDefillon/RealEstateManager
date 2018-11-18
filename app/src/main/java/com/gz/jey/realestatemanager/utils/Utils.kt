@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
+import android.util.DisplayMetrics
 import com.gz.jey.realestatemanager.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -69,10 +70,6 @@ object Utils{
         return activeNetwork.isConnectedOrConnecting
     }
 
-    fun isLandscape(context: Context): Boolean{
-        return context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-    }
-
     /**
      * convert today date in string format
      * @return String as dd/mm/yyyy format
@@ -127,8 +124,11 @@ object Utils{
     }
 
     fun getRoomNumFormat(context : Context, room : Int?) : String{
-        return if(room!=null) "T"+room.toString()
-        else "T?"
+        val r = if(room!=null && room>1) context.getString(R.string.rooms)
+            else context.getString(R.string.room)
+
+        return if(room!=null) "$room $r"
+        else "? $r"
     }
 
     fun getPPMFormat(context : Context, currency : Int?, price : Long?, surface : Int?) : String{
@@ -140,6 +140,16 @@ object Utils{
         }else{
             context.getString(R.string.price)+"/"+context.getString(R.string.m2)+" "+context.getString(R.string.nc)
         }
+    }
+
+    fun formatedLocation(a:String?,b:String?,c:String?,d:String?) : String{
+        val sb = StringBuilder()
+        if(!a.isNullOrEmpty()) sb.append("$a,\r\n")
+        if(!b.isNullOrEmpty()) sb.append("$b,")
+        if(!c.isNullOrEmpty()) sb.append("$c,\r\n")
+        if(!d.isNullOrEmpty()) sb.append("$d")
+
+        return sb.toString()
     }
 
     fun getPoiAsString(ar : ArrayList<String>) : String{
@@ -155,5 +165,9 @@ object Utils{
         for (v in ns)
             li.add(v.toInt())
         return li
+    }
+
+    fun isLandscape(context: Context): Boolean{
+        return context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     }
 }

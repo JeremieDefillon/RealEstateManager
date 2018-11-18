@@ -35,9 +35,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    // FRAGMENTS
     private val TAG = "MainActivity"
-    var lastFragment: Fragment? = null
+    // FRAGMENTS
     var realEstateList: RealEstateList? = null
     var realEstateDetails: RealEstateDetails? = null
 
@@ -86,11 +85,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fragmentContainer = findViewById(R.id.fragment_container)
         //saveDatas()
         this.configureToolBar()
+        this.setNavigationView()
         this.setDrawerLayout()
-        this.setViewModel()
         this.realEstateList = RealEstateList.newInstance(this)
         this.realEstateDetails = RealEstateDetails.newInstance(this)
-        this.setFragment(0)
+        this.setViewModel()
     }
 
     private fun setLang() {
@@ -164,17 +163,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
         this.itemViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ItemViewModel::class.java)
-        this.itemViewModel.getSettings().observe(this, Observer<Settings>{ s -> initSettings(s)})
+        this.itemViewModel.getSettings(Code.SETTINGS).observe(this, Observer<Settings>{ s -> initSettings(s)})
     }
 
     private fun initSettings(set : Settings?){
         if(set != null) {
             settings = set
             itemViewModel.updateSettings(settings!!)
+            this.setFragment(0)
         }else{
             val lang = if(Locale.getDefault().language == "fr") 1 else 0
-            settings = Settings(null, 0, lang, null, false, true)
+            settings = Settings(Code.SETTINGS, 0, lang, null, false, true)
             itemViewModel.createSettings(settings!!)
+            this.setFragment(0)
         }
     }
 
@@ -208,7 +209,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle Navigation Item Click
         item.isChecked = true
         when (item.itemId) {
-
+            R.id.loan -> setLoanSimulator()
             R.id.settings -> setFragment(5)
         }
         this.drawerLayout!!.closeDrawer(GravityCompat.START)
@@ -275,6 +276,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         finish()
     }
 
+    private fun setLoanSimulator() {
+        val intent = Intent(this, LoanSimulator::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     private fun changeToolBarMenu(em: Int) {
         when (em) {
             0 -> {
@@ -303,10 +310,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun unsetRE() {
         setEdit(false)
-        if (realEstate != null) {
-            realEstate!!.isSelected = false
-            itemViewModel.updateRealEstate(realEstate!!)
-        }
         realEstate = null
         poi = null
         photos = null

@@ -6,13 +6,16 @@ import android.arch.persistence.room.TypeConverters
 import android.content.ContentValues
 import com.gz.jey.realestatemanager.utils.PhotosConverter
 
-
 @Entity(tableName = "RealEstate")
 data class RealEstate(
         @PrimaryKey(autoGenerate = true)
         var id: Long? = null,
-        var district: String? = null,
-        var address: String? = null,
+        var streetNumber: String = "",
+        var street: String = "",
+        var zipCode: String = "",
+        var locality: String = "",
+        var state: String = "",
+        var verified: Boolean = false,
         var latitude: Double? = null,
         var longitude: Double? = null,
         var type: Int? = null,
@@ -21,13 +24,12 @@ data class RealEstate(
         var bed: Int? = null,
         var bath: Int? = null,
         var kitchen: Int? = null,
-        var description: String? = null,
-        var currency: Int? = null,
+        var description: String = "",
         var price: Long? = null,
-        var status: Int? = null,
-        var marketDate: String? = null,
-        var soldDate: String? = null,
-        var agentName: String? = null,
+        var sold: Boolean = false,
+        var marketDate: String = "",
+        var soldDate: String = "",
+        var agentName: String = "",
         var poiSchool : Boolean = false,
         var poiShops : Boolean = false,
         var poiPark : Boolean = false,
@@ -36,7 +38,6 @@ data class RealEstate(
         var poiTrain : Boolean = false,
         var poiHospital : Boolean = false,
         var poiAirport : Boolean = false,
-        var isSelected: Boolean = false,
         @TypeConverters(PhotosConverter::class)
         var photos: List<Photos>? = null
 ) {
@@ -44,8 +45,11 @@ data class RealEstate(
         // --- UTILS ---
         fun fromContentValues(values: ContentValues): RealEstate {
             val re = RealEstate()
-            if (values.containsKey("address")) re.address = values.getAsString("address")
-            if (values.containsKey("district")) re.district = values.getAsString("district")
+            if (values.containsKey("streetNumber")) re.streetNumber = values.getAsString("streetNumber")
+            if (values.containsKey("street")) re.street = values.getAsString("street")
+            if (values.containsKey("zipCode")) re.zipCode = values.getAsString("zipCode")
+            if (values.containsKey("locality")) re.locality = values.getAsString("locality")
+            if (values.containsKey("state")) re.state = values.getAsString("state")
             if (values.containsKey("latitude")) re.latitude = values.getAsDouble("latitude")
             if (values.containsKey("longitude")) re.longitude = values.getAsDouble("longitude")
             if (values.containsKey("type")) re.type = values.getAsInteger("type")
@@ -56,7 +60,7 @@ data class RealEstate(
             if (values.containsKey("bath")) re.bath = values.getAsInteger("bath")
             if (values.containsKey("kitchen")) re.kitchen = values.getAsInteger("kitchen")
             if (values.containsKey("description")) re.description = values.getAsString("description")
-            if (values.containsKey("status")) re.status = values.getAsInteger("status")
+            if (values.containsKey("sold")) re.sold = values.getAsBoolean("sold")
             if (values.containsKey("marketDate")) re.marketDate = values.getAsString("marketDate")
             if (values.containsKey("soldDate")) re.soldDate = values.getAsString("soldDate")
             if (values.containsKey("agentName")) re.agentName = values.getAsString("agentName")
@@ -68,7 +72,6 @@ data class RealEstate(
             if (values.containsKey("poiTrain")) re.poiTrain = values.getAsBoolean("poiTrain")
             if (values.containsKey("poiHospital")) re.poiHospital = values.getAsBoolean("poiHospital")
             if (values.containsKey("poiAirport")) re.poiAirport = values.getAsBoolean("poiAirport")
-            if (values.containsKey("isSelected")) re.isSelected = values.getAsBoolean("isSelected")
             return re
         }
     }
@@ -76,22 +79,24 @@ data class RealEstate(
     constructor() : this(null,
             "",
             "",
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "",
-            0,
-            null,
-            0,
             "",
             "",
             "",
             false,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "",
+            null,
+            false,
+            "",
+            "",
+            "",
             false,
             false,
             false,

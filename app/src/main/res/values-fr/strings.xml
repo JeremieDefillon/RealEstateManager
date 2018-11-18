@@ -28,7 +28,7 @@
     <string name="points_of_interest">Points d\'intérêt</string>
     <string name="status">Status</string>
     <string name="agent">Agent</string>
-    <string name="date_of_sale">Date de mise en vente</string>
+    <string name="date_of_market">Date de mise en vente</string>
     <string name="date_of_sold">Date vendu</string>
     <string name="address">Adresse</string>
 

@@ -22,10 +22,6 @@ class RealEstateDataRepository(private val realEstateDao: RealEstateDao) {
         return this.realEstateDao.getRealEstate(id)
     }
 
-    fun getRealEstateBySelect(): LiveData<RealEstate> {
-        return this.realEstateDao.getRealEstateBySelect()
-    }
-
     // --- CREATE ---
 
     fun createRealEstate(realEstate: RealEstate) : Long{
@@ -41,5 +37,9 @@ class RealEstateDataRepository(private val realEstateDao: RealEstateDao) {
     fun updateRealEstate(realEstate: RealEstate) {
         realEstateDao.updateRealEstate(realEstate)
     }
+    fun updateAllRealEstates(realEstates: List<RealEstate>) {
+        realEstateDao.updateAllRealEstates(realEstates)
+    }
+
 
 }

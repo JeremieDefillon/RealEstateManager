@@ -13,7 +13,7 @@ import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
 import com.gz.jey.realestatemanager.controllers.activities.SetFilters
 import com.gz.jey.realestatemanager.models.Code
-import java.util.*
+import kotlin.collections.ArrayList
 
 class ViewDialogMultiChoice {
     private lateinit var titleCanvas: TextView
@@ -30,9 +30,9 @@ class ViewDialogMultiChoice {
     private val rdb: ArrayList<RadioButton> = ArrayList()
     private var uri: String? = null
 
-    private var checkCode: Int? = null
+    private var checkCode: String? = null
 
-    fun showDialog(activity: Activity, code: Int, actualValue: ArrayList<String>) {
+    fun showDialog(activity: Activity, code: String, actualValue: ArrayList<String>) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
@@ -78,34 +78,23 @@ class ViewDialogMultiChoice {
                 list.addAll(activity.resources.getStringArray(R.array.status_ind))
                 setOnClick(activity, code, 0, dialog)
             }
-            Code.LEGEND -> {
-                titleLbl = activity.getString(R.string.legend)
-                uri = actualValue[0]
-                image.visibility = View.VISIBLE
-                Glide.with(activity)
-                        .load(uri)
-                        .into(image)
-                checkCode = Code.SOLOCHECK
-                list.addAll(activity.resources.getStringArray(R.array.rooms_ind))
-                setOnClick(activity, code, 2, dialog)
-            }
             Code.FILTER_TYPE -> {
                 titleLbl = activity.getString(R.string.type)
                 checkCode = Code.MULTICHECK
                 list.addAll(activity.resources.getStringArray(R.array.type_ind))
-                setOnClick(activity, code, 3, dialog)
+                setOnClick(activity, code, 2, dialog)
             }
             Code.FILTER_POI -> {
                 titleLbl = activity.getString(R.string.points_of_interest)
                 checkCode = Code.MULTICHECK
                 list.addAll(activity.resources.getStringArray(R.array.poi_ind))
-                setOnClick(activity, code, 3, dialog)
+                setOnClick(activity, code, 2, dialog)
             }
             Code.FILTER_STATUS -> {
                 titleLbl = activity.getString(R.string.status)
                 checkCode = Code.SOLOCHECK
                 list.addAll(activity.resources.getStringArray(R.array.status_ind))
-                setOnClick(activity, code, 4, dialog)
+                setOnClick(activity, code, 3, dialog)
             }
         }
 
@@ -115,60 +104,48 @@ class ViewDialogMultiChoice {
 
     }
 
-    private fun setOnClick(activity: Activity, code: Int, type: Int, dialog: Dialog) {
+    private fun setOnClick(activity: Activity, code: String, type: Int, dialog: Dialog) {
         when (type) {
             0 -> {
                 editBtn.setOnClickListener {
+                    var res = ""
                     for (i in 0 until list.size) {
-                        result.clear()
                         if (rdb[i].isChecked) {
-                            result.add(i.toString())
+                            res = i.toString()
                             break
                         }
                     }
                     val act = activity as AddOrEditActivity
-                    act.insertEditedValue(code, result)
+                    act.addOrEdit.insertStandardValue(code, res)
                     dialog.dismiss()
                 }
             }
             1 -> {
                 editBtn.setOnClickListener {
-                    result.clear()
+                    var res = ""
                     for (i in 0 until list.size) {
                         if (chk[i].isChecked)
-                            result.add(i.toString())
+                            res+=i.toString()+","
                     }
+                    res = res.substring(0, res.length-1)
                     val act = activity as AddOrEditActivity
-                    act.insertEditedValue(code, result)
+                    act.addOrEdit.insertStandardValue(code, res)
                     dialog.dismiss()
                 }
             }
             2 -> {
                 editBtn.setOnClickListener {
-                    for (i in 0 until list.size) {
-                        result.clear()
-                        if (rdb[i].isChecked) {
-                            val act = activity as AddOrEditActivity
-                            act.savePhoto(uri!!, i)
-                            dialog.dismiss()
-                            break
-                        }
-                    }
-                }
-            }
-            3 -> {
-                editBtn.setOnClickListener {
                     result.clear()
                     for (i in 0 until list.size) {
                         if (chk[i].isChecked)
                             result.add(i.toString())
                     }
                     val act = activity as SetFilters
-                    act.insertEditedValue(code, result)
+                    act.insertMultiValues(code, result)
                     dialog.dismiss()
                 }
             }
-            4 -> {
+            3 -> {
                 editBtn.setOnClickListener {
                     for (i in 0 until list.size) {
                         result.clear()
@@ -178,14 +155,14 @@ class ViewDialogMultiChoice {
                         }
                     }
                     val act = activity as SetFilters
-                    act.insertEditedValue(code, result)
+                    act.insertMultiValues(code, result)
                     dialog.dismiss()
                 }
             }
         }
     }
 
-    private fun setCheckList(activity: Activity, code: Int, list: ArrayList<String>) {
+    private fun setCheckList(activity: Activity, code: String, list: ArrayList<String>) {
         val params = scrollView.layoutParams
         when (activity.resources.configuration.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
@@ -228,6 +205,7 @@ class ViewDialogMultiChoice {
         }
 
         if (code != Code.LEGEND) {
+
             for (i in 0 until result.size) {
                 val n: Int? = if (result[i].isNotEmpty()) result[i].toInt() else null
                 if (n != null) {

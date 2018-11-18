@@ -8,8 +8,8 @@ class SettingsDataRepository(private val settingsDao: SettingsDao) {
 
     // --- GET ---
 
-    fun getSettings(): LiveData<Settings> {
-        return this.settingsDao.getSettings()
+    fun getSettings(id : Long): LiveData<Settings> {
+        return this.settingsDao.getSettings(id)
     }
 
     // --- CREATE ---

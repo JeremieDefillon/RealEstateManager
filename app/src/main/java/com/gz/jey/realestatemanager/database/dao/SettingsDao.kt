@@ -9,8 +9,8 @@ import com.gz.jey.realestatemanager.models.sql.Settings
 @Dao
 interface SettingsDao {
 
-    @Query("SELECT * FROM Settings")
-    fun getSettings(): LiveData<Settings>
+    @Query("SELECT * FROM Settings WHERE id=:id")
+    fun getSettings(id : Long): LiveData<Settings>
 
     @Query("SELECT * FROM Settings")
     fun getSettingsWithCursor(): Cursor

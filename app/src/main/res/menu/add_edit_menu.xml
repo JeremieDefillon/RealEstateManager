@@ -2,9 +2,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/menu">
         <item
+            android:id="@+id/remove_photo"
+            android:icon="@drawable/minate_box"
+            app:showAsAction="always"
+            android:title="@string/remove">
+        </item>
+        <item
+            android:id="@+id/edit_photo"
+            android:icon="@drawable/edit"
+            app:showAsAction="always"
+            android:title="@string/edit">
+        </item>
+        <item
+            android:id="@+id/add_photo"
+            android:icon="@drawable/add_box"
+            app:showAsAction="always"
+            android:title="@string/add">
+        </item>
+        <item
             android:id="@+id/save"
             android:icon="@drawable/save"
-            app:showAsAction="ifRoom"
+            app:showAsAction="always"
             android:title="@string/save">
         </item>
 </menu>

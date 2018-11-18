@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/under_border"
+    android:weightSum="100">
+
+    <TextView
+        android:id="@+id/row"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="15"
+        android:gravity="end"
+        android:padding="3dip"
+        android:scaleType="fitCenter"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/monthly_payed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="20"
+        android:gravity="end"
+        android:padding="3dip"
+        android:scaleType="fitCenter"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/interest_refunded"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="20"
+        android:gravity="end"
+        android:padding="3dip"
+        android:scaleType="fitCenter"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/capital_refunded"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="20"
+        android:gravity="end"
+        android:padding="3dip"
+        android:scaleType="fitCenter"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/capital_fee"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="25"
+        android:gravity="end"
+        android:padding="3dip"
+        android:scaleType="fitCenter"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+</LinearLayout>

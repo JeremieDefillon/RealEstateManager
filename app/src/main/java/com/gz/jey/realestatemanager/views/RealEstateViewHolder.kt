@@ -19,9 +19,6 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     private var type: TextView = itemView.findViewById(R.id.type)
     private var district: TextView = itemView.findViewById(R.id.district)
     private var price: TextView = itemView.findViewById(R.id.price)
-    private var nr: TextView = itemView.findViewById(R.id.nr)
-    private var surface: TextView = itemView.findViewById(R.id.surface)
-    private var ppm2: TextView = itemView.findViewById(R.id.ppm2)
     private var photo: ImageView = itemView.findViewById(R.id.photo)
     private var llButton: LinearLayout = itemView.findViewById(R.id.button)
 
@@ -29,15 +26,11 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     private var callbackWeakRef: WeakReference<RealEstateAdapter.Listener>? = null
 
 
-    fun updateWithRealEstate(context : Context, item: RealEstate, callback: RealEstateAdapter.Listener) {
-        val res = itemView.context.resources
+    fun updateWithRealEstate(context : Context, item: RealEstate, currency : Int, callback: RealEstateAdapter.Listener, position: Int, selected : Int?) {
         this.callbackWeakRef = WeakReference(callback)
-        this.type.text = if(item.type != null) res.getStringArray(R.array.type_ind)[item.type!!] else ""
-        this.district.text = item.district
-        this.nr.text = Utils.getRoomNumFormat(context, item.room)
-        this.surface.text = Utils.getSurfaceFormat(context, item.surface)
-        this.ppm2.text = Utils.getPPMFormat(context, item.currency, item.price, item.surface)
-        this.price.text = Utils.convertedHighPrice(context, item.currency, item.price)
+        this.type.text = getFirstLine(context, item.type, item.room, item.surface)
+        this.district.text = getSecondLine(context, item.locality, currency, item.price, item.surface)
+        this.price.text = Utils.convertedHighPrice(context, currency, item.price)
 
 
         if(item.photos != null && item.photos!!.isNotEmpty()) {
@@ -52,7 +45,7 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
         }
 
 
-        if(item.isSelected){
+        if(position == selected){
             llButton.setBackgroundColor(ContextCompat.getColor(itemView.context ,R.color.colorSecondary))
             price.setTextColor(ContextCompat.getColor(itemView.context ,R.color.colorWhite))
         }else{
@@ -61,8 +54,22 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
         }
     }
 
-    private fun getPPM(price : Int, surface: Int) : Float{
-       return (price / surface).toFloat()
+    private fun getFirstLine(context: Context, type : Int?, room : Int?, surface: Int?) : String{
+        val res = itemView.context.resources
+        val sb = StringBuilder()
+        if(type!=null) sb.append(res.getStringArray(R.array.type_ind)[type]).append("  ")
+        if(room!=null) sb.append(Utils.getRoomNumFormat(context, room)).append("  ")
+        if(room!=null) sb.append(Utils.getSurfaceFormat(context, surface)).append("  ")
+        return if(sb.isNotEmpty()) sb.substring(0, sb.toString().length-1)
+        else ""
+    }
+
+    private fun getSecondLine(context: Context, locality : String, currency: Int, price : Long?, surface: Int?): String{
+        val sb = StringBuilder()
+        if(locality.isNotEmpty()) sb.append("($locality)").append("  ")
+        sb.append(Utils.getPPMFormat(context, currency, price, surface)).append("  ")
+        return if(sb.isNotEmpty()) sb.substring(0, sb.toString().length-1)
+        else ""
     }
 
     override fun onClick(view: View) {

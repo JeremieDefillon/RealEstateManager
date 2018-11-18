@@ -30,10 +30,6 @@ class ItemViewModel(// REPOSITORIES
         return realEstateDataSource.getFilteredRealEstate(req)
     }
 
-    fun getRealEstateBySelect(): LiveData<RealEstate>{
-        return realEstateDataSource.getRealEstateBySelect()
-    }
-
     fun getRealEstate(id : Long): LiveData<RealEstate> {
         return realEstateDataSource.getRealEstate(id)
     }
@@ -50,12 +46,16 @@ class ItemViewModel(// REPOSITORIES
         executor.execute { realEstateDataSource.updateRealEstate(realEstate) }
     }
 
+    fun updateAllRealEstates(realEstates: List<RealEstate>) {
+        executor.execute { realEstateDataSource.updateAllRealEstates(realEstates) }
+    }
+
     // -------------
     // FOR SETTINGS
     // -------------
 
-    fun getSettings() : LiveData<Settings> {
-        return settingsDataSource.getSettings()
+    fun getSettings(id : Long) : LiveData<Settings> {
+        return settingsDataSource.getSettings(id)
     }
 
     fun createSettings(settings: Settings) {

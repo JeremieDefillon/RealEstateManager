@@ -24,9 +24,8 @@ class ViewDialogDatePicker {
     private lateinit var editBtn : Button
     private lateinit var image : ImageView
 
-    private var result : ArrayList<String> = ArrayList()
 
-    fun showDialog(activity: Activity, code : Int, actualValue : ArrayList<String>) {
+    fun showDialog(activity: Activity, code : String) {
 
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -39,19 +38,15 @@ class ViewDialogDatePicker {
         editBtn = dialog.findViewById(R.id.edit_btn)
         image = dialog.findViewById(R.id.image)
 
-        result.clear()
-        result.addAll(actualValue)
-
         cancelBtn.setOnClickListener { dialog.dismiss() }
 
         val editLbl = activity.getString(R.string.insert)
         val titleLbl = when (code) {
-            Code.SALE_DATE -> activity.getString(R.string.date_of_sale)
+            Code.SALE_DATE -> activity.getString(R.string.date_of_market)
             Code.SOLD_DATE -> activity.getString(R.string.date_of_sold)
             else -> ""
         }
         editBtn.setOnClickListener {
-            result.clear()
             val year = inputDate.year
             val month = inputDate.month
             val day = inputDate.dayOfMonth
@@ -62,13 +57,12 @@ class ViewDialogDatePicker {
             val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val date = format.format(calendar.time)
             Log.d("Date", date)
-            result.add(date)
             if(code == Code.SALE_DATE || code == Code.SOLD_DATE){
                 val aoeAct = activity as AddOrEditActivity
-                aoeAct.insertEditedValue(code, result)
+                aoeAct.addOrEdit.insertStandardValue(code, date)
             }else{
                 val sfAct = activity as SetFilters
-                sfAct.insertEditedValue(code, result)
+                sfAct.insertStandardValue(code, date)
             }
             dialog.dismiss()
         }

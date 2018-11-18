@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraint"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="#ffffffff"
+    android:minWidth="400dip"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:gravity="top"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="15"
+            android:lines="2"
+            android:layout_gravity="center"
+            android:background="@color/colorSecondaryDark"
+            android:gravity="center"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:textColor="@color/colorWhite"
+            android:text="Row"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/monthly"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:lines="2"
+            android:layout_gravity="center"
+            android:background="@color/colorSecondaryDark"
+            android:gravity="center"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:textColor="@color/colorWhite"
+            android:textSize="10sp"
+            android:text="Monthly"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/interest"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:layout_gravity="center"
+            android:background="@color/colorSecondaryDark"
+            android:gravity="center"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:textColor="@color/colorWhite"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:text="Interest Refund"/>
+
+        <TextView
+            android:id="@+id/capital"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:layout_gravity="center"
+            android:background="@color/colorSecondaryDark"
+            android:gravity="center"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:textColor="@color/colorWhite"
+            android:textSize="10sp"
+            android:text="Capital refunded"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/capital_fee"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:lines="2"
+            android:layout_gravity="center"
+            android:background="@color/colorSecondaryDark"
+            android:gravity="center"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:textColor="@color/colorWhite"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:text="Capital fee"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dip"
+        android:layout_marginBottom="100dip">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="top"
+        android:layout_marginBottom="50dip"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="16  "
+            android:lines="2"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:textColor="@color/colorBlack"
+            android:text="Total"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/monthly_tot"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="28"
+            android:lines="2"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:textColor="@color/colorBlack"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/interest_tot"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="28"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:textColor="@color/colorBlack"
+            android:textSize="12sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/capital_tot"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="28"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:textColor="@color/colorBlack"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center"
+            android:text="@string/close"
+            android:textColor="@color/colorAccent" />
+
+    </FrameLayout>
+
+</FrameLayout>
+
+
+

@@ -40,6 +40,9 @@
         <activity
             android:name=".controllers.activities.SetFilters"
             android:parentActivityName="controllers.activities.MainActivity" />
+        <activity
+            android:name=".controllers.activities.LoanSimulator"
+            android:parentActivityName="controllers.activities.MainActivity" />
 
         <!-- CONTENT PROVIDER -->
         <provider

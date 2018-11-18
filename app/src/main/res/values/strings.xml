@@ -8,6 +8,8 @@
     <string name="colon">:</string>
     <string name="suspens">...</string>
     <string name="obl">*</string>
+    <string name="room">Room</string>
+    <string name="rooms">Rooms</string>
     <string name="min_label">Min</string>
     <string name="max_label">Max</string>
     <string name="start_label">Start</string>
@@ -15,9 +17,20 @@
     <string name="search">Search</string>
     <string name="edit">Edit</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
     <string name="add">Add</string>
+    <string name="remove">Remove</string>
     <string name="home">Home</string>
     <string name="loan_simulator">Loan Simulator</string>
+    <string name="calculate_loan">Calculate your Loan</string>
+    <string name="years">Years</string>
+    <string name="years_unit">years</string>
+    <string name="capital">Capital</string>
+    <string name="rate_interest">Interest\'s rate</string>
+    <string name="monthly_payment">Monthly payment</string>
+    <string name="on_label">On :</string>
     <string name="settings">Settings</string>
     <string name="power_off">Turn Off</string>
     <string name="check">Check</string>
@@ -33,9 +46,9 @@
     <string name="set_filters_by">Set Filters by</string>
     <string name="sector">Sector</string>
     <string name="since_date">Since Date</string>
-    <string name="locality">Locality</string>
     <string name="distance">Distance</string>
     <string name="since">Since</string>
+    <string name="main">MAIN</string>
     <string name="photo_number">Photo\'s number</string>
     <string name="reset_filters">Reset Filters</string>
     <string name="search_filters">Search with Filters</string>
@@ -45,16 +58,22 @@
 
     // FAIL
     <string name="no_results">There is any Real Estate registered !</string>
-    <string name="filters_failed">Any Real Estate found with filters !</string>
-
     <string name="no_results_title">No Real Estate registered !</string>
-    <string name="filters_failed_title">Any Real Estate found !</string>
     <string name="no_results_message">There is any Real Estate registered, you have to add at least one for the application can start list em, Click on \"CREATE\" for implement your first Real Estate !</string>
-    <string name="filters_failed_message">There is any Real Estate found with those filters\'s set , you can either change yours settings on clicking \"REEDIT\" either just step aside filters and reload all yours Real Estates by clicking \"CANCEL\" !</string>
     <string name="no_results_cancel">Do Anything</string>
-    <string name="filters_failed_cancel">Cancel Filters</string>
     <string name="no_results_edit">Create</string>
+
+    <string name="filters_failed">Any Real Estate found with filters !</string>
+    <string name="filters_failed_title">Any Real Estate found !</string>
+    <string name="filters_failed_message">There is any Real Estate found with those filters\'s set , you can either change yours settings on clicking \"REEDIT\" either just step aside filters and reload all yours Real Estates by clicking \"CANCEL\" !</string>
+    <string name="filters_failed_cancel">Cancel Filters</string>
     <string name="filters_failed_edit">Reedit Filters</string>
+
+    <string name="no_photos">There is any Photos registered !</string>
+    <string name="no_photos_title">Any Photos registered !</string>
+    <string name="no_photos_message">There is any Photo registered, you have to add at least one for being able to save a Real Estate, Click on \"Add\" for add photos !</string>
+    <string name="no_photos_cancel">Cancel</string>
+    <string name="no_photos_edit">Add</string>
 
     <!-- ADD & UPDATE LABELS  -->
     <string name="currency">Currency</string>
@@ -64,6 +83,15 @@
     <string name="location">Location</string>
     <string name="nf_on_map">Did not found this location on map</string>
 
+    <string name="total_rooms">Total Rooms</string>
+    <string name="state_of_property">State of Property</string>
+    <string name="search_location">Locate with Google</string>
+
+    <string name="street_num">Street Num</string>
+    <string name="street">Street</string>
+    <string name="zp">Zip Code</string>
+    <string name="locality">Locality</string>
+    <string name="country">Country</string>
     <string name="type">Type</string>
     <string name="surface">Surface</string>
     <string name="district">District</string>
@@ -73,13 +101,17 @@
     <string name="bath_number">Bathrooms</string>
     <string name="description">Description</string>
     <string name="price">Price</string>
+    <string name="ppm">Price/m²</string>
     <string name="photos">Photos</string>
     <string name="points_of_interest">Points of Interest</string>
     <string name="status">Status</string>
     <string name="agent">Agent</string>
-    <string name="date_of_sale">Sale\'s Date</string>
+    <string name="date_of_market">Market\'s Date</string>
     <string name="date_of_sold">Sold\'s Date</string>
     <string name="address">Address</string>
+    <string name="define_main">Define this photo as main</string>
+
+    <string name="one_photo">* must have at least one photo set as main</string>
 
     <string-array name="add_edit_ind">
         <item>@string/address</item>
@@ -97,7 +129,7 @@
         <item> </item>
         <item>@string/points_of_interest</item>
         <item>@string/status</item>
-        <item>@string/date_of_sale</item>
+        <item>@string/date_of_market</item>
         <item>@string/date_of_sold</item>
         <item>@string/agent</item>
     </string-array>
@@ -122,6 +154,8 @@
         <item>Sold</item>
     </string-array>
 
+    <string name="property_sold">Property sold</string>
+
     <string-array name="type_ind">
         <item>Flat</item>
         <item>House</item>
@@ -143,7 +177,7 @@
         <item>Airport</item>
     </string-array>
 
-    <string-array name="rooms_ind">
+    <string-array name="photos_ind">
         <item>Facade</item>
         <item>Hall</item>
         <item>Lounge</item>

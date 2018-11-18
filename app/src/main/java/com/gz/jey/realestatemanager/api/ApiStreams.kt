@@ -11,6 +11,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
+
 object ApiStreams {
 
     /**
@@ -46,10 +47,9 @@ object ApiStreams {
      * @param lang Int
      * @return Observable<Details>
      */
-    fun getStaticMap(address : String, dimen :Int, pos :LatLng) : String{
+    fun getStaticMap(address : String, dimen :Int, pos :LatLng?) : String{
         val max = dimen.toString()+"x"+dimen.toString()
-        val lat = pos.latitude
-        val lng = pos.longitude
+
         val key = BuildConfig.GEOCODE_KEY
 
         val url = StringBuilder()
@@ -57,7 +57,11 @@ object ApiStreams {
         url.append("center=$address")
         url.append("&size=$max")
         url.append("&maptype=roadmap")
-        url.append("&markers=color:blue%7Clabel:S%7C$lat,$lng")
+        if(pos!= null){
+            val lat = pos.latitude
+            val lng = pos.longitude
+            url.append("&markers=color:blue%7Clabel:S%7C$lat,$lng")
+        }
         url.append("&key=$key")
 
         return url.toString()

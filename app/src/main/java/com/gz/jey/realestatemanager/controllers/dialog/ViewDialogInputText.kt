@@ -2,6 +2,7 @@ package com.gz.jey.realestatemanager.controllers.dialog
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.support.design.widget.TextInputEditText
 import android.text.Editable
 import android.text.InputType
@@ -18,7 +19,11 @@ import com.gz.jey.realestatemanager.controllers.activities.SetFilters
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.utils.Utils
 import java.lang.Exception
+import java.util.*
 import kotlin.collections.ArrayList
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.view.inputmethod.InputMethodManager
+
 
 class ViewDialogInputText {
 
@@ -29,9 +34,9 @@ class ViewDialogInputText {
     private lateinit var editBtn: Button
 
     private val list: ArrayList<String> = ArrayList()
-    private lateinit var result: String
+    private var result: String? = null
 
-    fun showDialog(activity: Activity, code: Int, actualValue: ArrayList<String>) {
+    fun showDialog(activity: Activity, code: String, actualValue:String?) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
@@ -42,7 +47,7 @@ class ViewDialogInputText {
         overview = dialog.findViewById(R.id.overview)
         cancelBtn = dialog.findViewById(R.id.cancel_btn)
         editBtn = dialog.findViewById(R.id.edit_btn)
-        result = if(actualValue.isNotEmpty()) actualValue[0] else ""
+        result = if(!actualValue.isNullOrEmpty() && actualValue!="null") actualValue else ""
 
         cancelBtn.setOnClickListener { dialog.dismiss() }
 
@@ -51,10 +56,25 @@ class ViewDialogInputText {
         var titleLbl = ""
 
         when (code) {
-            Code.ADDRESS -> { titleLbl = activity.getString(R.string.address) }
-            Code.SURFACE -> {
-                titleLbl = activity.getString(R.string.surface)
+            Code.STREET_NUM -> {
+                titleLbl = activity.getString(R.string.street_num)
                 inputText.inputType = InputType.TYPE_CLASS_NUMBER
+            }
+            Code.STREET -> titleLbl = activity.getString(R.string.street)
+            Code.ZIP_CODE -> titleLbl = activity.getString(R.string.zp)
+            Code.LOCALITY -> titleLbl = activity.getString(R.string.locality)
+            Code.STATE -> titleLbl = activity.getString(R.string.state)
+            Code.SURFACE -> {
+                titleLbl = activity.getString(R.string.surface) + "(m²)"
+                overview.visibility = View.VISIBLE
+                inputText.inputType = InputType.TYPE_CLASS_NUMBER
+                inputText.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+                    override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+                    override fun afterTextChanged(editable: Editable) {
+                        overview.text = getSurfaceOverview(activity, editable.toString())
+                    }
+                })
             }
             Code.ROOM_NUM -> {
                 titleLbl = activity.getString(R.string.room_number)
@@ -75,38 +95,44 @@ class ViewDialogInputText {
             Code.DESCRIPTION -> { titleLbl = activity.getString(R.string.description) }
             Code.PRICE -> {
                 titleLbl = activity.getString(R.string.price)
+                val act = activity as AddOrEditActivity
+                val currency = act.addOrEdit.currency
                 overview.visibility = View.VISIBLE
                 inputText.inputType = InputType.TYPE_CLASS_NUMBER
                 inputText.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun afterTextChanged(editable: Editable) {
-                        overview.text = getPriceOverview(activity, editable.toString())
+                        overview.text = getPriceOverview(activity, editable.toString(), currency)
                     }
                 })
             }
             Code.AGENT -> { titleLbl = activity.getString(R.string.agent) }
             Code.FILTER_MIN_PRICE -> {
                 titleLbl = activity.getString(R.string.price)
+                val act = activity as SetFilters
+                val currency = act.currency
                 overview.visibility = View.VISIBLE
                 inputText.inputType = InputType.TYPE_CLASS_NUMBER
                 inputText.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun afterTextChanged(editable: Editable) {
-                        overview.text = getPriceOverview(activity, editable.toString())
+                        overview.text = getPriceOverview(activity, editable.toString(), currency)
                     }
                 })
             }
             Code.FILTER_MAX_PRICE -> {
                 titleLbl = activity.getString(R.string.price)
+                val act = activity as SetFilters
+                val currency = act.currency
                 overview.visibility = View.VISIBLE
                 inputText.inputType = InputType.TYPE_CLASS_NUMBER
                 inputText.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun afterTextChanged(editable: Editable) {
-                        overview.text = getPriceOverview(activity, editable.toString())
+                        overview.text = getPriceOverview(activity, editable.toString(), currency)
                     }
                 })
             }
@@ -141,31 +167,33 @@ class ViewDialogInputText {
         editBtn.setOnClickListener {
             val res : ArrayList<String> = ArrayList()
             res.add(inputText.text.toString())
-            if(code >= 200){
+            if(code.split('_').contains("FILTER")){
                 val act = activity as SetFilters
-                act.insertEditedValue(code, res)
+                act.insertStandardValue(code, inputText.text.toString())
             }else{
                 val act = activity as AddOrEditActivity
-                act.insertEditedValue(code, res)
+                act.addOrEdit.insertStandardValue(code, inputText.text.toString())
             }
 
             dialog.dismiss()
         }
         titleCanvas.text = "$editLbl $titleLbl"
+        inputText.requestFocus()
+        val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        keyboard.showSoftInput(inputText, 0)
         dialog.show()
     }
 
-    private fun getPriceOverview(activity: Activity, ed: String): String {
+    private fun getPriceOverview(activity: Activity, ed: String, currency: Int): String {
         val sb = StringBuilder()
         try {
             val edit = if (ed.isEmpty()) 0 else ed.toLong()
-            val num = Utils.convertedHighPrice(activity, 0, edit)
+            val num = Utils.convertedHighPrice(activity, currency, edit)
             val overv = activity.getString(R.string.overview)
 
-            val currency = 1
             when (currency) {
-                0 -> sb.append(overv).append(" : ").append(activity.getString(R.string.dollar_symbol)).append(" ").append(num)
-                1 -> sb.append(overv).append(" : ").append(num).append(" ").append(activity.getString(R.string.euro_symbol))
+                0 -> sb.append(overv).append(" : ").append(num)
+                1 -> sb.append(overv).append(" : ").append(num)
             }
         }catch (e : Exception){
             Log.e("OVERVIEW FAILED ", e.toString())
@@ -174,4 +202,18 @@ class ViewDialogInputText {
         return sb.toString()
     }
 
+    private fun getSurfaceOverview(activity: Activity, ed: String): String {
+        val sb = StringBuilder()
+        try {
+            val edit = if (ed.isEmpty()) 0 else ed.toLong()
+            val num = Utils.getSurfaceFormat(activity, edit.toInt())
+            val overv = activity.getString(R.string.overview)
+
+            sb.append(overv).append(" : ").append(num)
+        }catch (e : Exception){
+            Log.e("OVERVIEW FAILED ", e.toString())
+        }
+
+        return sb.toString()
+    }
 }

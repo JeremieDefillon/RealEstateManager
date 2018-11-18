@@ -15,20 +15,20 @@ interface RealEstateDao {
     @RawQuery(observedEntities = [RealEstate::class])
     fun getFilteredRealEstate(query: SupportSQLiteQuery): LiveData<List<RealEstate>>
 
-    @Query("SELECT * FROM RealEstate WHERE isSelected = :get")
-    fun getRealEstateBySelect(get: Boolean = true): LiveData<RealEstate>
-
     @Query("SELECT * FROM RealEstate WHERE id = :id")
     fun getRealEstatesWithCursor(id: Long): Cursor
 
-    @Query("SELECT * FROM RealEstate")
+    @Query("SELECT * FROM RealEstate WHERE id != 999999999999999999")
     fun getAllRealEstate(): LiveData<List<RealEstate>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRealEstate(realEstate: RealEstate): Long
 
     @Update
     fun updateRealEstate(realEstate: RealEstate): Int
+
+    @Update
+    fun updateAllRealEstates(realEstates: List<RealEstate>): Int
 
     @Query("DELETE FROM RealEstate WHERE id = :id")
     fun deleteRealEstate(id: Long): Int

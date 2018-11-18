@@ -20,8 +20,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.api.ApiStreams
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
+import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogNoResults
+import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.sql.Photos
 import com.gz.jey.realestatemanager.models.sql.RealEstate
+import com.gz.jey.realestatemanager.models.sql.Settings
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
 import com.gz.jey.realestatemanager.views.PhotosAdapter
@@ -102,6 +105,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
             scrv.visibility = View.VISIBLE
             noRe.visibility = View.GONE
             mainActivity!!.itemViewModel.getRealEstate(mainActivity!!.realEstate!!.id!!).observe(this, Observer<RealEstate> { re -> updateRealEstateDetails(re!!) })
+            mainActivity!!.realEstate = null
         }else{
             scrv.visibility = View.GONE
             noRe.visibility = View.VISIBLE
@@ -115,16 +119,20 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
 
         this.adapter.updateData(item.photos as List<Photos>)
 
-        descriptionValue.text = if(item.description!=null && item.description!!.isNotEmpty()) item.description
+        descriptionValue.text = if(item.description.isNotEmpty()) item.description
                                 else getString(R.string.nc)
-        descriptionValue.typeface = if(item.description!=null && item.description!!.isNotEmpty()) Typeface.DEFAULT else Typeface.DEFAULT
+        descriptionValue.typeface = if(item.description.isNotEmpty()) Typeface.DEFAULT else Typeface.DEFAULT
         val locIc = SetImageColor.changeDrawableColor(view!!.context, R.drawable.location, black)
         locationIcon.background = locIc
-        locationValue.text = if(item.address!=null && item.address!!.isNotEmpty()) item.address else getString(R.string.nc)
-        locationValue.typeface = if(item.address!=null && item.address!!.isNotEmpty()) Typeface.DEFAULT else Typeface.DEFAULT
-        if(item.address!=null){
-            val pos = LatLng(item.latitude!!, item.longitude!!)
-            val url = ApiStreams.getStaticMap(item.address!!, 200, pos)
+
+        val loc = Utils.formatedLocation(item.street, item.zipCode, item.locality, item.state)
+
+        locationValue.text = if(loc.isNotEmpty()) loc else getString(R.string.nc)
+
+        if(loc.isNotEmpty()){
+            val pos = if(item.latitude!=null && item.longitude!=null)LatLng(item.latitude!!, item.longitude!!)
+            else null
+            val url = ApiStreams.getStaticMap(loc, 200, pos)
             Glide.with(context!!)
                     .load(url)
                     .into(mapReceiver)
@@ -171,20 +179,23 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
                     statValue.text = if(item.kitchen !=null)item.kitchen!!.toString() else getString(R.string.nc)
                 }
                 6 -> {
-                    val symb = if(item.currency !=null && item.currency==1) R.drawable.euro else R.drawable.dollar
-                    statIcon.background = SetImageColor.changeDrawableColor(child.context, symb, second)
+                    var currency = 0
                     statLbl.text = getString(R.string.price)
-                    val sb = StringBuilder()
-                            .append(Utils.convertedHighPrice(this.context!!, item.currency,item.price))
-                            .append("\r\n")
-                            .append(Utils.getPPMFormat(this.context!!, item.currency,item.price, item.surface))
-                    statValue.text = sb.toString()
+                    mainActivity!!.itemViewModel.getSettings(Code.SETTINGS)
+                            .observe(this, Observer<Settings> { st ->
+                                if(st!=null){
+                                    currency = st.currency
+                                    setPriceState(currency, item.price, item.surface, statIcon, statValue)
+                            }else
+                                    setPriceState(currency, item.price, item.surface, statIcon, statValue)
+                            })
+
                 }
                 7 -> {
-                    val status = if(item.status !=null)resources.getStringArray(R.array.status_ind)[item.status!!] else null
+                    val status = if(item.sold)resources.getStringArray(R.array.status_ind)[1] else resources.getStringArray(R.array.status_ind)[0]
                     statLbl.text = getString(R.string.status)
-                    when(item.status){
-                        0-> {
+                    when(item.sold){
+                        false-> {
                             statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.check_circle, grey)
                             val sb = StringBuilder()
                                     .append(status)
@@ -192,17 +203,13 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
                                     .append(item.marketDate)
                             statValue.text = sb.toString()
                         }
-                        1-> {
+                        true-> {
                             statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.check_circle, second)
                             val sb = StringBuilder()
                                     .append(status)
                                     .append(" since \r\n")
                                     .append(item.soldDate)
                             statValue.text = sb.toString()
-                        }
-                        else ->{
-                            statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.close, grey)
-                            statValue.text = getString(R.string.nc)
                         }
                     }
                 }
@@ -233,6 +240,16 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
                 }
             }
         }
+    }
+
+    private fun setPriceState(currency : Int, price : Long?, surface : Int?, icon : ImageView, value : TextView){
+        val symb = if(currency==1) R.drawable.euro else R.drawable.dollar
+        icon.background = SetImageColor.changeDrawableColor(mainActivity!!, symb, ContextCompat.getColor(view!!.context, R.color.colorSecondary))
+        val sb = StringBuilder()
+                .append(Utils.convertedHighPrice(this.context!!, currency,price))
+                .append("\r\n")
+                .append(Utils.getPPMFormat(this.context!!, currency,price, surface))
+        value.text = sb.toString()
     }
 
     override fun onDestroy() {

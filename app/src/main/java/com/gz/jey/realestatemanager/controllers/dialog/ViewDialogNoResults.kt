@@ -36,9 +36,9 @@ class ViewDialogNoResults {
                 cancelBtn.text = activity.getString(R.string.no_results_cancel)
                 editBtn.text = activity.getString(R.string.no_results_edit)
                 editBtn.setOnClickListener {
+                    dialog.dismiss()
                     val act = activity as MainActivity
                     act.addOrEditActivity(false)
-                    dialog.dismiss()
                 }
                 cancelBtn.setOnClickListener {
                     dialog.dismiss()
@@ -51,15 +51,29 @@ class ViewDialogNoResults {
                 editBtn.text = activity.getString(R.string.filters_failed_edit)
                 editBtn.setOnClickListener {
                     val act = activity as MainActivity
-                    act.filtersActivity()
                     dialog.dismiss()
+                    act.filtersActivity()
                 }
                 cancelBtn.setOnClickListener {
                     val act = activity as MainActivity
                     val intent = Intent(activity, MainActivity::class.java)
                     intent.putExtra(Code.FILTERS, false)
                     act.startActivity(intent)
+                    dialog.dismiss()
                     act.finish()
+                }
+            }
+            Code.NO_PHOTO -> {
+                titleCanvas.text = activity.getString(R.string.no_photos)
+                message.text = activity.getString(R.string.no_photos_message)
+                cancelBtn.text = activity.getString(R.string.no_photos_cancel)
+                editBtn.text = activity.getString(R.string.no_photos_edit)
+                editBtn.setOnClickListener {
+                    val act = activity as AddOrEditActivity
+                    dialog.dismiss()
+                    act.photosManager.addPhotos()
+                }
+                cancelBtn.setOnClickListener {
                     dialog.dismiss()
                 }
             }

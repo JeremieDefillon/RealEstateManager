@@ -7,27 +7,19 @@ import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
-import android.text.style.CharacterStyle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.Window
-import android.view.inputmethod.EditorInfo
 import android.widget.*
 import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.AutocompletePrediction
 import com.google.android.gms.location.places.GeoDataClient
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
 import com.gz.jey.realestatemanager.controllers.adapters.PlacesAdapter
 import com.gz.jey.realestatemanager.utils.SetImageColor
-import org.json.JSONObject
-
-
 
 
 class ViewDialogInputAddress {
@@ -35,23 +27,21 @@ class ViewDialogInputAddress {
     private val TAG = "INPUT ADDRESS"
 
     private lateinit var titleCanvas: TextView
-    lateinit var checkAC : ImageView
+    lateinit var checkAC: ImageView
     private lateinit var inputAddress: AutoCompleteTextView
     private lateinit var cancelBtn: Button
     private lateinit var editBtn: Button
 
     private val list: ArrayList<String> = ArrayList()
-    private lateinit var resultFullAddress: String
+    private var resultFullAddress: String? = null
     private lateinit var resultDistrict: String
 
-    private lateinit var validIcon : Drawable
-    private lateinit var unvalidIcon : Drawable
+    private lateinit var validIcon: Drawable
+    private lateinit var unvalidIcon: Drawable
     private lateinit var placesAdapter: PlacesAdapter
 
 
-
-
-    fun showDialog(gdc : GeoDataClient, activity: AddOrEditActivity, context: Context, code : Int, actualValue: ArrayList<String>) {
+    fun showDialog(gdc: GeoDataClient, activity: AddOrEditActivity, context: Context, actualValue: ArrayList<String?>) {
 
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -63,10 +53,10 @@ class ViewDialogInputAddress {
         inputAddress = dialog.findViewById(R.id.input_address)
         cancelBtn = dialog.findViewById(R.id.cancel_btn)
         editBtn = dialog.findViewById(R.id.edit_btn)
-        resultFullAddress = if(actualValue.size>0) actualValue[0] else ""
+        resultFullAddress = if (actualValue.size > 0) actualValue[0] else ""
 
-        unvalidIcon = SetImageColor.changeDrawableColor(context , R.drawable.check_circle, ContextCompat.getColor(context, R.color.colorGrey))
-        validIcon = SetImageColor.changeDrawableColor(context , R.drawable.check_circle, ContextCompat.getColor(context, R.color.colorSecondary))
+        unvalidIcon = SetImageColor.changeDrawableColor(context, R.drawable.check_circle, ContextCompat.getColor(context, R.color.colorGrey))
+        validIcon = SetImageColor.changeDrawableColor(context, R.drawable.check_circle, ContextCompat.getColor(context, R.color.colorSecondary))
 
         checkAC.background = unvalidIcon
 
@@ -79,13 +69,13 @@ class ViewDialogInputAddress {
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                 .build()
 
-        val bounds = if(activity.mLastKnownLocation!=null)
-            LatLngBounds(LatLng(activity.mLastKnownLocation!!.latitude-1, activity.mLastKnownLocation!!.longitude-1), LatLng(activity.mLastKnownLocation!!.latitude+1, activity.mLastKnownLocation!!.longitude+1))
-            else LatLngBounds(LatLng(-40.00, -168.00), LatLng(71.00, 136.00))
+        val bounds = if (activity.mLastKnownLocation != null)
+            LatLngBounds(LatLng(activity.mLastKnownLocation!!.latitude - 1, activity.mLastKnownLocation!!.longitude - 1), LatLng(activity.mLastKnownLocation!!.latitude + 1, activity.mLastKnownLocation!!.longitude + 1))
+        else LatLngBounds(LatLng(-40.00, -168.00), LatLng(71.00, 136.00))
 
-        Log.d("FILTER" , typeFilter.toString())
-        Log.d("GEOD" , gdc.toString())
-        Log.d("BOUNDS" , bounds.toString())
+        Log.d("FILTER", typeFilter.toString())
+        Log.d("GEOD", gdc.toString())
+        Log.d("BOUNDS", bounds.toString())
         placesAdapter = PlacesAdapter(context, activity.mGoogleApiClient, bounds, typeFilter)
         inputAddress.setAdapter(placesAdapter)
 
@@ -105,24 +95,29 @@ class ViewDialogInputAddress {
             }
         })
 
-        val editable = SpannableStringBuilder(resultFullAddress)
-        inputAddress.text = editable
+        for (a in actualValue)
+            if (a != null)
+                resultFullAddress += "$a "
+
+        if (!resultFullAddress.isNullOrEmpty()) {
+            val editable = SpannableStringBuilder(resultFullAddress)
+            inputAddress.text = editable
+        }
 
         editBtn.setOnClickListener {
-            val res : ArrayList<String> = ArrayList()
-            res.add(resultFullAddress)
-            activity.insertEditedValue(code, res)
+            if(resultFullAddress!=null)
+                activity.addOrEdit.insertLocation(resultFullAddress!!)
             dialog.dismiss()
         }
         titleCanvas.text = "$editLbl $titleLbl"
         dialog.show()
     }
 
-    private fun checkValidate(){
-        if(resultFullAddress == inputAddress.text.toString() && resultFullAddress.isNotEmpty()) {
+    private fun checkValidate() {
+        if (resultFullAddress == inputAddress.text.toString() && !resultFullAddress.isNullOrEmpty()) {
             checkAC.background = validIcon
             editBtn.visibility = View.VISIBLE
-        }else {
+        } else {
             checkAC.background = unvalidIcon
             editBtn.visibility = View.GONE
         }

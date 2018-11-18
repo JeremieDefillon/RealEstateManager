@@ -49,7 +49,7 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
     private lateinit var maxRoomsValue: TextView
     private lateinit var localityBtn: LinearLayout
     private lateinit var localityValue: TextView
-    private lateinit var distanceBtn: LinearLayout
+    //private lateinit var distanceBtn: LinearLayout
     private lateinit var distanceValue: TextView
     private lateinit var statusBtn: LinearLayout
     private lateinit var statusValue: TextView
@@ -75,6 +75,7 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
     private lateinit var realEstateViewModel: ItemViewModel
     lateinit var database: ItemDatabase
     var filters: Filters? = null
+    var currency: Int = 0
 
     private val results: ArrayList<String> = ArrayList()
 
@@ -120,8 +121,8 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
         maxRoomsValue = findViewById(R.id.max_rooms_value)
         localityBtn = findViewById(R.id.locality_button)
         localityValue = findViewById(R.id.locality_value)
-        distanceBtn = findViewById(R.id.distance_button)
-        distanceValue = findViewById(R.id.distance_value)
+        //distanceBtn = findViewById(R.id.distance_button)
+        //distanceValue = findViewById(R.id.distance_value)
         statusBtn = findViewById(R.id.status_button)
         statusValue = findViewById(R.id.status_value)
         dateBtn = findViewById(R.id.date_button)
@@ -149,7 +150,7 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
         minRoomsBtn.setOnClickListener { openDialog(2) }
         maxRoomsBtn.setOnClickListener { openDialog(3) }
         localityBtn.setOnClickListener { openDialog(4) }
-        distanceBtn.setOnClickListener { openDialog(5) }
+        //distanceBtn.setOnClickListener { openDialog(5) }
         statusBtn.setOnClickListener { openDialog(6) }
         dateBtn.setOnClickListener { openDialog(7) }
         minPriceBtn.setOnClickListener { openDialog(8) }
@@ -212,7 +213,7 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
     }
 
     private fun getDtbValue() {
-        var array: ArrayList<String> = ArrayList()
+        val array: ArrayList<String> = ArrayList()
         if (filters!!.id != null) {
             if (filters!!.type != null) {
                 //array = arrayOf(filters!!.type!!)
@@ -220,50 +221,28 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
             if (filters!!.poi != null) {
                 //filters!!.poi!!.toTypedArray(array)
             }
-            if (filters!!.minRoom != null) {
-                array.add(filters!!.minRoom.toString())
-                insertEditedValue(202, array)
-            }
-            if (filters!!.maxRoom != null) {
-                array.add(filters!!.maxRoom.toString())
-                insertEditedValue(203, array)
-            }
-            if (filters!!.locality != null) {
-                array.add(filters!!.locality.toString())
-                insertEditedValue(204, array)
-            }
-            if (filters!!.distance != null) {
-                array.add(filters!!.distance.toString())
-                insertEditedValue(205, array)
-            }
-            if (filters!!.status != null) {
-                array.add(filters!!.status.toString())
-                insertEditedValue(206, array)
-            }
-            if (filters!!.date != null) {
-                array.add(filters!!.date.toString())
-                insertEditedValue(207, array)
-            }
-            if (filters!!.minPrice != null) {
-                array.add(filters!!.minPrice.toString())
-                insertEditedValue(208, array)
-            }
-            if (filters!!.maxPrice != null) {
-                array.add(filters!!.maxPrice.toString())
-                insertEditedValue(209, array)
-            }
-            if (filters!!.minSurface != null) {
-                array.add(filters!!.minSurface.toString())
-                insertEditedValue(210, array)
-            }
-            if (filters!!.maxSurface != null) {
-                array.add(filters!!.maxSurface.toString())
-                insertEditedValue(211, array)
-            }
-            if (filters!!.minPhoto != null) {
-                array.add(filters!!.minPhoto.toString())
-                insertEditedValue(212, array)
-            }
+            if (filters!!.minRoom != null)
+                insertStandardValue(Code.FILTER_MIN_ROOMS, filters!!.minRoom.toString())
+            if (filters!!.maxRoom != null)
+                insertStandardValue(Code.FILTER_MAX_ROOMS, filters!!.maxRoom.toString())
+            if (filters!!.locality != null)
+                insertStandardValue(Code.FILTER_LOCALITY, filters!!.locality.toString())
+            if (filters!!.distance != null)
+                insertStandardValue(Code.FILTER_DISTANCE, filters!!.distance.toString())
+            if (filters!!.status != null)
+                insertStandardValue(Code.FILTER_STATUS, filters!!.status.toString())
+            if (filters!!.date != null)
+                insertStandardValue(Code.FILTER_DATE, filters!!.date.toString())
+            if (filters!!.minPrice != null)
+                insertStandardValue(Code.FILTER_MIN_PRICE, filters!!.minPrice.toString())
+            if (filters!!.maxPrice != null)
+                insertStandardValue(Code.FILTER_MAX_PRICE, filters!!.maxPrice.toString())
+            if (filters!!.minSurface != null)
+                insertStandardValue(Code.FILTER_MIN_SURFACE, filters!!.minSurface.toString())
+            if (filters!!.maxSurface != null)
+                insertStandardValue(Code.FILTER_MAX_SURFACE, filters!!.maxSurface.toString())
+            if (filters!!.minPhoto != null)
+                insertStandardValue(Code.FILTER_PHOTO, filters!!.minPhoto.toString())
         }
     }
 
@@ -274,17 +253,17 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
         when (index) {
             0 -> ViewDialogMultiChoice().showDialog(this, Code.FILTER_TYPE, res)
             1 -> ViewDialogMultiChoice().showDialog(this, Code.FILTER_POI, res)
-            2 -> ViewDialogInputText().showDialog(this, Code.FILTER_MIN_ROOMS, res)
-            3 -> ViewDialogInputText().showDialog(this, Code.FILTER_MAX_ROOMS, res)
-            4 -> ViewDialogInputText().showDialog(this, Code.FILTER_LOCALITY, res)
-            5 -> ViewDialogInputText().showDialog(this, Code.FILTER_DISTANCE, res)
+            2 -> ViewDialogInputText().showDialog(this, Code.FILTER_MIN_ROOMS, res[0])
+            3 -> ViewDialogInputText().showDialog(this, Code.FILTER_MAX_ROOMS, res[0])
+            4 -> ViewDialogInputText().showDialog(this, Code.FILTER_LOCALITY, res[0])
+            5 -> ViewDialogInputText().showDialog(this, Code.FILTER_DISTANCE, res[0])
             6 -> ViewDialogMultiChoice().showDialog(this, Code.FILTER_STATUS, res)
-            7 -> ViewDialogDatePicker().showDialog(this, Code.FILTER_DATE, res)
-            8 -> ViewDialogInputText().showDialog(this, Code.FILTER_MIN_PRICE, res)
-            9 -> ViewDialogInputText().showDialog(this, Code.FILTER_MAX_PRICE, res)
-            10 -> ViewDialogInputText().showDialog(this, Code.FILTER_MIN_SURFACE, res)
-            11 -> ViewDialogInputText().showDialog(this, Code.FILTER_MAX_SURFACE, res)
-            12 -> ViewDialogInputText().showDialog(this, Code.FILTER_PHOTO, res)
+            7 -> ViewDialogDatePicker().showDialog(this, Code.FILTER_DATE)
+            8 -> ViewDialogInputText().showDialog(this, Code.FILTER_MIN_PRICE, res[0])
+            9 -> ViewDialogInputText().showDialog(this, Code.FILTER_MAX_PRICE, res[0])
+            10 -> ViewDialogInputText().showDialog(this, Code.FILTER_MIN_SURFACE, res[0])
+            11 -> ViewDialogInputText().showDialog(this, Code.FILTER_MAX_SURFACE, res[0])
+            12 -> ViewDialogInputText().showDialog(this, Code.FILTER_PHOTO, res[0])
         }
     }
 
@@ -341,70 +320,48 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
     }
 
     private fun resetAllFilters() {
-        val arr: ArrayList<String> = ArrayList()
+        val arr: ArrayList<Int> = ArrayList()
         for (i in 0 until 13) {
-            insertEditedValue(i + 200, arr)
+            insertStandardValue(Code.FILTER_DATE, "")
         }
     }
 
-    fun insertEditedValue(nc: Int, array: ArrayList<String>) {
-        val code = nc - 200
-        if (array.isNotEmpty() && array[0].isNotEmpty()) {
-            Log.d("ARRAY $code", array[0])
-            Log.d("RESULTS $code", results[code])
-            results[code] = setSeveralResult(array)
+    fun insertStandardValue(code: String, res : String) {
+        if (res.isNotEmpty()) {
+            Log.d("RESULTS $code", res)
             when (code) {
-                0 -> {
-                    if (results[code].isNotEmpty()) {
-                        typeValue.text = setSeveralValue(code, array)
-                        typeValue.visibility = View.VISIBLE
-                        addTypeBtn.visibility = View.GONE
-                    } else {
-                        typeValue.visibility = View.GONE
-                        addTypeBtn.visibility = View.VISIBLE
-                    }
-                }
-                1 -> {
-                    if (results[code].isNotEmpty()) {
-                        poiValue.text = setSeveralValue(code, array)
-                        poiValue.visibility = View.VISIBLE
-                        addPoiBtn.visibility = View.GONE
-                    } else {
-                        poiValue.visibility = View.GONE
-                        addPoiBtn.visibility = View.VISIBLE
-                    }
-                }
-                2 -> minRoomsValue.text = results[code]
-                3 -> maxRoomsValue.text = results[code]
-                4 -> localityValue.text = results[code]
-                5 -> {
-                    val dist = results[code]
+                Code.FILTER_MIN_ROOMS -> minRoomsValue.text = results[2]
+                Code.FILTER_MAX_ROOMS -> maxRoomsValue.text = results[3]
+                Code.FILTER_LOCALITY -> localityValue.text = results[4]
+                Code.FILTER_DISTANCE -> {
+                    val dist = results[5]
                     distanceValue.text = "$dist km"
                 }
-                6 -> statusValue.text = resources.getStringArray(R.array.status_ind)[results[code].toInt()]
-                7 -> dateValue.text = results[code]
-                8 -> {
+                Code.FILTER_STATUS -> statusValue.text = resources.getStringArray(R.array.status_ind)[results[6].toInt()]
+                Code.FILTER_DATE -> dateValue.text = results[7]
+                Code.FILTER_MIN_PRICE -> {
                     try {
-                        val l = results[code].toLong()
+                        val l = results[8].toLong()
                         minPriceValue.text = Utils.convertedHighPrice(this, 0, l)
                     } catch (e: Exception) {
                         Log.e("ERROR MIN PRICE", e.toString())
                     }
                 }
-                9 -> {
+                Code.FILTER_MAX_PRICE -> {
                     try {
-                        val l = results[code].toLong()
+                        val l = results[9].toLong()
                         maxPriceValue.text = Utils.convertedHighPrice(this, 0, l)
                     } catch (e: Exception) {
                         Log.e("ERROR MAX PRICE", e.toString())
                     }
                 }
-                10 -> minSurfaceValue.text = Utils.getSurfaceFormat(this, results[code].toInt())
-                11 -> maxSurfaceValue.text = Utils.getSurfaceFormat(this, results[code].toInt())
-                12 -> minPhotoValue.text = results[code]
+                Code.FILTER_MIN_SURFACE -> minSurfaceValue.text = Utils.getSurfaceFormat(this, results[10].toInt())
+                Code.FILTER_MAX_SURFACE -> maxSurfaceValue.text = Utils.getSurfaceFormat(this, results[11].toInt())
+                Code.FILTER_PHOTO -> minPhotoValue.text = results[12]
             }
         } else {
-            results[code] = ""
+            for (i in 0 until results.size)
+                results[i] = ""
             typeValue.text = ""
             typeValue.visibility = View.GONE
             addTypeBtn.visibility = View.VISIBLE
@@ -414,7 +371,7 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
             minRoomsValue.text = ""
             maxRoomsValue.text = ""
             localityValue.text = ""
-            distanceValue.text = ""
+            //distanceValue.text = ""
             statusValue.text = ""
             dateValue.text = ""
             minPriceValue.text = ""
@@ -425,13 +382,41 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
         }
     }
 
-    private fun setSeveralValue(code: Int, array: ArrayList<String>): String {
-        val res = if (code == 0) resources.getStringArray(R.array.type_ind)
-        else resources.getStringArray(R.array.poi_ind)
+    fun insertMultiValues(code: String, res: ArrayList<String>){
+        when (code) {
+            Code.FILTER_LOCALITY -> {
+                if (res.isNotEmpty()) {
+                    typeValue.text = setSeveralValue(code, res)
+                    typeValue.visibility = View.VISIBLE
+                    addTypeBtn.visibility = View.GONE
+                } else {
+                    typeValue.visibility = View.GONE
+                    addTypeBtn.visibility = View.VISIBLE
+                }
+            }
+            Code.FILTER_DATE -> {
+                if (res.isNotEmpty()) {
+                    poiValue.text = setSeveralValue(code, res)
+                    poiValue.visibility = View.VISIBLE
+                    addPoiBtn.visibility = View.GONE
+                } else {
+                    poiValue.visibility = View.GONE
+                    addPoiBtn.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    private fun setSeveralValue(code: String, array: ArrayList<String>): String {
+        val res = when (code){
+            Code.FILTER_TYPE -> resources.getStringArray(R.array.type_ind)
+            Code.FILTER_POI -> resources.getStringArray(R.array.poi_ind)
+            else -> null
+        }
 
         val t = StringBuilder()
         for ((i, s) in array.withIndex()) {
-            t.append(res[s.toInt()])
+            t.append(res!![s.toInt()])
             if (i < array.size - 1)
                 t.append("\r\n")
         }

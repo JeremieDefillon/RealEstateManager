@@ -7,12 +7,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.models.sql.RealEstate
+import java.util.*
 
-class RealEstateAdapter// CONSTRUCTOR
+ class RealEstateAdapter// CONSTRUCTOR
 (private val callback: Listener) : RecyclerView.Adapter<RealEstateViewHolder>() {
 
     // FOR DATA
     private lateinit var context : Context
+    private var currency = 0
+     private var selected : Int? = null
     private var realEstates: List<RealEstate>
 
     // CALLBACK
@@ -36,7 +39,7 @@ class RealEstateAdapter// CONSTRUCTOR
         Log.d("RE ADAPTER", "POSITION = $position")
         val re = this.realEstates[position]
 
-        viewHolder.updateWithRealEstate(this.context, re, this.callback)
+        viewHolder.updateWithRealEstate(this.context, re, currency ,this.callback, position ,this.selected)
     }
 
     override fun getItemCount(): Int {
@@ -51,8 +54,10 @@ class RealEstateAdapter// CONSTRUCTOR
         return this.realEstates[position]
     }
 
-    fun updateData(realEstates: List<RealEstate>) {
+    fun updateData(realEstates: List<RealEstate>, currency: Int, selected: Int?) {
         this.realEstates = realEstates
+        this.currency = currency
+        this.selected = selected
         this.notifyDataSetChanged()
     }
 }

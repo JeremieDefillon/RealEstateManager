@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/colorWhite"
+    android:orientation="horizontal"
+    android:weightSum="100">
+
+    <LinearLayout
+        android:id="@+id/line_1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="40"
+        android:orientation="vertical"
+        android:weightSum="100">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="top"
+            android:layout_margin="5dip"
+            android:layout_weight="60"
+            android:gravity="center"
+            android:orientation="horizontal"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="4dp"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/localition_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:padding="2dip"
+                    android:text="@string/location"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/locate_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <ImageView
+                        android:id="@+id/locate_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/search"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/locate_lbl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_marginEnd="5dip"
+                        android:text="@string/search_location"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/locate_check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/check_circle"
+                        android:contentDescription="@null" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/street_num_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/street_num_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="50"
+                        android:text="@string/street_num"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/street_num_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/street_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/street_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="30"
+                        android:text="@string/street"
+                        android:textColor="@color/colorSecondaryDark"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="70"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/street_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/locality_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/locality_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="30"
+                        android:text="@string/locality"
+                        android:textColor="@color/colorSecondaryDark"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="70"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/locality_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/zip_code_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/zip_code_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="40"
+                        android:text="@string/zp"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="60"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/zip_code_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/state_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/state_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="30"
+                        android:text="@string/state"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="70"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/state_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="top"
+            android:layout_margin="5dip"
+            android:layout_weight="40"
+            android:gravity="center"
+            android:orientation="horizontal"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="4dp"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/description_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:padding="2dip"
+                    android:text="@string/description"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <FrameLayout
+                    android:id="@+id/description_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dip"
+                    android:padding="10dip">
+
+                    <TextView
+                        android:id="@+id/description_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:gravity="center"
+                        android:maxLines="6"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_text"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/description_icon"
+                        android:layout_width="@dimen/add_edit_button"
+                        android:layout_height="@dimen/add_edit_button"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+                </FrameLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line_2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="27"
+        android:orientation="vertical">
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="top"
+            android:layout_margin="5dip"
+            android:layout_weight="50"
+            android:gravity="center"
+            android:orientation="horizontal"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="4dp"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/state_of_property_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:padding="2dip"
+                    android:text="@string/state_of_property"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/type_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/type_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="30"
+                        android:text="@string/type"
+                        android:textColor="@color/colorSecondaryDark"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="70"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/type_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/surface_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/surface_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="40"
+                        android:text="@string/surface"
+                        android:textColor="@color/colorSecondaryDark"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="60"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/surface_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/price_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/price_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="30"
+                        android:text="@string/price"
+                        android:textColor="@color/colorSecondaryDark"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="70"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/price_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/poi_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/poi_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="35"
+                        android:text="@string/points_of_interest"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="65"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/poi_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="top"
+            android:layout_margin="5dip"
+            android:layout_weight="40"
+            android:gravity="center"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="4dp"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/photo_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:padding="2dip"
+                    android:text="@string/photos"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <FrameLayout
+                    android:id="@+id/photo_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/photo_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/add_box"
+                        android:contentDescription="@null"
+                        android:gravity="center"
+                        android:maxHeight="95dip"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/photo_icon"
+                        android:layout_width="@dimen/add_edit_button"
+                        android:layout_height="@dimen/add_edit_button"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dip"
+                        android:contentDescription="@null"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/photo_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dip"
+                    android:text="@string/one_photo"
+                    android:textColor="@color/colorSecondaryDark"
+                    android:textSize="@dimen/info_text"
+                    android:textStyle="italic" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line_3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="33"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="top"
+            android:layout_margin="5dip"
+            android:layout_weight="40"
+            android:gravity="center"
+            android:orientation="horizontal"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="4dp"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/nb_rooms_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:padding="2dip"
+                    android:text="@string/room_number"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/total_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/total_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="70"
+                        android:text="@string/total_rooms"
+                        android:textColor="@color/colorSecondaryDark"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/total_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bedroom_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/bedroom_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="70"
+                        android:text="@string/bed_number"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/bedroom_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/bathroom_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/bathroom_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="70"
+                        android:text="@string/bath_number"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/bathroom_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/kitchen_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/kitchen_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="70"
+                        android:text="@string/kitchen_number"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/kitchen_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="top"
+            android:layout_margin="5dip"
+            android:layout_weight="50"
+            android:gravity="center"
+            android:orientation="horizontal"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="4dp"
+            card_view:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/status_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:padding="2dip"
+                    android:text="@string/status"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/sold_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/sold_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="80"
+                        android:text="@string/property_sold"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/sold_check"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dip"
+                        android:layout_weight="20"
+                        android:clickable="false"
+                        android:gravity="end|center"
+                        android:textColor="@color/colorSecondary" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/market_date_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/market_date_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="45"
+                        android:text="@string/date_of_market"
+                        android:textColor="@color/colorSecondaryDark"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="55"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/market_date_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/sold_date_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/sold_date_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="45"
+                        android:text="@string/date_of_sold"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="55"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/sold_date_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/agent_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dip"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/agent_lbl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dip"
+                        android:layout_weight="40"
+                        android:text="@string/agent"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/value_labels"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="60"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/agent_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dip"
+                            android:layout_marginEnd="5dip"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/value_labels" />
+
+                        <include layout="@layout/under_line" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

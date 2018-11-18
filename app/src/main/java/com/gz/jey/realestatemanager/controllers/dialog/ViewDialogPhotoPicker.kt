@@ -4,19 +4,19 @@ import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.Window
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
-import com.gz.jey.realestatemanager.models.Code
-import com.gz.jey.realestatemanager.utils.MyImagePicker
 import com.gz.jey.realestatemanager.utils.SetImageColor
-import com.qingmei2.rximagepicker.core.RxImagePicker
 
 
 class ViewDialogPhotoPicker {
 
+    private lateinit var act : AddOrEditActivity
     private lateinit var titleCanvas : TextView
     private lateinit var cancelBtn : Button
     private lateinit var galleryBtn : LinearLayout
@@ -29,6 +29,7 @@ class ViewDialogPhotoPicker {
     private lateinit var uri : Uri
 
     fun showDialog(activity: AddOrEditActivity) {
+        act = activity
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
@@ -50,33 +51,18 @@ class ViewDialogPhotoPicker {
             dialog.dismiss()
         }
         galleryBtn.setOnClickListener {
-            RxImagePicker
-                    .create(MyImagePicker::class.java)
-                    .openGallery(activity)
-                    .subscribe { picR ->
-                        uri = picR.uri
-                        Log.d("URI", uri.toString())
-                        Log.d("Path", uri.path)
-                        dialog.dismiss()
-                        val res : ArrayList<String> = ArrayList()
-                        res.add(uri.toString())
-                        ViewDialogMultiChoice().showDialog(activity, Code.LEGEND, res)
-                    }
+            act.photosManager.openGallery()
+            dialog.dismiss()
         }
         cameraBtn.setOnClickListener {
-            RxImagePicker
-                    .create(MyImagePicker::class.java)
-                    .openCamera(activity)
-                    .subscribe { picR ->
-                        uri = picR.uri
-                        dialog.dismiss()
-                        val res : ArrayList<String> = ArrayList()
-                        res.add(uri.toString())
-                        ViewDialogMultiChoice().showDialog(activity, Code.LEGEND, res)
-                    }
+            act.photosManager.openCamera()
+            dialog.dismiss()
         }
 
         titleCanvas.text = activity.getString(R.string.pick_up_photo)
         dialog.show()
     }
+
+
+
 }
