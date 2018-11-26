@@ -1,7 +1,7 @@
 package com.gz.jey.realestatemanager.controllers.activities
 
 import android.arch.lifecycle.ViewModelProviders
-import android.arch.lifecycle.Observer
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -29,7 +30,7 @@ import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.*
 import com.gz.jey.realestatemanager.models.sql.Photos
 import com.gz.jey.realestatemanager.models.sql.RealEstate
-import com.gz.jey.realestatemanager.models.sql.Settings
+import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import java.util.*
 
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     // FOR DATA
     lateinit var itemViewModel: ItemViewModel
     lateinit var database: ItemDatabase
-    private var settings : Settings? = null
+    private var settings : Data? = null
     private var existMenu: Boolean = false
     var tabLand: Boolean = false
 
@@ -79,6 +80,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      * INIT ACTIVITY
      */
     private fun initActivity() {
+        initDatas()
         tabLand = (findViewById<View>(R.id.fragment_details) != null)
         setLang()
         setIcon()
@@ -90,6 +92,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         this.realEstateList = RealEstateList.newInstance(this)
         this.realEstateDetails = RealEstateDetails.newInstance(this)
         this.setViewModel()
+        setFragment(0)
     }
 
     private fun setLang() {
@@ -140,7 +143,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 true
             }
             R.id.search_on -> {
-                filtersActivity()
+                openFiltersActivity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -163,20 +166,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
         this.itemViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ItemViewModel::class.java)
-        this.itemViewModel.getSettings(Code.SETTINGS).observe(this, Observer<Settings>{ s -> initSettings(s)})
     }
 
-    private fun initSettings(set : Settings?){
-        if(set != null) {
-            settings = set
-            itemViewModel.updateSettings(settings!!)
-            this.setFragment(0)
-        }else{
-            val lang = if(Locale.getDefault().language == "fr") 1 else 0
-            settings = Settings(Code.SETTINGS, 0, lang, null, false, true)
-            itemViewModel.createSettings(settings!!)
-            this.setFragment(0)
-        }
+    /**
+     * LOAD ALL THE SAVED DATAS FROM PREFERENCES
+     */
+    private fun initDatas(){
+        Data.currency = getPreferences(Context.MODE_PRIVATE).getInt("CURRENCY", 0)
+        Data.enableNotif = getPreferences(Context.MODE_PRIVATE).getBoolean("NOTIF", true)
+        saveDatas()
+    }
+
+    /**
+     * SAVE ALL THE DATAS INTO PREFERENCES
+     */
+    private fun saveDatas(){
+        val preferences = getPreferences(Context.MODE_PRIVATE)
+        val editor = preferences.edit()
+        editor.putInt("CURRENCY", Data.currency)
+        editor.putBoolean("NOTIF", Data.enableNotif)
+        editor.apply()
     }
 
     /**
@@ -209,8 +218,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle Navigation Item Click
         item.isChecked = true
         when (item.itemId) {
-            R.id.loan -> setLoanSimulator()
-            R.id.settings -> setFragment(5)
+            R.id.loan -> openLoanSimulator()
+            R.id.settings -> openSettingsActivity()
         }
         this.drawerLayout!!.closeDrawer(GravityCompat.START)
         return true
@@ -270,14 +279,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         finish()
     }
 
-    fun filtersActivity() {
+    fun openFiltersActivity() {
         val intent = Intent(this, SetFilters::class.java)
         startActivity(intent)
         finish()
     }
 
-    private fun setLoanSimulator() {
+    private fun openLoanSimulator() {
         val intent = Intent(this, LoanSimulator::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun openSettingsActivity() {
+        val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
         finish()
     }

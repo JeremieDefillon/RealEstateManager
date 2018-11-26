@@ -26,24 +26,27 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     private var callbackWeakRef: WeakReference<RealEstateAdapter.Listener>? = null
 
 
-    fun updateWithRealEstate(context : Context, item: RealEstate, currency : Int, callback: RealEstateAdapter.Listener, position: Int, selected : Int?) {
+    fun updateWithRealEstate(context : Context, item: RealEstate, callback: RealEstateAdapter.Listener, position: Int, selected : Int?) {
         this.callbackWeakRef = WeakReference(callback)
         this.type.text = getFirstLine(context, item.type, item.room, item.surface)
-        this.district.text = getSecondLine(context, item.locality, currency, item.price, item.surface)
-        this.price.text = Utils.convertedHighPrice(context, currency, item.price)
+        this.district.text = getSecondLine(context, item.locality, item.price, item.surface)
+        this.price.text = Utils.convertedHighPrice(context, item.price)
 
+        val npic = ContextCompat.getDrawable(itemView.context, R.drawable.no_pict)
+        Glide.with(itemView.context)
+                .load(npic)
+                .into(this.photo)
 
         if(item.photos != null && item.photos!!.isNotEmpty()) {
-            Glide.with(itemView.context)
-                    .load(Uri.parse(item.photos!![0].image))
-                    .into(this.photo)
-        }else{
-            val npic = ContextCompat.getDrawable(itemView.context, R.drawable.no_pict)
-            Glide.with(itemView.context)
-                    .load(npic)
-                    .into(this.photo)
+            for(p in item.photos!!){
+                if(p.main){
+                    Glide.with(itemView.context)
+                            .load(Uri.parse(p.image!!))
+                            .into(this.photo)
+                    break
+                }
+            }
         }
-
 
         if(position == selected){
             llButton.setBackgroundColor(ContextCompat.getColor(itemView.context ,R.color.colorSecondary))
@@ -64,10 +67,10 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
         else ""
     }
 
-    private fun getSecondLine(context: Context, locality : String, currency: Int, price : Long?, surface: Int?): String{
+    private fun getSecondLine(context: Context, locality : String, price : Long?, surface: Int?): String{
         val sb = StringBuilder()
         if(locality.isNotEmpty()) sb.append("($locality)").append("  ")
-        sb.append(Utils.getPPMFormat(context, currency, price, surface)).append("  ")
+        sb.append(Utils.getPPMFormat(context, price, surface)).append("  ")
         return if(sb.isNotEmpty()) sb.substring(0, sb.toString().length-1)
         else ""
     }

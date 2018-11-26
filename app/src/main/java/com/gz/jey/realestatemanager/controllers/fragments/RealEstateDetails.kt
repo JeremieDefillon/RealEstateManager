@@ -1,6 +1,7 @@
 package com.gz.jey.realestatemanager.controllers.fragments
 
 import android.arch.lifecycle.Observer
+import android.graphics.Point
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -20,11 +21,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.api.ApiStreams
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
-import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogNoResults
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.sql.Photos
 import com.gz.jey.realestatemanager.models.sql.RealEstate
-import com.gz.jey.realestatemanager.models.sql.Settings
+import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
 import com.gz.jey.realestatemanager.views.PhotosAdapter
@@ -37,6 +37,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
     private var mView : View? = null
 
     var mainActivity: MainActivity? = null
+    private var re : RealEstate? = null
     private lateinit var adapter : PhotosAdapter
     private lateinit var photos : List<Photos>
 
@@ -104,7 +105,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
         if(mainActivity!!.realEstate!=null) {
             scrv.visibility = View.VISIBLE
             noRe.visibility = View.GONE
-            mainActivity!!.itemViewModel.getRealEstate(mainActivity!!.realEstate!!.id!!).observe(this, Observer<RealEstate> { re -> updateRealEstateDetails(re!!) })
+            mainActivity!!.itemViewModel.getRealEstate(mainActivity!!.realEstate!!.id!!).observe(this, Observer<RealEstate> { re -> updateRealEstateDetails(re!!)})
             mainActivity!!.realEstate = null
         }else{
             scrv.visibility = View.GONE
@@ -117,7 +118,12 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
         val second = ContextCompat.getColor(view!!.context, R.color.colorSecondary)
         val grey = ContextCompat.getColor(view!!.context, R.color.colorGrey)
 
-        this.adapter.updateData(item.photos as List<Photos>)
+        val display = activity!!.windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val screenX = size.x
+
+        this.adapter.updateData(item.photos as List<Photos>, screenX)
 
         descriptionValue.text = if(item.description.isNotEmpty()) item.description
                                 else getString(R.string.nc)
@@ -179,17 +185,8 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
                     statValue.text = if(item.kitchen !=null)item.kitchen!!.toString() else getString(R.string.nc)
                 }
                 6 -> {
-                    var currency = 0
                     statLbl.text = getString(R.string.price)
-                    mainActivity!!.itemViewModel.getSettings(Code.SETTINGS)
-                            .observe(this, Observer<Settings> { st ->
-                                if(st!=null){
-                                    currency = st.currency
-                                    setPriceState(currency, item.price, item.surface, statIcon, statValue)
-                            }else
-                                    setPriceState(currency, item.price, item.surface, statIcon, statValue)
-                            })
-
+                    setPriceState(item.price, item.surface, statIcon, statValue)
                 }
                 7 -> {
                     val status = if(item.sold)resources.getStringArray(R.array.status_ind)[1] else resources.getStringArray(R.array.status_ind)[0]
@@ -242,13 +239,13 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener{
         }
     }
 
-    private fun setPriceState(currency : Int, price : Long?, surface : Int?, icon : ImageView, value : TextView){
-        val symb = if(currency==1) R.drawable.euro else R.drawable.dollar
+    private fun setPriceState(price : Long?, surface : Int?, icon : ImageView, value : TextView){
+        val symb = if(Data.currency==1) R.drawable.euro else R.drawable.dollar
         icon.background = SetImageColor.changeDrawableColor(mainActivity!!, symb, ContextCompat.getColor(view!!.context, R.color.colorSecondary))
         val sb = StringBuilder()
-                .append(Utils.convertedHighPrice(this.context!!, currency,price))
+                .append(Utils.convertedHighPrice(this.context!!, price))
                 .append("\r\n")
-                .append(Utils.getPPMFormat(this.context!!, currency,price, surface))
+                .append(Utils.getPPMFormat(this.context!!, price, surface))
         value.text = sb.toString()
     }
 

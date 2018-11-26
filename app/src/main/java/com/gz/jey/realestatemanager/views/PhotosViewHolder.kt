@@ -14,15 +14,16 @@ class PhotosViewHolder(photoView: View) : RecyclerView.ViewHolder(photoView), Vi
 
     private var photo: ImageView = photoView.findViewById(R.id.photo)
     private var legend: TextView = photoView.findViewById(R.id.legend)
+    private var cb: TextView = photoView.findViewById(R.id.selector_check)
 
     // FOR DATA
     private var callbackWeakRef: WeakReference<PhotosAdapter.Listener>? = null
 
     fun updateWithPhotos(photo: Photos, context : Context, callback: PhotosAdapter.Listener) {
         val res = context.resources
+        this.cb.visibility = View.GONE
         this.callbackWeakRef = WeakReference(callback)
-
-        this.legend.text =  res.getStringArray(R.array.photos_ind)[photo.legend!!]
+        this.legend.text = if(photo.legend!=null) res.getStringArray(R.array.photos_ind)[photo.legend!!] else "?"
         Glide.with(context)
                 .load(photo.image)
                 .into(this.photo)

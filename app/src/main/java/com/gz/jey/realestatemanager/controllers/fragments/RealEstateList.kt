@@ -17,7 +17,7 @@ import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogNoResults
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.sql.Filters
 import com.gz.jey.realestatemanager.models.sql.RealEstate
-import com.gz.jey.realestatemanager.models.sql.Settings
+import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.utils.BuildRequestSQL
 import com.gz.jey.realestatemanager.utils.ItemClickSupport
 import com.gz.jey.realestatemanager.views.RealEstateAdapter
@@ -32,7 +32,6 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     private var itemPos: Int? = null
     private var slct: Int = 0
     private var maxClick = 1
-    private var currency = 0
     private var position : Int? = null
 
 
@@ -67,7 +66,6 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
         // DELETE
     }
 
-
     private fun configureRecyclerView() {
         this.adapter = RealEstateAdapter(this)
         this.recyclerView!!.adapter = this.adapter
@@ -81,10 +79,6 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
 
     private fun init() {
         Log.d("RE LIST", "OK")
-        mainActivity!!.itemViewModel.getSettings(Code.SETTINGS)
-                .observe(this, Observer<Settings> { st ->
-                    currency = st?.currency ?: 0
-                })
         getRealEstates()
     }
 
@@ -147,7 +141,11 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     }
 
     private fun updateRealEstateList(items: List<RealEstate>) {
-        Log.d("RE LIST", items.toString())
+
+        for((i,p) in items.withIndex()){
+            Log.d("LOC - $i", p.latitude.toString() + " " + p.longitude.toString())
+        }
+
         if (items.isNotEmpty()) {
             infoText!!.visibility = View.GONE
         }else{
@@ -156,12 +154,12 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
             ViewDialogNoResults().showDialog(mainActivity!!, Code.NO_RESULTS)
         }
 
-        updateData(items, currency)
+        updateData(items)
     }
 
-    private fun updateData(items: List<RealEstate>, cur : Int){
+    private fun updateData(items: List<RealEstate>){
         Log.d("RE LIST","UPDATE DATA $items")
-        this.adapter!!.updateData(items, cur, position)
+        this.adapter!!.updateData(items, position)
     }
 
 

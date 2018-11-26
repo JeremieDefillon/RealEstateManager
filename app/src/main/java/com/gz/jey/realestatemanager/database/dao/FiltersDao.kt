@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.database.Cursor
 import com.gz.jey.realestatemanager.models.sql.Filters
-import com.gz.jey.realestatemanager.models.sql.Settings
 
 
 @Dao

@@ -1,11 +1,15 @@
 package com.gz.jey.realestatemanager.views
 
 import android.content.Context
+import android.graphics.Point
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.models.sql.Photos
+import com.gz.jey.realestatemanager.utils.BuildCardView
+import com.gz.jey.realestatemanager.utils.Utils
+import kotlinx.android.synthetic.main.photos_manager.*
 import java.util.ArrayList
 
 class PhotosAdapter// CONSTRUCTOR
@@ -13,6 +17,7 @@ class PhotosAdapter// CONSTRUCTOR
 
     // FOR DATA
     private lateinit var context : Context
+    private var screenX : Int = 0
     private var photos: List<Photos>? = null
 
     // CALLBACK
@@ -26,8 +31,9 @@ class PhotosAdapter// CONSTRUCTOR
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotosViewHolder {
         context = parent.context
-        val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.photos_item, parent, false)
+        val numPic = if (Utils.isLandscape(context)) 6 else 4
+        val size = screenX / numPic
+        val view= BuildCardView().photos(context, size)
 
         return PhotosViewHolder(view)
     }
@@ -49,8 +55,9 @@ class PhotosAdapter// CONSTRUCTOR
         return this.photos!![position]
     }
 
-    fun updateData(photos : List<Photos>) {
+    fun updateData(photos : List<Photos>, screenX : Int) {
         this.photos = photos
+        this.screenX = screenX
         this.notifyDataSetChanged()
     }
 }

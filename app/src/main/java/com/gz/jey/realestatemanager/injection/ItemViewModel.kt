@@ -1,19 +1,16 @@
 package com.gz.jey.realestatemanager.injection
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.persistence.db.SupportSQLiteQuery
 import com.gz.jey.realestatemanager.models.sql.Filters
 import com.gz.jey.realestatemanager.models.sql.RealEstate
-import com.gz.jey.realestatemanager.models.sql.Settings
 import com.gz.jey.realestatemanager.repositories.*
 import java.util.concurrent.Executor
 
 class ItemViewModel(// REPOSITORIES
         private val realEstateDataSource: RealEstateDataRepository,
         private val photosDataSource: PhotosDataRepository,
-        private val settingsDataSource: SettingsDataRepository,
         private val filtersDataSource: FiltersDataRepository,
         private val executor: Executor
 ) : ViewModel() {
@@ -51,26 +48,8 @@ class ItemViewModel(// REPOSITORIES
     }
 
     // -------------
-    // FOR SETTINGS
-    // -------------
-
-    fun getSettings(id : Long) : LiveData<Settings> {
-        return settingsDataSource.getSettings(id)
-    }
-
-    fun createSettings(settings: Settings) {
-        executor.execute {settingsDataSource.createSettings(settings) }
-    }
-
-    fun updateSettings(settings: Settings) {
-        executor.execute {settingsDataSource.updateSettings(settings) }
-    }
-
-
-    // -------------
     // FOR FILTERS
     // -------------
-
     fun getFilters(id : Long) : LiveData<Filters> {
         return filtersDataSource.getFilters(id)
     }

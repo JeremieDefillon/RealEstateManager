@@ -13,5 +13,6 @@
     <dimen name="value_text">16sp</dimen>
     <dimen name="info_text">15sp</dimen>
     <dimen name="add_edit_button">60dp</dimen>
+    <dimen name="loc_button">16sp</dimen>
 
 </resources>

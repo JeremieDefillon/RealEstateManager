@@ -52,7 +52,7 @@ class ViewDialogNoResults {
                 editBtn.setOnClickListener {
                     val act = activity as MainActivity
                     dialog.dismiss()
-                    act.filtersActivity()
+                    act.openFiltersActivity()
                 }
                 cancelBtn.setOnClickListener {
                     val act = activity as MainActivity

@@ -16,6 +16,7 @@
     <string name="end_label">End</string>
     <string name="search">Search</string>
     <string name="edit">Edit</string>
+    <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
     <string name="next">Next</string>
@@ -24,13 +25,19 @@
     <string name="remove">Remove</string>
     <string name="home">Home</string>
     <string name="loan_simulator">Loan Simulator</string>
-    <string name="calculate_loan">Calculate your Loan</string>
+    <string name="simulate_loan">Simulate your Loan</string>
+    <string name="calculate">Calculate</string>
     <string name="years">Years</string>
+    <string name="months">Months</string>
     <string name="years_unit">years</string>
     <string name="capital">Capital</string>
+    <string name="capital_borrowed">Capital Borrowed</string>
+    <string name="duration_of_loan">Duration of Loan</string>
     <string name="rate_interest">Interest\'s rate</string>
     <string name="monthly_payment">Monthly payment</string>
     <string name="on_label">On :</string>
+    <string name="number_index">Number : </string>
+    <string name="amortizations_table">Amortizations Table</string>
     <string name="settings">Settings</string>
     <string name="power_off">Turn Off</string>
     <string name="check">Check</string>
@@ -112,6 +119,13 @@
     <string name="define_main">Define this photo as main</string>
 
     <string name="one_photo">* must have at least one photo set as main</string>
+
+    <string name="delete_photos_title">Delete Photos</string>
+    <string name="delete_photos_msg">Want you really delete these photos ?</string>
+    <string name="delete_re_title">Delete Real Estates</string>
+    <string name="delete_re_msg">Want you really delete all the real estates registered in application\'s storage ?</string>
+    <string name="insert_re_title">Insert Real Estates</string>
+    <string name="insert_re_msg">Want you really generate several real estates from an encoded files (made for give an example) ?</string>
 
     <string-array name="add_edit_ind">
         <item>@string/address</item>
@@ -203,4 +217,11 @@
     <string name="filter_photos">Filters : set amount of Photos</string>
     <string name="filter_price">Filters : set Price\'s range</string>
     <string name="title_activity_maps">Map</string>
+
+
+    // ADMIN
+
+    <string name="admin">Admin</string>
+    <string name="insert_real_estates">Insert Real Estates</string>
+    <string name="delete_real_estates">Delete Real Estates</string>
 </resources>

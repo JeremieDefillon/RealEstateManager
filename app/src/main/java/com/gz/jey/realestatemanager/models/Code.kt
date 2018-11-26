@@ -8,6 +8,9 @@ object Code{
     val NO_RESULTS = "NO_RESULTS"
     val FILTERS_FAILED = "FILTERS_FAILED"
     val NO_PHOTO = "NO_PHOTO"
+    val DELETE_PHOTOS = "DELETE_PHOTOS"
+    val DELETE_RE = "DELETE_RE"
+    val INSERT_RE = "INSERT_RE"
     val FILTERS_DATA : Long = 1986
     val SETTINGS : Long = 1997
     val TEMP_RE : Long = 999999999999999999
@@ -54,4 +57,5 @@ object Code{
     val MULTICHECK = "MULTICHECK"
     val SOLOCHECK = "SOLOCHECK"
     val ERROR_NOT_FOUND = "ERROR_NOT_FOUND"
+    val ERROR_CALCULATE = "ERROR_CALCULATE"
 }

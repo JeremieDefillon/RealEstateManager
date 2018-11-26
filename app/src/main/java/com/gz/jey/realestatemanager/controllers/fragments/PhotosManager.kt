@@ -19,6 +19,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
+import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogConfirmAction
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogNoResults
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogPhotoPicker
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogSetPhotos
@@ -31,7 +32,6 @@ import com.qingmei2.rximagepicker.core.RxImagePicker
 import com.qingmei2.rximagepicker_extension.MimeType
 import com.qingmei2.rximagepicker_extension_zhihu.ZhihuConfigurationBuilder
 import kotlinx.android.synthetic.main.photos_manager.*
-
 
 class PhotosManager : Fragment() {
 
@@ -165,7 +165,14 @@ class PhotosManager : Fragment() {
     }
 
     fun deletePhotos() {
-        ViewDialogPhotoPicker().showDialog(act)
+        ViewDialogConfirmAction().showDialog(act, Code.DELETE_PHOTOS)
+    }
+
+    fun confirmDelete(){
+        for(i in photosSelected.size-1 downTo 0){
+            photosList.remove(photosList[photosSelected[i]])
+        }
+        setAllPhotos()
     }
 
     private fun addNewPhoto(uri: String) {

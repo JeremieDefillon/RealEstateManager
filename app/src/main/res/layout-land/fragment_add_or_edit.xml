@@ -48,39 +48,24 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/locate_button"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/locate_btn"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dip"
-                    android:weightSum="100">
-
-                    <ImageView
-                        android:id="@+id/locate_search"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/search"
-                        android:contentDescription="@null" />
-
-                    <TextView
-                        android:id="@+id/locate_lbl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dip"
-                        android:layout_marginEnd="5dip"
-                        android:text="@string/search_location"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/value_labels"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/locate_check"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/check_circle"
-                        android:contentDescription="@null" />
-
-                </LinearLayout>
+                    android:maxHeight="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_margin="10dip"
+                    android:paddingStart="10dip"
+                    android:paddingEnd="10dip"
+                    android:background="@color/colorWhite"
+                    android:text="@string/search_location"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/loc_button"
+                    android:drawableStart="@drawable/search"
+                    android:drawableEnd="@drawable/check_circle"
+                    />
 
                 <LinearLayout
                     android:id="@+id/street_num_button"

@@ -23,6 +23,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.view.inputmethod.InputMethodManager
+import com.gz.jey.realestatemanager.models.Data
 
 
 class ViewDialogInputText {
@@ -95,44 +96,38 @@ class ViewDialogInputText {
             Code.DESCRIPTION -> { titleLbl = activity.getString(R.string.description) }
             Code.PRICE -> {
                 titleLbl = activity.getString(R.string.price)
-                val act = activity as AddOrEditActivity
-                val currency = act.addOrEdit.currency
                 overview.visibility = View.VISIBLE
                 inputText.inputType = InputType.TYPE_CLASS_NUMBER
                 inputText.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun afterTextChanged(editable: Editable) {
-                        overview.text = getPriceOverview(activity, editable.toString(), currency)
+                        overview.text = getPriceOverview(activity, editable.toString())
                     }
                 })
             }
             Code.AGENT -> { titleLbl = activity.getString(R.string.agent) }
             Code.FILTER_MIN_PRICE -> {
                 titleLbl = activity.getString(R.string.price)
-                val act = activity as SetFilters
-                val currency = act.currency
                 overview.visibility = View.VISIBLE
                 inputText.inputType = InputType.TYPE_CLASS_NUMBER
                 inputText.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun afterTextChanged(editable: Editable) {
-                        overview.text = getPriceOverview(activity, editable.toString(), currency)
+                        overview.text = getPriceOverview(activity, editable.toString())
                     }
                 })
             }
             Code.FILTER_MAX_PRICE -> {
                 titleLbl = activity.getString(R.string.price)
-                val act = activity as SetFilters
-                val currency = act.currency
                 overview.visibility = View.VISIBLE
                 inputText.inputType = InputType.TYPE_CLASS_NUMBER
                 inputText.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                     override fun afterTextChanged(editable: Editable) {
-                        overview.text = getPriceOverview(activity, editable.toString(), currency)
+                        overview.text = getPriceOverview(activity, editable.toString())
                     }
                 })
             }
@@ -184,14 +179,14 @@ class ViewDialogInputText {
         dialog.show()
     }
 
-    private fun getPriceOverview(activity: Activity, ed: String, currency: Int): String {
+    private fun getPriceOverview(activity: Activity, ed: String): String {
         val sb = StringBuilder()
         try {
             val edit = if (ed.isEmpty()) 0 else ed.toLong()
-            val num = Utils.convertedHighPrice(activity, currency, edit)
+            val num = Utils.convertedHighPrice(activity, edit)
             val overv = activity.getString(R.string.overview)
 
-            when (currency) {
+            when (Data.currency) {
                 0 -> sb.append(overv).append(" : ").append(num)
                 1 -> sb.append(overv).append(" : ").append(num)
             }

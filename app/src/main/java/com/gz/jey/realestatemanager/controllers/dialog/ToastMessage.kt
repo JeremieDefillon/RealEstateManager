@@ -10,6 +10,7 @@ class ToastMessage{
             Code.UNEDITABLE -> "Can't Edit, please select a re first !"
             Code.UNSAVABLE -> "Can't Save until you've edited \r\n all the \"blue\" colored fields !"
             Code.ERROR_NOT_FOUND -> "[ERROR] : The content expected couldn't load cause it doesn't exist in the database !"
+            Code.ERROR_CALCULATE -> "Can not calculate, there is/are field(s) missing(s)"
             else -> ""
         }
 

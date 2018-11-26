@@ -5,8 +5,8 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.wifi.WifiManager
-import android.util.DisplayMetrics
 import com.gz.jey.realestatemanager.R
+import com.gz.jey.realestatemanager.models.Data
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -74,11 +74,11 @@ object Utils{
      * convert today date in string format
      * @return String as dd/mm/yyyy format
      */
-    fun convertedHighPrice(context : Context, currency : Int?, price : Long?): String {
-        if(currency!=null && price!=null){
+    fun convertedHighPrice(context : Context, price : Long?): String {
+        if(price!=null){
             val text = price.toString()
             var hp : String
-            val s = if(currency==0) "," else "."
+            val s = if(Data.currency==0) "," else "."
             val end = text.length
             val step = 3
             val over = end-1
@@ -100,22 +100,10 @@ object Utils{
             }else
                 hp = text
 
-            return if(currency==1) hp + " " + context.getString(R.string.euro_symbol)
+            return if(Data.currency==1) hp + " " + context.getString(R.string.euro_symbol)
             else context.getString(R.string.dollar_symbol) + " " + hp
         }else
             return context.getString(R.string.price) + " " + context.getString(R.string.nc)
-    }
-
-    fun getCurrencyFormat(context: Context, currency : Int?) : String{
-        val dl = context.getString(R.string.dollar_symbol) + " " + context.getString(R.string.dollar)
-        val er = context.getString(R.string.euro_symbol) + " " + context.getString(R.string.euro)
-        return if(currency!=null)
-            when(currency){
-                1-> er
-                else -> dl
-            }
-        else
-            ""
     }
 
     fun getSurfaceFormat(context: Context, surface : Int?) : String{
@@ -131,10 +119,11 @@ object Utils{
         else "? $r"
     }
 
-    fun getPPMFormat(context : Context, currency : Int?, price : Long?, surface : Int?) : String{
-        return if(currency!=null && price!=null && surface!=null){
+    fun getPPMFormat(context : Context, price : Long?, surface : Int?) : String{
+
+        return if(price!=null && surface!=null){
             val part : Long = (price/surface)
-            val str = this.convertedHighPrice(context,currency,part)
+            val str = this.convertedHighPrice(context, part)
            // val partStr = String.format("%.2f", str)
              str + "/" + context.getString(R.string.m2)
         }else{

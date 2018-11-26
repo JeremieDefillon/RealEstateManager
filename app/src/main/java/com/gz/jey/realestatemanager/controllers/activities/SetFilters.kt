@@ -75,7 +75,6 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
     private lateinit var realEstateViewModel: ItemViewModel
     lateinit var database: ItemDatabase
     var filters: Filters? = null
-    var currency: Int = 0
 
     private val results: ArrayList<String> = ArrayList()
 
@@ -342,7 +341,7 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
                 Code.FILTER_MIN_PRICE -> {
                     try {
                         val l = results[8].toLong()
-                        minPriceValue.text = Utils.convertedHighPrice(this, 0, l)
+                        minPriceValue.text = Utils.convertedHighPrice(this, l)
                     } catch (e: Exception) {
                         Log.e("ERROR MIN PRICE", e.toString())
                     }
@@ -350,7 +349,7 @@ class SetFilters : AppCompatActivity(), PhotosAdapter.Listener {
                 Code.FILTER_MAX_PRICE -> {
                     try {
                         val l = results[9].toLong()
-                        maxPriceValue.text = Utils.convertedHighPrice(this, 0, l)
+                        maxPriceValue.text = Utils.convertedHighPrice(this, l)
                     } catch (e: Exception) {
                         Log.e("ERROR MAX PRICE", e.toString())
                     }

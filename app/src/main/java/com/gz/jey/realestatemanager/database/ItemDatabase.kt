@@ -10,14 +10,13 @@ import com.gz.jey.realestatemanager.models.sql.*
 import com.gz.jey.realestatemanager.utils.IntConverter
 import com.gz.jey.realestatemanager.utils.PhotosConverter
 
-@Database(entities = [RealEstate::class, Photos::class, Settings::class, Filters::class], version = 1, exportSchema = false)
+@Database(entities = [RealEstate::class, Photos::class, Filters::class], version = 1, exportSchema = false)
 @TypeConverters(PhotosConverter::class, IntConverter::class)
 abstract class ItemDatabase : RoomDatabase() {
 
     // --- DAO ---
     abstract fun realEstateDao(): RealEstateDao
     abstract fun photosDao(): PhotosDao
-    abstract fun settingsDao(): SettingsDao
     abstract fun filtersDao(): FiltersDao
 
     companion object {

@@ -51,7 +51,7 @@ class BuildCardView{
         val main = TextView(context)
         main.layoutParams = mainParams
         main.id = R.id.main
-        main.textSize = size*0.05f
+        main.textSize = (size*0.10f) / context.resources.displayMetrics.density
         main.text = context.getText(R.string.main)
         main.background = ContextCompat.getDrawable(context, R.drawable.main_border)
         main.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD)

@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dip"
-        android:text="@string/calculate_loan"
+        android:text="@string/simulate_loan"
         android:textColor="@color/colorSecondaryDark"
         android:textSize="26sp"
         android:textStyle="bold" />
@@ -56,7 +56,7 @@
                     android:background="@color/colorPrimary"
                     android:gravity="center"
                     android:padding="5dip"
-                    android:text="@string/capital"
+                    android:text="@string/capital_borrowed"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/value_title"
                     android:textStyle="bold" />
@@ -189,7 +189,7 @@
                     android:background="@color/colorPrimary"
                     android:gravity="center"
                     android:padding="5dip"
-                    android:text="@string/years"
+                    android:text="@string/duration_of_loan"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/value_title"
                     android:textStyle="bold" />
@@ -202,18 +202,6 @@
                     android:layout_margin="@dimen/item_margin"
                     android:gravity="center"
                     android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:background="@color/colorWhite"
-                        android:gravity="center"
-                        android:padding="5dip"
-                        android:text="@string/on_label"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/value_title"
-                        android:textStyle="bold" />
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/years_value"
@@ -254,59 +242,52 @@
             card_view:cardUseCompatPadding="true">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minWidth="200dip"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="top"
-                    android:background="@color/colorPrimary"
-                    android:gravity="center"
-                    android:padding="5dip"
-                    android:text="@string/monthly_payment"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/value_title"
-                    android:textStyle="bold" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/monthly_btn"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/item_margin"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:minWidth="150dip"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="top"
+                        android:background="@color/colorPrimary"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="@string/monthly_payment"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/value_title"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/monthly_value"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:minWidth="20dip"
                         android:layout_gravity="center"
                         android:background="@color/colorWhite"
-                        android:gravity="end"
+                        android:gravity="center"
                         android:padding="5dip"
                         android:textColor="@color/colorSecondaryDark"
                         android:textSize="@dimen/value_title"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/monthly_lbl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@color/colorWhite"
-                        android:gravity="center"
-                        android:padding="5dip"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/value_title"
-                        android:textStyle="bold" />
                 </LinearLayout>
 
+                <Button
+                    android:id="@+id/calculate_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="10dip"
+                    android:background="@color/colorSecondaryDark"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    android:text="@string/calculate"/>
             </LinearLayout>
+
         </android.support.v7.widget.CardView>
     </LinearLayout>
 
@@ -320,22 +301,15 @@
             android:id="@+id/amortization_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:layout_margin="20dip"
             android:padding="10dip"
             android:background="@color/colorSecondaryDark"
             android:textColor="@color/colorWhite"
             android:textStyle="bold"
-            android:text="Amotizations Table"/>
+            android:text="@string/amortizations_table"
+            android:visibility="gone"/>
 
-        <Button
-            android:id="@+id/calculate_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dip"
-            android:padding="10dip"
-            android:background="@color/colorSecondaryDark"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold"
-            android:text="Calculate"/>
     </LinearLayout>
 </LinearLayout>

@@ -13,5 +13,8 @@
     <dimen name="value_text">11sp</dimen>
     <dimen name="info_text">10sp</dimen>
     <dimen name="add_edit_button">60dp</dimen>
+    <dimen name="loc_button">11sp</dimen>
+    <dimen name="table_title">12sp</dimen>
+    <dimen name="table_result">11sp</dimen>
 
 </resources>

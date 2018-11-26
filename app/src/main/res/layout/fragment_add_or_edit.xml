@@ -32,7 +32,6 @@
                 android:layout_marginBottom="10dip"
                 android:orientation="vertical">
 
-
                 <TextView
                     android:id="@+id/localition_label"
                     android:layout_width="match_parent"
@@ -46,39 +45,24 @@
                     android:textSize="@dimen/value_title"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/locate_button"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/locate_btn"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dip"
-                    android:weightSum="100">
-
-                    <ImageView
-                        android:id="@+id/locate_search"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/search"
-                        android:contentDescription="@null"/>
-
-                    <TextView
-                        android:id="@+id/locate_lbl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dip"
-                        android:layout_marginEnd="5dip"
-                        android:text="@string/search_location"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/value_labels"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/locate_check"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/check_circle"
-                        android:contentDescription="@null" />
-
-                </LinearLayout>
+                    android:maxHeight="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_margin="10dip"
+                    android:paddingStart="10dip"
+                    android:paddingEnd="10dip"
+                    android:background="@color/colorWhite"
+                    android:text="@string/search_location"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/loc_button"
+                    android:drawableStart="@drawable/search"
+                    android:drawableEnd="@drawable/check_circle"
+                    />
 
                 <LinearLayout
                     android:id="@+id/street_num_button"
@@ -108,10 +92,10 @@
                             android:id="@+id/street_num_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:maxLines="1"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
@@ -148,10 +132,10 @@
                             android:id="@+id/street_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:maxLines="1"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
@@ -189,10 +173,10 @@
                             android:id="@+id/locality_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:maxLines="1"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
@@ -229,10 +213,10 @@
                             android:id="@+id/zip_code_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 
@@ -268,10 +252,10 @@
                             android:id="@+id/state_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 
@@ -341,10 +325,10 @@
                             android:id="@+id/type_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:maxLines="1"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
@@ -381,10 +365,10 @@
                             android:id="@+id/surface_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 
@@ -421,10 +405,10 @@
                             android:id="@+id/price_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 
@@ -460,10 +444,10 @@
                             android:id="@+id/poi_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 
@@ -542,10 +526,10 @@
                             android:id="@+id/total_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 
@@ -581,10 +565,10 @@
                             android:id="@+id/bedroom_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 
@@ -621,10 +605,10 @@
                             android:id="@+id/bathroom_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 
@@ -660,10 +644,10 @@
                             android:id="@+id/kitchen_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 
@@ -751,7 +735,7 @@
             android:layout_gravity="top"
             android:layout_margin="5dip"
             android:layout_weight="35"
-            android:gravity="center"
+            android:gravity="top"
             card_view:cardCornerRadius="2dp"
             card_view:cardElevation="4dp"
             card_view:cardUseCompatPadding="true">
@@ -781,17 +765,16 @@
 
                     <ImageView
                         android:id="@+id/photo_value"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:maxHeight="95dip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/add_box"
+                        android:maxHeight="140dip"
                         android:contentDescription="@null"
                         android:gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/value_labels"
-                        android:textStyle="bold"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        android:adjustViewBounds="true"
+                        android:cropToPadding="false"
+                        android:scaleType="fitXY" />
 
                     <ImageView
                         android:id="@+id/photo_icon"
@@ -909,10 +892,10 @@
                             android:id="@+id/market_date_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 
@@ -949,10 +932,10 @@
                             android:id="@+id/sold_date_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:layout_gravity="end"
                             android:layout_marginStart="5dip"
                             android:layout_marginEnd="5dip"
-                            android:gravity="center"
+                            android:gravity="end"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/value_labels" />
 

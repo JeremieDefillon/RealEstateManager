@@ -14,7 +14,6 @@ import java.util.*
 
     // FOR DATA
     private lateinit var context : Context
-    private var currency = 0
      private var selected : Int? = null
     private var realEstates: List<RealEstate>
 
@@ -39,7 +38,7 @@ import java.util.*
         Log.d("RE ADAPTER", "POSITION = $position")
         val re = this.realEstates[position]
 
-        viewHolder.updateWithRealEstate(this.context, re, currency ,this.callback, position ,this.selected)
+        viewHolder.updateWithRealEstate(this.context, re, this.callback, position ,this.selected)
     }
 
     override fun getItemCount(): Int {
@@ -54,9 +53,8 @@ import java.util.*
         return this.realEstates[position]
     }
 
-    fun updateData(realEstates: List<RealEstate>, currency: Int, selected: Int?) {
+    fun updateData(realEstates: List<RealEstate>, selected: Int?) {
         this.realEstates = realEstates
-        this.currency = currency
         this.selected = selected
         this.notifyDataSetChanged()
     }

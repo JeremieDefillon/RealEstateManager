@@ -1,17 +1,15 @@
 package com.gz.jey.realestatemanager.controllers.activities
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -25,6 +23,7 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.places.GeoDataClient
 import com.google.android.gms.location.places.PlaceDetectionClient
@@ -39,13 +38,12 @@ import com.gz.jey.realestatemanager.injection.Injection
 import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.TempRealEstate
-import com.gz.jey.realestatemanager.models.sql.RealEstate
-import com.gz.jey.realestatemanager.models.sql.Settings
+import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import java.util.*
-import kotlin.collections.ArrayList
 
-class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener {
+class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener , LocationListener {
+
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -61,9 +59,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener {
     private lateinit var disableSaveIcon: Drawable
     private var toolMenu: Menu? = null
     var fragmentContainer: FrameLayout? = null
-    private var drawerLayout: DrawerLayout? = null
     var toolbar: Toolbar? = null
-    private var navigationView: NavigationView? = null
     lateinit var saveItem: MenuItem
     lateinit var addPhotoItem: MenuItem
     lateinit var editPhotoItem: MenuItem
@@ -75,7 +71,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener {
     // FOR DATA
     lateinit var itemViewModel: ItemViewModel
     lateinit var database: ItemDatabase
-    private var settings : Settings? = null
+    private var settings : Data? = null
     private var index : Int = 0
     var tabLand: Boolean = false
     var enableSave: Boolean = false
@@ -227,21 +223,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener {
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
         this.itemViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ItemViewModel::class.java)
-        this.itemViewModel.getSettings(Code.SETTINGS).observe(this, Observer<Settings>{ s -> initSettings(s)})
     }
-
-    private fun initSettings(set : Settings?){
-        if(set != null) {
-            settings = set
-            itemViewModel.updateSettings(settings!!)
-        }else{
-            val lang = if(Locale.getDefault().language == "fr") 1 else 0
-            settings = Settings(null, 0, lang, null, false, true)
-            itemViewModel.createSettings(settings!!)
-        }
-    }
-
-
 
     /**
      * @param index Int
@@ -279,7 +261,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener {
                     .commit()
     }
 
-    private fun backToMainActivity() {
+    fun backToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
@@ -325,6 +307,14 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener {
     /////////////////////////////////////////
     ///// LOCATION //////////////////////////
     /////////////////////////////////////////
+
+    override fun onLocationChanged(p0: android.location.Location?) {
+        if(p0!=null){
+            mLastKnownLocation = (LatLng(p0.latitude, p0.longitude))
+            Log.d(TAG, mLastKnownLocation.toString())
+        }
+    }
+
     /**
      * GET DEVICE LOCATION
      */
@@ -338,9 +328,15 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener {
                         Log.d(TAG, mLastKnownLocation.toString())
 
                     } else {
-                        Log.e("MAP LOCATION", "Exception: %s", task.exception)
-                        // Prompt the user for permission.
-                        getLocationPermission()
+                        if(mLastKnownLocation!=null) {
+                            task.result!!.latitude = mLastKnownLocation!!.latitude
+                            task.result!!.longitude = mLastKnownLocation!!.longitude
+                            Log.d("LOCATION", "OVER")
+                        }else{
+                            // Prompt the user for permission.
+                            getLocationPermission()
+                            Log.e("ERROR", "LOCATION")
+                        }
                     }
                 }
     }

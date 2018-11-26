@@ -29,7 +29,7 @@
             android:scaleType="fitCenter"
             android:textColor="@color/colorWhite"
             android:text="Row"
-            android:textSize="10sp"
+            android:textSize="@dimen/table_title"
             android:textStyle="bold" />
 
         <TextView
@@ -44,8 +44,8 @@
             android:padding="10dip"
             android:scaleType="fitCenter"
             android:textColor="@color/colorWhite"
-            android:textSize="10sp"
-            android:text="Monthly"
+            android:textSize="@dimen/table_title"
+            android:text="@string/monthly_payment"
             android:textStyle="bold" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:padding="10dip"
             android:scaleType="fitCenter"
             android:textColor="@color/colorWhite"
-            android:textSize="10sp"
+            android:textSize="@dimen/table_title"
             android:textStyle="bold"
             android:text="Interest Refund"/>
 
@@ -74,7 +74,7 @@
             android:padding="10dip"
             android:scaleType="fitCenter"
             android:textColor="@color/colorWhite"
-            android:textSize="10sp"
+            android:textSize="@dimen/table_title"
             android:text="Capital refunded"
             android:textStyle="bold" />
 
@@ -90,7 +90,7 @@
             android:padding="10dip"
             android:scaleType="fitCenter"
             android:textColor="@color/colorWhite"
-            android:textSize="10sp"
+            android:textSize="@dimen/table_title"
             android:textStyle="bold"
             android:text="Capital fee"/>
     </LinearLayout>
@@ -107,6 +107,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
         android:layout_gravity="bottom"
         android:gravity="top"
         android:layout_marginBottom="50dip"
@@ -116,15 +117,14 @@
             android:id="@+id/total"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="16  "
+            android:layout_weight="16"
             android:lines="2"
             android:layout_gravity="center"
             android:gravity="center"
             android:padding="10dip"
             android:scaleType="fitCenter"
-            android:textColor="@color/colorBlack"
-            android:text="Total"
-            android:textSize="12sp"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/table_result"
             android:textStyle="bold" />
 
         <TextView
@@ -137,8 +137,8 @@
             android:gravity="center"
             android:padding="10dip"
             android:scaleType="fitCenter"
-            android:textColor="@color/colorBlack"
-            android:textSize="12sp"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/table_result"
             android:textStyle="bold" />
 
         <TextView
@@ -150,12 +150,12 @@
             android:gravity="center"
             android:padding="10dip"
             android:scaleType="fitCenter"
-            android:textColor="@color/colorBlack"
-            android:textSize="12sp"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/table_result"
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/capital_tot"
+            android:id="@+id/capital_refund_tot"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="28"
@@ -163,9 +163,23 @@
             android:gravity="center"
             android:padding="10dip"
             android:scaleType="fitCenter"
-            android:textColor="@color/colorBlack"
-            android:textSize="12sp"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/table_result"
             android:textStyle="bold" />
+<!--
+        <TextView
+            android:id="@+id/capital_fee_tot"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="21"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/table_result"
+            android:textStyle="bold" />
+            -->
 
     </LinearLayout>
 

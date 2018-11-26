@@ -24,25 +24,21 @@ import com.gz.jey.realestatemanager.utils.SetImageColor
 
 class ViewDialogInputAddress {
 
-    private val TAG = "INPUT ADDRESS"
-
     private lateinit var titleCanvas: TextView
-    lateinit var checkAC: ImageView
+    private lateinit var checkAC: ImageView
     private lateinit var inputAddress: AutoCompleteTextView
     private lateinit var cancelBtn: Button
     private lateinit var editBtn: Button
 
-    private val list: ArrayList<String> = ArrayList()
     private var resultFullAddress: String? = null
-    private lateinit var resultDistrict: String
 
     private lateinit var validIcon: Drawable
     private lateinit var unvalidIcon: Drawable
     private lateinit var placesAdapter: PlacesAdapter
 
 
-    fun showDialog(gdc: GeoDataClient, activity: AddOrEditActivity, context: Context, actualValue: ArrayList<String?>) {
-
+    fun showDialog(gdc: GeoDataClient, activity: AddOrEditActivity, actualValue: ArrayList<String?>) {
+        val context = activity.applicationContext
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)

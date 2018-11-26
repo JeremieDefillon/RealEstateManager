@@ -2,6 +2,9 @@ package com.gz.jey.realestatemanager.controllers.dialog
 
 import android.app.Activity
 import android.app.Dialog
+import android.support.design.widget.TextInputEditText
+import android.text.InputType
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
@@ -17,6 +20,8 @@ class ViewDialogSetPhotos {
     private lateinit var titleCanvas: TextView
     private lateinit var scrollView: ScrollView
     private lateinit var inputChoice: GridLayout
+    private lateinit var photoIndex: TextInputEditText
+
     private lateinit var cancelBtn: Button
     private lateinit var nextBtn: Button
     private lateinit var finishBtn: Button
@@ -49,12 +54,15 @@ class ViewDialogSetPhotos {
         titleCanvas = dialog.findViewById(R.id.title)
         inputChoice = dialog.findViewById(R.id.grid_layout)
         scrollView = dialog.findViewById(R.id.scroll_view)
+        photoIndex = dialog.findViewById(R.id.photo_index)
         cancelBtn = dialog.findViewById(R.id.cancel_btn)
         nextBtn = dialog.findViewById(R.id.next_btn)
         finishBtn = dialog.findViewById(R.id.finish_btn)
         checkMain = dialog.findViewById(R.id.check_main)
 
         image = dialog.findViewById(R.id.image)
+
+        photoIndex.inputType = InputType.TYPE_CLASS_NUMBER
 
         cancelBtn.setOnClickListener { dialog.dismiss() }
 
@@ -98,6 +106,7 @@ class ViewDialogSetPhotos {
 
             photos[modif[counter]].legend = res
             photos[modif[counter]].main = checkMain.isChecked
+            photos[modif[counter]].num = if(photoIndex.text.toString().isNotEmpty()) photoIndex.text.toString().toInt() else null
             activity.photosManager.saveLegends(this.photos)
             dialog.dismiss()
         }
@@ -149,6 +158,9 @@ class ViewDialogSetPhotos {
 
         if(photos[modif[counter]].legend!=null)
             rdb[photos[modif[counter]].legend!!].isChecked = true
+
+        val indexValue = if(photos[modif[counter]].num!=null) photos[modif[counter]].num.toString() else ""
+        photoIndex.text = SpannableStringBuilder(indexValue)
     }
 
 }
