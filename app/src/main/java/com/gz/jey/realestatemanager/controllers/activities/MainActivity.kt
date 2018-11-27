@@ -51,14 +51,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var navigationView: NavigationView? = null
     lateinit var editItem: MenuItem
     var loading: FrameLayout? = null
-    private var loadingContent: TextView? = null
 
     // FOR DATA
     lateinit var itemViewModel: ItemViewModel
     lateinit var database: ItemDatabase
-    private var settings : Data? = null
     private var existMenu: Boolean = false
-    var tabLand: Boolean = false
 
 
     // FOR REALESTATE SELECTOR
@@ -81,7 +78,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      */
     private fun initActivity() {
         initDatas()
-        tabLand = (findViewById<View>(R.id.fragment_details) != null)
+        Data.tabMode = (findViewById<View>(R.id.fragment_details) != null)
         setLang()
         setIcon()
         fragmentContainer = findViewById(R.id.fragment_container)
@@ -135,7 +132,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 true
             }
             R.id.edit -> {
-                if (realEstate!=null) {
+                Log.d("EDIT ",realEstate.toString())
+                if (realEstate != null) {
                     addOrEditActivity(true)
                 } else {
                     ToastMessage().notifyMessage(this, Code.UNEDITABLE)
@@ -172,9 +170,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      * LOAD ALL THE SAVED DATAS FROM PREFERENCES
      */
     private fun initDatas(){
-        Data.currency = getPreferences(Context.MODE_PRIVATE).getInt("CURRENCY", 0)
-        Data.enableNotif = getPreferences(Context.MODE_PRIVATE).getBoolean("NOTIF", true)
-        saveDatas()
+        if(intent.hasExtra(Code.SETTINGS) && intent.getBooleanExtra(Code.SETTINGS, false)){
+            saveDatas()
+        }else{
+            intent.putExtra(Code.SETTINGS, false)
+            Data.currency = getPreferences(Context.MODE_PRIVATE).getInt("CURRENCY", 0)
+            Data.enableNotif = getPreferences(Context.MODE_PRIVATE).getBoolean("NOTIF", true)
+            saveDatas()
+        }
     }
 
     /**
@@ -239,7 +242,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //}else {
 
         //A - We only add DetailFragment in Tablet mode (If found frame_layout_detail)
-        if (tabLand) {
+        if (Data.tabMode) {
             invalidateOptionsMenu()
             changeToolBarMenu(1)
             this.supportFragmentManager.beginTransaction()
@@ -320,6 +323,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun setRE(re: RealEstate) {
         this.realEstate = re
+        Log.d("MA RE", this.realEstate.toString())
         setEdit(true)
     }
 
@@ -331,8 +335,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setEdit(bool: Boolean) {
-        if (bool) editItem.icon = enableEditIcon
-        else editItem.icon = disableEditIcon
+        if(toolMenu != null){
+            if (bool) editItem.icon = enableEditIcon
+            else editItem.icon = disableEditIcon
+        }
     }
 
 }

@@ -64,90 +64,26 @@
                 android:textSize="12sp" />
 
             <LinearLayout
+                android:id="@+id/location_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_marginTop="10dip"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="100"/>
 
-                <GridLayout
-                    android:id="@+id/stat_grid_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="50"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dip"
-                    android:layout_marginTop="10dip"
-                    android:layout_marginEnd="10dip"
-                    android:columnCount="2">
+            <GridLayout
+                android:id="@+id/stat_grid_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dip"
+                android:layout_marginTop="20dip"
+                android:layout_marginEnd="10dip"
+                android:columnCount="3">
 
-                </GridLayout>
-
-                <GridLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:columnCount="2"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/location_icon"
-                        android:layout_width="20dip"
-                        android:layout_height="20dip"
-                        android:layout_margin="10dip"
-                        android:contentDescription="@string/location" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dip"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/location"
-                            android:textStyle="bold"
-                            android:textColor="@color/colorBlack"/>
-
-                        <TextView
-                            android:id="@+id/location_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dip"
-                            android:maxWidth="120dip"
-                            android:textSize="12sp"
-                            android:textColor="@color/colorBlack" />
-                    </LinearLayout>
-                </GridLayout>
-
-                <FrameLayout
-                    android:layout_width="140dip"
-                    android:layout_height="140dip"
-                    android:layout_margin="10dip">
-
-                    <ImageView
-                        android:id="@+id/map_receiver"
-                        android:layout_width="140dip"
-                        android:layout_height="140dip"
-                        android:background="@drawable/layout_border"
-                        android:padding="1dp"
-                        android:scaleType="centerCrop"
-                        android:cropToPadding="true"
-                        android:contentDescription="@string/location"/>
-
-                    <TextView
-                        android:id="@+id/nf_location"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_margin="20dip"
-                        android:gravity="center"
-                        android:text="@string/nf_on_map"
-                        android:textAlignment="center"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textStyle="bold" />
-                </FrameLayout>
-            </LinearLayout>
-
+            </GridLayout>
 
 
         </LinearLayout>

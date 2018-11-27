@@ -3,6 +3,7 @@ package com.gz.jey.realestatemanager.models
 object Code{
     val RE_ID = "RE_ID"
     val IS_EDIT = "IS_EDIT"
+    val FROM_MAP = "FROM_MAP"
     val FILTERS = "FILTERS"
     val ARGS = "ARGS"
     val NO_RESULTS = "NO_RESULTS"
@@ -11,8 +12,8 @@ object Code{
     val DELETE_PHOTOS = "DELETE_PHOTOS"
     val DELETE_RE = "DELETE_RE"
     val INSERT_RE = "INSERT_RE"
+    val SETTINGS = "SETTINGS"
     val FILTERS_DATA : Long = 1986
-    val SETTINGS : Long = 1997
     val TEMP_RE : Long = 999999999999999999
 
     val UNEDITABLE = "MULTICHECK"

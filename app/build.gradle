@@ -29,16 +29,16 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField ("String", "GOOGLE_MAPS_KEY", "\"${google_maps_key}\"")
-            resValue ("string", "google_maps_key", "\"${google_maps_key}\"")
-            buildConfigField ("String", "GEOCODE_KEY", "\"${geocode_key}\"")
-            resValue ("string", "geocode_key", "\"${geocode_key}\"")
+            buildConfigField("String", "GOOGLE_MAPS_KEY", "\"${google_maps_key}\"")
+            resValue("string", "google_maps_key", "\"${google_maps_key}\"")
+            buildConfigField("String", "GEOCODE_KEY", "\"${geocode_key}\"")
+            resValue("string", "geocode_key", "\"${geocode_key}\"")
         }
-        debug{
-            buildConfigField ("String", "GOOGLE_MAPS_KEY", "\"${google_maps_key}\"")
-            resValue ("string", "google_maps_key", "\"${google_maps_key}\"")
-            buildConfigField ("String", "GEOCODE_KEY", "\"${geocode_key}\"")
-            resValue ("string", "geocode_key", "\"${geocode_key}\"")
+        debug {
+            buildConfigField("String", "GOOGLE_MAPS_KEY", "\"${google_maps_key}\"")
+            resValue("string", "google_maps_key", "\"${google_maps_key}\"")
+            buildConfigField("String", "GEOCODE_KEY", "\"${geocode_key}\"")
+            resValue("string", "geocode_key", "\"${geocode_key}\"")
         }
     }
     compileOptions {

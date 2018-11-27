@@ -3,50 +3,33 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:id="@+id/card_view"
-    android:layout_width="80dip"
-    android:layout_height="80dip"
-    android:layout_margin="5dip"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:gravity="center">
 
     <ImageView
         android:id="@+id/photo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:cropToPadding="false"
-        android:scaleType="fitXY"/>
+        android:layout_height="match_parent"/>
 
     <CheckBox
         android:id="@+id/selector_check"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"/>
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/main"
         android:layout_margin="5dip"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|start"
-        android:text="@string/main"
-        android:textSize="14sp"
-        android:textColor="@color/colorSecondary"
-        android:textStyle="bold"/>
+        android:layout_height="wrap_content"/>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="30dip"
-        android:layout_gravity="bottom"
-        android:background="@color/colorBlackAlpha">
+        android:layout_height="30dip">
         <TextView
             android:id="@+id/legend"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="@color/colorWhite"
-            android:textSize="13sp"/>
+            android:layout_height="match_parent"/>
     </FrameLayout>
 
 </android.support.v7.widget.CardView>

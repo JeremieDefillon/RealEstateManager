@@ -2,71 +2,201 @@
 <resources>
     <string name="app_name">Real Estate Manager</string>
 
-    <string name="navigation_drawer_close">Close</string>
-    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Fermer</string>
+    <string name="navigation_drawer_open">Ouvrir</string>
+
+    <string name="notifications">Notifications</string>
+    <string name="enable_notifications">Autoriser Notifications</string>
 
     <string name="colon">:</string>
-    <string name="search">Rechercher</string>
+    <string name="suspens">...</string>
+    <string name="obl">*</string>
+    <string name="room">Pièce</string>
+    <string name="rooms">Pièces</string>
+    <string name="min_label">Min</string>
+    <string name="max_label">Max</string>
+    <string name="start_label">Départ</string>
+    <string name="end_label">Fin</string>
+    <string name="search">Recherche</string>
     <string name="edit">Editer</string>
+    <string name="confirm">Confirmer</string>
+    <string name="cancel">Annuler</string>
+    <string name="close">Fermer</string>
+    <string name="next">Suivant</string>
+    <string name="finish">Fini</string>
     <string name="add">Ajouter</string>
-    <string name="save">Enregistrer</string>
+    <string name="remove">Retirer</string>
+    <string name="home">Maison</string>
+    <string name="loan_simulator">Simulateur de Prêt</string>
+    <string name="simulate_loan">Simuler votre Prêt</string>
+    <string name="calculate">Calculer</string>
+    <string name="years">Ans</string>
+    <string name="months">Mois</string>
+    <string name="years_unit">Ans</string>
+    <string name="capital">Capital</string>
+    <string name="capital_borrowed">Capital Emprunté</string>
+    <string name="duration_of_loan">Durée du Prêt</string>
+    <string name="rate_interest">Taux d\'intéret</string>
+    <string name="monthly_payment">Mensualité</string>
+    <string name="on_label">Sur :</string>
+    <string name="number_index">Nombre : </string>
+    <string name="amortizations_table">Table d\'amortissement</string>
+    <string name="settings">Paramètres</string>
+    <string name="power_off">Eteindre</string>
+    <string name="check">Check</string>
+    <string name="save">Sauvegarder</string>
     <string name="overview">Aperçu</string>
+    <string name="insert">Insérer</string>
+    <string name="legend">Légende : </string>
+    <string name="pick_up_photo">Choisir Photo</string>
+    <string name="gallery">Gallerie</string>
+    <string name="camera">Caméra</string>
+    <string name="loading">Chargement ...</string>
+    <string name="search_address">Chercher Adresse</string>
+    <string name="set_filters_by">Filtrer par</string>
+    <string name="sector">Secteur</string>
+    <string name="since_date">Depuis le</string>
+    <string name="distance">Distance</string>
+    <string name="since">Depuis</string>
+    <string name="main">MAIN</string>
+    <string name="photo_number">Nombre de Photo</string>
+    <string name="reset_filters">Réinitialiser Filtres</string>
+    <string name="search_filters">Appliquer Filtres</string>
+    <string name="nc">NC</string>
+    <string name="m2">m²</string>
+    <string name="km">km</string>
 
+    // FAIL
+    <string name="no_results">Il n\'y a aucun bien enregistré !</string>
+    <string name="no_results_title">Aucun bien enregistré !</string>
+    <string name="no_results_message">There is any Real Estate registered, you have to add at least one for the application can start list em, Click on \"CREATE\" for implement your first Real Estate !</string>
+    <string name="no_results_cancel">Ne rien faire</string>
+    <string name="no_results_edit">Créer</string>
+
+    <string name="filters_failed">Aucun bien trouvé avec les filtres !</string>
+    <string name="filters_failed_title">Aucun bien trouvé !</string>
+    <string name="filters_failed_message">There is any Real Estate found with those filters\'s set , you can either change yours settings on clicking \"REEDIT\" either just step aside filters and reload all yours Real Estates by clicking \"CANCEL\" !</string>
+    <string name="filters_failed_cancel">Annuler Filtres</string>
+    <string name="filters_failed_edit">Rééditer Filtres</string>
+
+    <string name="no_photos">Il n\'y a aucune photo enregistré !</string>
+    <string name="no_photos_title">Aucune photo enregistré !</string>
+    <string name="no_photos_message">There is any Photo registered, you have to add at least one for being able to save a Real Estate, Click on \"Add\" for add photos !</string>
+    <string name="no_photos_cancel">Annuler</string>
+    <string name="no_photos_edit">Ajouter</string>
 
     <!-- ADD & UPDATE LABELS  -->
     <string name="currency">Monnaie</string>
 
+    <string name="media">Média</string>
+    <string name="state">Etat</string>
+    <string name="location">Localisation</string>
+    <string name="nf_on_map">Cette localisation n\'a pas été trouvé sur la carte</string>
+
+    <string name="total_rooms">Total Pièces</string>
+    <string name="state_of_property">Etat du bien</string>
+    <string name="search_location">Localiser avec Google</string>
+
+    <string name="street_num">Num Rue</string>
+    <string name="street">Rue</string>
+    <string name="zp">Code Postal</string>
+    <string name="locality">Ville</string>
+    <string name="country">Pays</string>
     <string name="type">Type</string>
+    <string name="surface">Surface</string>
     <string name="district">Quartier</string>
-    <string name="room_number">Nombre de pièces</string>
-    <string name="bed_number">Nombre de chambres</string>
-    <string name="kitchen_number">Nombre de cuisines</string>
-    <string name="bath_number">Nombre de salle de Bain</string>
-    <string name="description">Description</string>
+    <string name="room_number">Nombre de Pièces</string>
+    <string name="bed_number">Chambres</string>
+    <string name="kitchen_number">Cuisines</string>
+    <string name="bath_number">Salles de Bain</string>
+    <string name="description">Déscription</string>
     <string name="price">Prix</string>
+    <string name="ppm">Prix/m²</string>
     <string name="photos">Photos</string>
-    <string name="points_of_interest">Points d\'intérêt</string>
+    <string name="points_of_interest">Points d\'Intéret</string>
     <string name="status">Status</string>
     <string name="agent">Agent</string>
-    <string name="date_of_market">Date de mise en vente</string>
-    <string name="date_of_sold">Date vendu</string>
+    <string name="date_of_market">Date de vente</string>
+    <string name="date_of_sold">Vendu le</string>
     <string name="address">Adresse</string>
+    <string name="define_main">Definir cette photo en principale</string>
 
-    <!-- CURRENCY -->
+    <string name="one_photo">* il doit y avoir au moins une photo en principale</string>
 
-    <string name="dollar_symbol">$</string>
-    <string name="euro_symbol">€</string>
+    <string name="delete_photos_title">Supprimer Photos</string>
+    <string name="delete_photos_msg">Want you really delete these photos ?</string>
+    <string name="delete_re_title">Supprimer les biens</string>
+    <string name="delete_re_msg">Want you really delete all the real estates registered in application\'s storage ?</string>
+    <string name="insert_re_title">Générer les biens</string>
+    <string name="insert_re_msg">Want you really generate several real estates from an encoded files (made for give an example) ?</string>
+
+    <string-array name="add_edit_ind">
+        <item>@string/address</item>
+        <item>@string/type</item>
+        <item>@string/surface</item>
+        <item>@string/room_number</item>
+        <item>@string/bed_number</item>
+        <item>@string/bath_number</item>
+        <item>@string/kitchen_number</item>
+        <item>@string/description</item>
+        <item> </item>
+        <item>@string/currency</item>
+        <item>@string/price</item>
+        <item>@string/photos</item>
+        <item> </item>
+        <item>@string/points_of_interest</item>
+        <item>@string/status</item>
+        <item>@string/date_of_market</item>
+        <item>@string/date_of_sold</item>
+        <item>@string/agent</item>
+    </string-array>
+
     <string name="add_symbol">+</string>
     <string name="minus_symbol">-</string>
+
+    <!-- CURRENCY -->
+    <string name="dollar_symbol">$</string>
+    <string name="euro_symbol">€</string>
+
+    <string name="dollar">Dollar</string>
+    <string name="euro">Euro</string>
+
+    <string-array name="currency_ind">
+        <item>@string/dollar</item>
+        <item>@string/euro</item>
+    </string-array>
 
     <string-array name="status_ind">
         <item>à Vendre</item>
         <item>Vendu</item>
     </string-array>
 
+    <string name="property_sold">Bien vendu</string>
+
     <string-array name="type_ind">
-        <item>Appart</item>
+        <item>Appartement</item>
         <item>Maison</item>
         <item>Villa</item>
+        <item>Duplex</item>
         <item>Loft</item>
         <item>Manoir</item>
         <item>Château</item>
     </string-array>
 
     <string-array name="poi_ind">
-        <item>Ecole</item>
-        <item>Commerces</item>
-        <item>Parc</item>
-        <item>Métro</item>
+        <item>Ecoles</item>
+        <item>Commeces</item>
+        <item>Parcs</item>
+        <item>Métros</item>
         <item>Bus</item>
-        <item>Train</item>
-        <item>Hôpital</item>
+        <item>Trains</item>
+        <item>Hôpitaux</item>
         <item>Aéroport</item>
     </string-array>
 
-
-    <string-array name="rooms_ind">
-        <item>Facade</item>
+    <string-array name="photos_ind">
+        <item>\?</item>
+        <item>Façade</item>
         <item>Hall</item>
         <item>Salon</item>
         <item>Cuisine</item>
@@ -78,9 +208,43 @@
         <item>Terrasse</item>
         <item>Garage</item>
         <item>Grenier</item>
+        <item>Céllier</item>
         <item>Cave</item>
-        <item>Buanderie</item>
     </string-array>
 
+    <string-array name="nums_ind">
+        <item>\?</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+    </string-array>
 
+    // FILTERS
+
+    <string name="filter_type">Filtres : choisir Type</string>
+    <string name="filter_surface">Filtres : choisir Surfaces</string>
+    <string name="filter_poi">Filtres : choisir Points d\'Intéret</string>
+    <string name="filter_date">Filtres : choisir Date</string>
+    <string name="filter_photos">Filtres : choisir nombre de Photos</string>
+    <string name="filter_price">Filtres : choisir Prix</string>
+    <string name="title_activity_maps">Carte</string>
+
+
+    // ADMIN
+
+    <string name="admin">Admin</string>
+    <string name="insert_real_estates">Générer les biens</string>
+    <string name="delete_real_estates">Supprimer les biens</string>
 </resources>

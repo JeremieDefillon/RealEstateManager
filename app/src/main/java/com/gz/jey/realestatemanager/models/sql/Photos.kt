@@ -9,8 +9,8 @@ data class Photos(
         @PrimaryKey(autoGenerate = true)
         var id: Long?,
         var image: String?,
-        var legend: Int?,
-        var num: Int?,
+        var legend: Int,
+        var num: Int,
         var main: Boolean = false
 ) {
     companion object {
@@ -25,5 +25,5 @@ data class Photos(
         }
     }
 
-    constructor() : this(null, null, null, null, false)
+    constructor() : this(null, null, 0, 0, false)
 }

@@ -131,14 +131,15 @@ object Utils{
         }
     }
 
-    fun formatedLocation(a:String?,b:String?,c:String?,d:String?) : String{
+    fun formatedLocation(a:String?,b:String?,c:String?,d:String?,e:String?) : String{
         val sb = StringBuilder()
         if(!a.isNullOrEmpty()) sb.append("$a,\r\n")
-        if(!b.isNullOrEmpty()) sb.append("$b,")
+        if(!b.isNullOrEmpty()) sb.append("$b,\r\n")
         if(!c.isNullOrEmpty()) sb.append("$c,\r\n")
-        if(!d.isNullOrEmpty()) sb.append("$d")
+        if(!c.isNullOrEmpty()) sb.append("$d,\r\n")
+        if(!d.isNullOrEmpty()) sb.append("$e,\r\n")
 
-        return sb.toString()
+        return sb.substring(0, sb.length-3)
     }
 
     fun getPoiAsString(ar : ArrayList<String>) : String{

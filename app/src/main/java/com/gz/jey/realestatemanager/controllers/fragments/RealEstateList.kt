@@ -2,6 +2,7 @@ package com.gz.jey.realestatemanager.controllers.fragments
 
 import android.arch.lifecycle.Observer
 import android.arch.persistence.db.SimpleSQLiteQuery
+import android.graphics.Point
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.utils.BuildRequestSQL
 import com.gz.jey.realestatemanager.utils.ItemClickSupport
+import com.gz.jey.realestatemanager.utils.Utils
 import com.gz.jey.realestatemanager.views.RealEstateAdapter
 
 class RealEstateList : Fragment(), RealEstateAdapter.Listener {
@@ -32,7 +34,7 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     private var itemPos: Int? = null
     private var slct: Int = 0
     private var maxClick = 1
-    private var position : Int? = null
+    var position : Int? = null
 
 
     /**
@@ -45,7 +47,7 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.real_estate_list, container, false)
         mainActivity = activity as MainActivity
-        maxClick = if (mainActivity!!.tabLand) 1 else 2
+        maxClick = if (Data.tabMode) 1 else 2
         return mView
     }
 
@@ -94,18 +96,18 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     private fun updateRealEstate(realEstate: RealEstate, position: Int, allRE: List<RealEstate>) {
         this.position = position
         updateRealEstateList(allRE)
-        if (mainActivity!!.realEstate == realEstate && !mainActivity!!.tabLand) {
+        if (mainActivity!!.realEstate == realEstate && !Data.tabMode) {
             slct = 2
         } else {
             mainActivity!!.setRE(realEstate)
             slct++
         }
-        Log.d("SLC", slct.toString() + " " + maxClick)
+        Log.d("SLC", slct.toString() + " / " + maxClick)
 
         if (slct == maxClick) {
             mainActivity!!.setRE(realEstate)
             slct = 0
-            if (mainActivity!!.tabLand) {
+            if (Data.tabMode) {
                 mainActivity!!.realEstateDetails!!.init()
             } else {
                 this.position = null
@@ -153,15 +155,36 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
             infoText!!.text = getString(R.string.no_results)
             ViewDialogNoResults().showDialog(mainActivity!!, Code.NO_RESULTS)
         }
+        val num = if(Data.tabMode)
+            if (Utils.isLandscape(context!!)) 9 else 14
+        else
+            if (Utils.isLandscape(context!!)) 5 else 10
 
-        updateData(items)
+        val div = if(Data.tabMode)
+            if (Utils.isLandscape(context!!)) 0.35f else 0.4f
+        else
+            if (Utils.isLandscape(context!!)) 0.65f else 1f
+
+        val display = activity!!.windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+        val width = (size.x*div).toInt()
+        val height= size.y/num
+
+        this.adapter!!.updateData(items, position, width, height)
+
+        if(mainActivity!!.intent.hasExtra(Code.FROM_MAP) && mainActivity!!.intent.getBooleanExtra(Code.FROM_MAP, false)){
+            mainActivity!!.intent.putExtra(Code.FROM_MAP, false)
+            val id = mainActivity!!.intent.getLongExtra(Code.RE_ID, 0)
+            itemPos = id.toInt()-1
+            this.updateRealEstate(this.adapter!!.getRealEstate(itemPos!!), itemPos!!, this.adapter!!.getAllRealEstate())
+        }else{
+            if(Data.tabMode && items.isNotEmpty() && this.position == null){
+                itemPos = 0
+                this.updateRealEstate(this.adapter!!.getRealEstate(0), 0, this.adapter!!.getAllRealEstate())
+            }
+        }
     }
-
-    private fun updateData(items: List<RealEstate>){
-        Log.d("RE LIST","UPDATE DATA $items")
-        this.adapter!!.updateData(items, position)
-    }
-
 
     override fun onDestroy() {
         super.onDestroy()

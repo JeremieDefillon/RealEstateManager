@@ -27,16 +27,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="?android:attr/actionBarSize">
-
             <FrameLayout
                 android:id="@+id/fragment_container"
-                android:layout_weight="35"
+                android:layout_weight="40"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 />
             <FrameLayout
                 android:id="@+id/fragment_details"
-                android:layout_weight="65"
+                android:layout_weight="60"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 />

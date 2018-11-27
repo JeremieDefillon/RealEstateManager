@@ -761,7 +761,8 @@
                 <FrameLayout
                     android:id="@+id/photo_button"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:minHeight="50dip">
 
                     <ImageView
                         android:id="@+id/photo_value"

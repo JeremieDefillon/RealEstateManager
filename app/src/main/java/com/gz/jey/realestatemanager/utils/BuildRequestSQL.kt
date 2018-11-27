@@ -8,7 +8,7 @@ class BuildRequestSQL {
 
     fun setBuild(fi: Filters): SimpleSQLiteQuery? {
         val str = StringBuilder()
-        str.append("SELECT *, COUNT(photos) as C ")
+        str.append("SELECT *, COUNT(photosCardView) as C ")
         str.append("FROM RealEstate ")
         str.append("WHERE ")
 

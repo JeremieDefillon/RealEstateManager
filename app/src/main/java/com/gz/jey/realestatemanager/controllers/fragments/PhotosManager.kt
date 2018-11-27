@@ -22,10 +22,9 @@ import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogConfirmAction
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogNoResults
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogPhotoPicker
-import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogSetPhotos
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.sql.Photos
-import com.gz.jey.realestatemanager.utils.BuildCardView
+import com.gz.jey.realestatemanager.utils.BuildItems
 import com.gz.jey.realestatemanager.utils.Utils
 import com.gz.jey.realestatemanager.utils.ZhihuImagePicker
 import com.qingmei2.rximagepicker.core.RxImagePicker
@@ -42,9 +41,7 @@ class PhotosManager : Fragment() {
     // FOR DATA
     lateinit var act: AddOrEditActivity
     val cardViews: ArrayList<CardView> = ArrayList()
-    var photosList: ArrayList<Photos> = ArrayList()
     val checkList: ArrayList<CheckBox> = ArrayList()
-    val photosSelected: ArrayList<Int> = ArrayList()
     private var justApplied = false
 
     // FOR DESIGN
@@ -78,21 +75,19 @@ class PhotosManager : Fragment() {
     }
 
     private fun init() {
-        photosList.clear()
+        Log.d("Photos []", act.tempRE!!.photos.toString())
+        act.photosList.clear()
         val max = if(act.tempRE!!.photos != null) act.tempRE!!.photos!!.size else 0
+        Log.d("Photos [$max]", act.tempRE!!.photos.toString())
         if(max>0){
-            Log.d("Photos [$max]", act.tempRE!!.photos.toString())
             for (i in 0 until max){
-                photosList.add(act.tempRE!!.photos!![i])
+                act.photosList.add(act.tempRE!!.photos!![i])
                 if (i >= max-1)
                     setAllPhotos()
             }
         }else{
-            act.setSave(false)
             ViewDialogNoResults().showDialog(act, Code.NO_PHOTO)
         }
-
-        Log.d("Photos [$max]", photosList.toString())
     }
 
     private fun setAllPhotos() {
@@ -101,14 +96,14 @@ class PhotosManager : Fragment() {
         val size = screenX / numPic
 
         photos_grid.removeAllViews()
-        photosSelected.clear()
+        act.photosSelected.clear()
         cardViews.clear()
         checkList.clear()
 
-        if (photosList.isNotEmpty()) {
+        if (act.photosList.isNotEmpty()) {
             act.setSave(true)
-            for ((i, p) in photosList.withIndex()) {
-                val c = BuildCardView().photos(context!!, size)
+            for ((i, p) in act.photosList.withIndex()) {
+                val c = BuildItems().photosCardView(context!!, size)
                 c.setOnClickListener { selectPhoto(i) }
                 val img = c.findViewById<ImageView>(R.id.photo)
                 val t = c.findViewById<TextView>(R.id.legend)
@@ -118,9 +113,9 @@ class PhotosManager : Fragment() {
                 checkList.add(ch)
 
                 val sb = StringBuilder()
-                if (p.legend != null) sb.append(resources.getStringArray(R.array.photos_ind)[p.legend!!])
+                if (p.legend != 0) sb.append(resources.getStringArray(R.array.photos_ind)[p.legend])
                 else sb.append("?")
-                if (p.num != null) sb.append(" " + p.num!!)
+                if (p.num != 0) sb.append(" " + p.num)
                 t.text = sb.toString()
 
                 if (p.image!!.isNotEmpty()) {
@@ -135,11 +130,10 @@ class PhotosManager : Fragment() {
                 photos_grid.addView(c)
                 cardViews.add(c)
 
-                if (p.legend == null)
+                if (p.legend == 0)
                     selectPhoto(i)
             }
         } else {
-            act.setSave(false)
             ViewDialogNoResults().showDialog(act, Code.NO_PHOTO)
         }
     }
@@ -148,16 +142,16 @@ class PhotosManager : Fragment() {
         checkList[i].isChecked = !checkList[i].isChecked
         photos_grid.getChildAt(i).findViewById<CheckBox>(R.id.selector_check).isChecked = checkList[i].isChecked
         if (checkList[i].isChecked)
-            photosSelected.add(i)
+            act.photosSelected.add(i)
         else
-            photosSelected.remove(i)
+            act.photosSelected.remove(i)
 
-        if (photosSelected.isNotEmpty())
+        if (act.photosSelected.isNotEmpty())
             act.changeToolBarMenu(2)
         else
             act.changeToolBarMenu(1)
 
-        Log.d("PHOTO SELECT", photosSelected.toString())
+        Log.d("PHOTO SELECT", act.photosSelected.toString())
     }
 
     fun addPhotos() {
@@ -169,36 +163,20 @@ class PhotosManager : Fragment() {
     }
 
     fun confirmDelete(){
-        for(i in photosSelected.size-1 downTo 0){
-            photosList.remove(photosList[photosSelected[i]])
+        for(i in act.photosSelected.size-1 downTo 0){
+            act.photosList.remove(act.photosList[act.photosSelected[i]])
         }
         setAllPhotos()
+        act.savePhotos()
     }
 
     private fun addNewPhoto(uri: String) {
         Log.d("Photo", uri)
         justApplied = true
-        val ph = Photos(null, uri, null, null, false)
-        photosList.add(ph)
+        val ph = Photos(null, uri, 0, 0, false)
+        act.photosList.add(ph)
         setAllPhotos()
-    }
-
-    fun savePhotos() {
-        act.tempRE!!.photos = photosList
-        act.setFragment(0)
-    }
-
-    fun editLegends() {
-        ViewDialogSetPhotos().showDialog(act, photosList, photosSelected)
-    }
-
-    fun saveLegends(p: ArrayList<Photos>) {
-        photosList.clear()
-        photosSelected.clear()
-        photosList.addAll(p)
-        Log.d("P LIST", photosList.toString())
-        setAllPhotos()
-        checkMain()
+        act.savePhotos()
     }
 
     fun openGallery() {
@@ -236,9 +214,8 @@ class PhotosManager : Fragment() {
         for (c in cardViews)
             c.findViewById<TextView>(R.id.main).visibility = View.GONE
 
-        for ((i, p) in photosList.withIndex())
+        for ((i, p) in act.photosList.withIndex())
             if (p.main) {
-
                 cardViews[i].findViewById<TextView>(R.id.main).visibility = View.VISIBLE
                 break
             }

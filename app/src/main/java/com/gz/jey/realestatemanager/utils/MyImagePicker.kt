@@ -11,6 +11,6 @@ interface MyImagePicker {
     @Gallery    // open gallery
     fun openGallery(context: Context): Observable<Result>
 
-    @Camera    // take photos
+    @Camera    // take photosCardView
     fun openCamera(context: Context): Observable<Result>
 }

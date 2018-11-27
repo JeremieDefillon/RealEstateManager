@@ -30,7 +30,7 @@ object SetImageColor{
      * @return Bitmap
      */
     fun changeBitmapColor(sourceBitmap: Bitmap, color: Int) : Bitmap {
-        val resultBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0, sourceBitmap.width - 10, sourceBitmap.height - 10)
+        val resultBitmap = Bitmap.createBitmap(sourceBitmap, 0, 0, sourceBitmap.width-10, sourceBitmap.height-10)
         val p = Paint()
         val filter = LightingColorFilter(color, 1)
         p.colorFilter = filter

@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.dialog.ToastMessage
 import com.gz.jey.realestatemanager.controllers.fragments.AddOrEdit
+import com.gz.jey.realestatemanager.controllers.fragments.LegendsManager
 import com.gz.jey.realestatemanager.controllers.fragments.PhotosManager
 import com.gz.jey.realestatemanager.database.ItemDatabase
 import com.gz.jey.realestatemanager.injection.Injection
@@ -39,6 +40,7 @@ import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.TempRealEstate
 import com.gz.jey.realestatemanager.models.Data
+import com.gz.jey.realestatemanager.models.sql.Photos
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import java.util.*
 
@@ -53,6 +55,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener , Loca
     // FRAGMENTS
     lateinit var addOrEdit: AddOrEdit
     lateinit var photosManager: PhotosManager
+    lateinit var legendsManager: LegendsManager
 
     // FOR DESIGN
     private lateinit var enableSaveIcon: Drawable
@@ -75,6 +78,9 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener , Loca
     private var index : Int = 0
     var tabLand: Boolean = false
     var enableSave: Boolean = false
+
+    val photosSelected: ArrayList<Int> = ArrayList()
+    var photosList: ArrayList<Photos> = ArrayList()
 
     lateinit var mGoogleApiClient: GoogleApiClient
     var mGeoDataClient : GeoDataClient? = null
@@ -113,6 +119,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener , Loca
         this.setViewModel()
         this.addOrEdit = AddOrEdit.newInstance(this)
         this.photosManager = PhotosManager.newInstance(this)
+        this.legendsManager = LegendsManager.newInstance(this)
         this.setFragment(0)
     }
 
@@ -182,7 +189,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener , Loca
                 true
             }
             R.id.edit_photo -> {
-                photosManager.editLegends()
+                setFragment(2)
                 true
             }
             R.id.add_photo -> {
@@ -191,10 +198,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener , Loca
             }
             R.id.save -> {
                 if (enableSave)
-                    when(index){
-                        0 -> addOrEdit.saveRealEstate()
-                        1 -> photosManager.savePhotos()
-                    }
+                    addOrEdit.saveRealEstate()
                 else
                     ToastMessage().notifyMessage(this, Code.UNSAVABLE)
                 true
@@ -254,6 +258,11 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener , Loca
                     changeToolBarMenu(1)
                     fragment = this.photosManager
                 }
+
+                2 -> {
+                    changeToolBarMenu(3)
+                    fragment = this.legendsManager
+                }
             }
 
             this.supportFragmentManager.beginTransaction()
@@ -265,6 +274,13 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener , Loca
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    fun savePhotos() {
+        val pl = arrayListOf<Photos>()
+        pl.addAll(photosList)
+        tempRE!!.photos = pl
+        Log.d("SAVED PHOTOS" , tempRE!!.photos.toString())
     }
 
     fun changeToolBarMenu(em: Int) {
@@ -284,15 +300,22 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener , Loca
                 paramItems[0] = false
                 paramItems[1] = false
                 paramItems[2] = true
-                paramItems[3] = true
+                paramItems[3] = false
                 toolbar!!.setNavigationOnClickListener { setFragment(0) }
             }
             2 -> {
                 paramItems[0] = true
                 paramItems[1] = true
                 paramItems[2] = true
-                paramItems[3] = true
+                paramItems[3] = false
                 toolbar!!.setNavigationOnClickListener { setFragment(0) }
+            }
+            3 -> {
+                paramItems[0] = false
+                paramItems[1] = false
+                paramItems[2] = false
+                paramItems[3] = false
+                toolbar!!.setNavigationOnClickListener { setFragment(1) }
             }
         }
     }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.models.sql.RealEstate
+import com.gz.jey.realestatemanager.utils.BuildItems
 import java.util.*
 
  class RealEstateAdapter// CONSTRUCTOR
@@ -14,8 +15,11 @@ import java.util.*
 
     // FOR DATA
     private lateinit var context : Context
-     private var selected : Int? = null
+    private var selected : Int? = null
     private var realEstates: List<RealEstate>
+
+    private var width : Int = 0
+    private var height : Int = 0
 
     // CALLBACK
     interface Listener {
@@ -28,16 +32,13 @@ import java.util.*
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RealEstateViewHolder {
         context = parent.context
-        val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.real_estate_item, parent, false)
-
+        val view = BuildItems().reItem(context, width, height)
         return RealEstateViewHolder(view)
     }
 
     override fun onBindViewHolder(viewHolder: RealEstateViewHolder, position: Int) {
         Log.d("RE ADAPTER", "POSITION = $position")
         val re = this.realEstates[position]
-
         viewHolder.updateWithRealEstate(this.context, re, this.callback, position ,this.selected)
     }
 
@@ -53,9 +54,11 @@ import java.util.*
         return this.realEstates[position]
     }
 
-    fun updateData(realEstates: List<RealEstate>, selected: Int?) {
+    fun updateData(realEstates: List<RealEstate>, selected: Int?, width : Int, height: Int) {
         this.realEstates = realEstates
         this.selected = selected
+        this.width = width
+        this.height = height
         this.notifyDataSetChanged()
     }
 }

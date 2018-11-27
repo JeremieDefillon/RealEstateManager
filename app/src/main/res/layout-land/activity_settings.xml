@@ -14,15 +14,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="20dip"
+            android:layout_margin="30dip"
             android:gravity="center"
             card_view:cardCornerRadius="2dp"
             card_view:cardElevation="4dp"
@@ -47,38 +47,38 @@
                     android:textSize="@dimen/value_title"
                     android:textStyle="bold" />
 
-                    <RadioGroup
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="@dimen/item_margin"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/item_margin"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <RadioButton
                             android:id="@+id/dollar_btn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:gravity="center"
                             android:drawableEnd="@drawable/dollar"
-                            android:text="@string/dollar"/>
+                            android:gravity="center"
+                            android:text="@string/dollar" />
 
                         <RadioButton
                             android:id="@+id/euro_btn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:gravity="center"
                             android:drawableEnd="@drawable/euro"
-                            android:text="@string/euro"/>
+                            android:gravity="center"
+                            android:text="@string/euro" />
 
-                        </LinearLayout>
-                    </RadioGroup>
+                    </LinearLayout>
+                </RadioGroup>
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="20dip"
+            android:layout_margin="30dip"
             android:gravity="center"
             card_view:cardCornerRadius="2dp"
             card_view:cardElevation="4dp"
@@ -117,55 +117,61 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dip"
+                    android:text="@string/enable_notifications"
                     android:textColor="@color/colorSecondaryDark"
-                    android:textStyle="bold"
-                    android:text="@string/enable_notifications"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
+    </LinearLayout>
 
-        <android.support.v7.widget.CardView
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="30dip"
+        android:gravity="center"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true">
+
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="20dip"
-            android:gravity="center"
-            card_view:cardCornerRadius="2dp"
-            card_view:cardElevation="4dp"
-            card_view:cardUseCompatPadding="true">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:minWidth="150dip"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:padding="5dip"
+                    android:text="@string/admin"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/value_title"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="150dip"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="top"
-                        android:background="@color/colorPrimary"
-                        android:gravity="center"
-                        android:padding="5dip"
-                        android:text="@string/admin"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/value_title"
-                        android:textStyle="bold" />
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/insert_real_estates"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dip"
-                        android:minWidth="20dip"
                         android:layout_gravity="center"
+                        android:layout_margin="10dip"
                         android:background="@color/colorSecondaryDark"
                         android:gravity="center"
+                        android:minWidth="20dip"
                         android:padding="5dip"
                         android:text="@string/insert_real_estates"
                         android:textColor="@color/colorWhite"
@@ -176,19 +182,20 @@
                         android:id="@+id/delete_real_estates"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dip"
-                        android:minWidth="20dip"
                         android:layout_gravity="center"
+                        android:layout_margin="10dip"
                         android:background="@color/colorError"
                         android:gravity="center"
+                        android:minWidth="20dip"
                         android:padding="5dip"
                         android:text="@string/delete_real_estates"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/value_title"
                         android:textStyle="bold" />
                 </LinearLayout>
-            </LinearLayout>
 
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 </LinearLayout>

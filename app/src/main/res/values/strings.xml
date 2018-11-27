@@ -5,6 +5,9 @@
     <string name="navigation_drawer_close">Close</string>
     <string name="navigation_drawer_open">Open</string>
 
+    <string name="notifications">Notifications</string>
+    <string name="enable_notifications">Enable Notifications</string>
+
     <string name="colon">:</string>
     <string name="suspens">...</string>
     <string name="obl">*</string>
@@ -44,7 +47,7 @@
     <string name="save">Save</string>
     <string name="overview">Overview</string>
     <string name="insert">Insert</string>
-    <string name="legend">Legend</string>
+    <string name="legend">Legend : </string>
     <string name="pick_up_photo">Pick up Photo</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
@@ -192,6 +195,7 @@
     </string-array>
 
     <string-array name="photos_ind">
+        <item>\?</item>
         <item>Facade</item>
         <item>Hall</item>
         <item>Lounge</item>
@@ -206,6 +210,25 @@
         <item>Attic</item>
         <item>Cellar</item>
         <item>Utility</item>
+    </string-array>
+
+    <string-array name="nums_ind">
+        <item>\?</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
     </string-array>
 
     // FILTERS
