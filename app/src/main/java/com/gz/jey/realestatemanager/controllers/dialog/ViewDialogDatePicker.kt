@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
-import com.gz.jey.realestatemanager.controllers.activities.SetFilters
+import com.gz.jey.realestatemanager.controllers.activities.SetFiltersActivity
 import com.gz.jey.realestatemanager.models.Code
 import java.text.SimpleDateFormat
 import java.util.*
@@ -61,7 +61,7 @@ class ViewDialogDatePicker {
                 val aoeAct = activity as AddOrEditActivity
                 aoeAct.addOrEdit.insertStandardValue(code, date)
             }else{
-                val sfAct = activity as SetFilters
+                val sfAct = activity as SetFiltersActivity
                 sfAct.insertStandardValue(code, date)
             }
             dialog.dismiss()

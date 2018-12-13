@@ -1,5 +1,6 @@
 package com.gz.jey.realestatemanager.controllers.dialog
 
+import android.app.Activity
 import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -12,7 +13,6 @@ import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
 import com.gz.jey.realestatemanager.utils.SetImageColor
-
 
 class ViewDialogPhotoPicker {
 
@@ -28,8 +28,8 @@ class ViewDialogPhotoPicker {
 
     private lateinit var uri : Uri
 
-    fun showDialog(activity: AddOrEditActivity) {
-        act = activity
+    fun showDialog(activity: Activity) {
+        act = activity as AddOrEditActivity
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
@@ -62,7 +62,4 @@ class ViewDialogPhotoPicker {
         titleCanvas.text = activity.getString(R.string.pick_up_photo)
         dialog.show()
     }
-
-
-
 }

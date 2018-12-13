@@ -2,11 +2,10 @@ package com.gz.jey.realestatemanager.controllers.dialog
 
 import android.app.Dialog
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.Window
 import android.widget.Button
 import com.gz.jey.realestatemanager.R
-import com.gz.jey.realestatemanager.controllers.activities.LoanSimulator
+import com.gz.jey.realestatemanager.controllers.activities.LoanSimulatorActivity
 import com.gz.jey.realestatemanager.models.Amortizations
 import com.gz.jey.realestatemanager.views.AmortizationsAdapter
 import android.support.v7.widget.LinearLayoutManager
@@ -29,7 +28,7 @@ class ViewDialogAmortizationTable {
     //private lateinit var totFee : TextView
 
 
-    fun showDialog(activity: LoanSimulator, amort : ArrayList<Amortizations>) {
+    fun showDialog(activity: LoanSimulatorActivity, amort : ArrayList<Amortizations>) {
         val d2 = "%.2f"
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -74,7 +73,7 @@ class ViewDialogAmortizationTable {
         dialog.show()
     }
 
-    private fun configureRecyclerView(activity : LoanSimulator) {
+    private fun configureRecyclerView(activity : LoanSimulatorActivity) {
         val llm = LinearLayoutManager(activity)
         llm.orientation = LinearLayoutManager.VERTICAL
         this.adapter = AmortizationsAdapter(activity)

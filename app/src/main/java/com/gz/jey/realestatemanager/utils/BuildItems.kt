@@ -60,12 +60,12 @@ class BuildItems{
         val cbParams = FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT)
+        cbParams.setMargins((size*0.02f).toInt(),(size*0.02f).toInt(),(size*0.02f).toInt(),(size*0.02f).toInt())
         cbParams.gravity = Gravity.TOP or Gravity.END
-        val checkbox = CheckBox(context)
+        val checkbox = ImageView(context)
         checkbox.layoutParams = cbParams
         checkbox.id = R.id.selector_check
-        checkbox.isClickable = false
-        checkbox.gravity = Gravity.TOP or Gravity.END
+        checkbox.background = SetImageColor.changeDrawableColor(context, R.drawable.check_circle, ContextCompat.getColor(context, R.color.colorValid))
 
         val legendParams = FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -97,24 +97,31 @@ class BuildItems{
     }
 
     fun reItem(context : Context, width : Int, height : Int) : View{
-        val marge = (height*0.05f).toInt()
         val itemParams = FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
-        itemParams.setMargins(0,0,0,0)
+        itemParams.setMargins(0,0,0, 0)
         itemParams.height = height
-
-        val itemView = LinearLayout(context)
+        val itemView = FrameLayout(context)
         itemView.id = R.id.button
         itemView.layoutParams = itemParams
-        itemView.setPadding(0,1,0,1)
-        itemView.orientation = LinearLayout.HORIZONTAL
+        itemView.setPadding(0,0,0,0)
         itemView.background = ContextCompat.getDrawable(context, R.drawable.item_border)
+
+        val llParams = FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT)
+        llParams.setMargins(0,0,0,0)
+        llParams.height = height
+        val llView = LinearLayout(context)
+        llView.layoutParams = llParams
+        llView.setPadding(0,0,0,0)
+        llView.orientation = LinearLayout.HORIZONTAL
 
         val photoParams = FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
-        photoParams.setMargins(0,marge,0,marge)
+        photoParams.setMargins(0,0,0,0)
         photoParams.height = height
         photoParams.width = (width*0.25f).toInt()
 
@@ -171,11 +178,23 @@ class BuildItems{
         price.setTextColor(context.resources.getColor(R.color.colorSecondary))
         price.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD)
 
+        val underParams = FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT)
+        underParams.height = 1
+        underParams.gravity = Gravity.BOTTOM
+
+        val underLine = ImageView(context)
+        underLine.layoutParams = underParams
+        underLine.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSecondaryLight))
+
         textsLayout.addView(type)
         textsLayout.addView(district)
         textsLayout.addView(price)
-        itemView.addView(photo)
-        itemView.addView(textsLayout)
+        llView.addView(photo)
+        llView.addView(textsLayout)
+        itemView.addView(llView)
+        itemView.addView(underLine)
         return itemView
     }
 
@@ -183,7 +202,7 @@ class BuildItems{
         val itemParams = FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT)
-        itemParams.setMargins(1,1,1,1)
+        itemParams.setMargins(0,0,0,0)
         itemParams.gravity = Gravity.CENTER
 
         val itemView = LinearLayout(context)
@@ -214,7 +233,7 @@ class BuildItems{
                 ViewGroup.LayoutParams.WRAP_CONTENT)
         labelParams.setMargins((size*0.001f).toInt(),1,1,1)
         labelParams.width = (size*0.8f).toInt()
-        labelParams.gravity = Gravity.CENTER or Gravity.START
+        labelParams.gravity = Gravity.CENTER
 
         val label = TextView(context)
         label.layoutParams = labelParams
@@ -222,7 +241,7 @@ class BuildItems{
         label.textSize = (size*0.1f)/ context.resources.displayMetrics.density
         label.gravity = Gravity.CENTER
         label.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
-        label.setPadding(0,0,0,0)
+        label.setPadding(10,0,0,0)
         label.setTextColor(Color.BLACK)
         label.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD)
 

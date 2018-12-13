@@ -2,9 +2,12 @@ package com.gz.jey.realestatemanager.controllers.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Point
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v7.widget.CardView
@@ -22,7 +25,10 @@ import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogConfirmAction
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogNoResults
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogPhotoPicker
+import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Code
+import com.gz.jey.realestatemanager.models.Data
+import com.gz.jey.realestatemanager.models.TempRealEstate
 import com.gz.jey.realestatemanager.models.sql.Photos
 import com.gz.jey.realestatemanager.utils.BuildItems
 import com.gz.jey.realestatemanager.utils.Utils
@@ -39,9 +45,9 @@ class PhotosManager : Fragment() {
     private var screenY = 0
 
     // FOR DATA
-    lateinit var act: AddOrEditActivity
+    lateinit var mListener: PhotosManagerListener
     val cardViews: ArrayList<CardView> = ArrayList()
-    val checkList: ArrayList<CheckBox> = ArrayList()
+    var photosList : ArrayList<Photos> = ArrayList()
     private var justApplied = false
 
     // FOR DESIGN
@@ -55,7 +61,6 @@ class PhotosManager : Fragment() {
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.photos_manager, container, false)
-        act = activity as AddOrEditActivity
         val display = activity!!.windowManager.defaultDisplay
         val size = Point()
         display.getSize(size)
@@ -74,19 +79,29 @@ class PhotosManager : Fragment() {
         init()
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is PhotosManagerListener)
+            mListener = context
+    }
+
     private fun init() {
-        Log.d("Photos []", act.tempRE!!.photos.toString())
-        act.photosList.clear()
-        val max = if(act.tempRE!!.photos != null) act.tempRE!!.photos!!.size else 0
-        Log.d("Photos [$max]", act.tempRE!!.photos.toString())
-        if(max>0){
-            for (i in 0 until max){
-                act.photosList.add(act.tempRE!!.photos!![i])
-                if (i >= max-1)
+        //Log.d("Photos []", tempRE!!.photos.toString())
+        photosList.clear()
+        val max =
+                if (tempRE!!.photos != null)
+                    tempRE!!.photos!!.size
+                else
+                    0
+        Log.d("Photos [$max]", tempRE!!.photos.toString())
+        if (max > 0) {
+            for (i in 0 until max) {
+                photosList.add(tempRE!!.photos!![i])
+                if (i >= max - 1)
                     setAllPhotos()
             }
-        }else{
-            ViewDialogNoResults().showDialog(act, Code.NO_PHOTO)
+        } else {
+            ViewDialogNoResults().showDialog(activity!!, Code.NO_PHOTO)
         }
     }
 
@@ -96,30 +111,26 @@ class PhotosManager : Fragment() {
         val size = screenX / numPic
 
         photos_grid.removeAllViews()
-        act.photosSelected.clear()
         cardViews.clear()
-        checkList.clear()
 
-        if (act.photosList.isNotEmpty()) {
-            act.setSave(true)
-            for ((i, p) in act.photosList.withIndex()) {
+        if (photosList.isNotEmpty()) {
+            mListener.setSave(true)
+            for ((i, p) in photosList.withIndex()) {
                 val c = BuildItems().photosCardView(context!!, size)
                 c.setOnClickListener { selectPhoto(i) }
                 val img = c.findViewById<ImageView>(R.id.photo)
                 val t = c.findViewById<TextView>(R.id.legend)
-                val ch = c.findViewById<CheckBox>(R.id.selector_check)
                 val m = c.findViewById<TextView>(R.id.main)
-
-                checkList.add(ch)
 
                 val sb = StringBuilder()
                 if (p.legend != 0) sb.append(resources.getStringArray(R.array.photos_ind)[p.legend])
                 else sb.append("?")
                 if (p.num != 0) sb.append(" " + p.num)
+
                 t.text = sb.toString()
 
                 if (p.image!!.isNotEmpty()) {
-                    Glide.with(act)
+                    Glide.with(context!!)
                             .load(p.image)
                             .into(img)
                 }
@@ -129,54 +140,65 @@ class PhotosManager : Fragment() {
 
                 photos_grid.addView(c)
                 cardViews.add(c)
-
-                if (p.legend == 0)
-                    selectPhoto(i)
+                checkSelect(i)
             }
         } else {
-            ViewDialogNoResults().showDialog(act, Code.NO_PHOTO)
+            ViewDialogNoResults().showDialog(activity!!, Code.NO_PHOTO)
         }
     }
 
     private fun selectPhoto(i: Int) {
-        checkList[i].isChecked = !checkList[i].isChecked
-        photos_grid.getChildAt(i).findViewById<CheckBox>(R.id.selector_check).isChecked = checkList[i].isChecked
-        if (checkList[i].isChecked)
-            act.photosSelected.add(i)
-        else
-            act.photosSelected.remove(i)
+        photosList[i].selected = !photosList[i].selected
+        checkSelect(i)
+    }
 
-        if (act.photosSelected.isNotEmpty())
-            act.changeToolBarMenu(2)
-        else
-            act.changeToolBarMenu(1)
+    private fun checkSelect(i: Int) {
+        Log.d("PH $i SELECTED", photosList[i].selected.toString())
+        photos_grid.getChildAt(i).findViewById<ImageView>(R.id.selector_check).visibility =
+                if (photosList[i].selected)
+                    View.VISIBLE
+                else
+                    View.GONE
 
-        Log.d("PHOTO SELECT", act.photosSelected.toString())
+        var c = 0
+
+        for (s in photosList)
+            c += if (s.selected) 1 else 0
+
+        if (c > 0)
+            mListener.changeToolBarMenu(2)
+        else
+            mListener.changeToolBarMenu(1)
     }
 
     fun addPhotos() {
-        ViewDialogPhotoPicker().showDialog(act)
+        ViewDialogPhotoPicker().showDialog(activity!!)
     }
 
     fun deletePhotos() {
-        ViewDialogConfirmAction().showDialog(act, Code.DELETE_PHOTOS)
+        ViewDialogConfirmAction().showDialog(activity!!, Code.DELETE_PHOTOS)
     }
 
-    fun confirmDelete(){
-        for(i in act.photosSelected.size-1 downTo 0){
-            act.photosList.remove(act.photosList[act.photosSelected[i]])
-        }
+    fun confirmDelete() {
+        val toDel: ArrayList<Photos> = ArrayList()
+        for (p in photosList)
+            if (p.selected)
+                toDel.add(p)
+
+        for (p in toDel)
+            photosList.remove(p)
+
         setAllPhotos()
-        act.savePhotos()
+        mListener.savePhotos()
     }
 
     private fun addNewPhoto(uri: String) {
         Log.d("Photo", uri)
         justApplied = true
-        val ph = Photos(null, uri, 0, 0, false)
-        act.photosList.add(ph)
+        val ph = Photos(null, null, uri,0,0,false,true)
+        photosList.add(ph)
         setAllPhotos()
-        act.savePhotos()
+        mListener.savePhotos()
     }
 
     fun openGallery() {
@@ -188,7 +210,7 @@ class PhotosManager : Fragment() {
         val rxImagePicker: ZhihuImagePicker = RxImagePicker
                 .create(ZhihuImagePicker::class.java)
 
-        rxImagePicker.openGalleryAsNormal(act, ZhihuConfigurationBuilder(MimeType.ofImage(), false)
+        rxImagePicker.openGalleryAsNormal(activity!!, ZhihuConfigurationBuilder(MimeType.ofImage(), false)
                 .maxSelectable(10)
                 .countable(true)
                 .spanCount(4)
@@ -206,24 +228,12 @@ class PhotosManager : Fragment() {
         val rxImagePicker: ZhihuImagePicker = RxImagePicker
                 .create(ZhihuImagePicker::class.java)
 
-        rxImagePicker.openCamera(act)
+        rxImagePicker.openCamera(activity!!)
                 .subscribe { p -> addNewPhoto(p.uri.toString()) }
     }
-
-    private fun checkMain() {
-        for (c in cardViews)
-            c.findViewById<TextView>(R.id.main).visibility = View.GONE
-
-        for ((i, p) in act.photosList.withIndex())
-            if (p.main) {
-                cardViews[i].findViewById<TextView>(R.id.main).visibility = View.VISIBLE
-                break
-            }
-    }
-
     private fun checkPermissionAndRequest(requestCode: Int) {
-        if (ActivityCompat.checkSelfPermission(act, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(act,
+        if (ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity!!,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                     requestCode)
         } else {
@@ -235,7 +245,7 @@ class PhotosManager : Fragment() {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             onPermissionGrant(requestCode)
         } else {
-            Toast.makeText(act, "Please allow the Permission first.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity!!, "Please allow the Permission first.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -248,17 +258,30 @@ class PhotosManager : Fragment() {
     }
 
     companion object {
+        var tempRE: TempRealEstate? = null
+        var itemViewModel: ItemViewModel? = null
+        var photosList : ArrayList<Photos> = ArrayList()
         /**
-         * @param addOrEditActivity MainActivity
+         * @param tempRealEstate TempRealEstate
+         * @param ivm ItemViewModel
+         * @param pl ArrayList<Photos>
          * @return new RealEstateList()
          */
-        fun newInstance(addOrEditActivity: AddOrEditActivity): PhotosManager {
+        fun newInstance(tempRealEstate: TempRealEstate, ivm: ItemViewModel, pl : ArrayList<Photos>): PhotosManager {
             val fragment = PhotosManager()
-            fragment.act = addOrEditActivity
+            tempRE = tempRealEstate
+            itemViewModel = ivm
+            photosList = pl
             return fragment
         }
 
         private const val REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION_CAMERA = 99
         private const val REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION_GALLERY_NORMAL = 100
+    }
+
+    interface PhotosManagerListener {
+        fun changeToolBarMenu(i : Int)
+        fun setSave(b : Boolean)
+        fun savePhotos()
     }
 }

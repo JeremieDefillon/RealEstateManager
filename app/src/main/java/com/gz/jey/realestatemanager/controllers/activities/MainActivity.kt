@@ -19,7 +19,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.dialog.ToastMessage
 import com.gz.jey.realestatemanager.controllers.fragments.RealEstateDetails
@@ -34,7 +33,8 @@ import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import java.util.*
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, RealEstateList.RealEstateListListener {
+
 
     private val TAG = "MainActivity"
     // FRAGMENTS
@@ -70,7 +70,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
+        if (savedInstanceState != null) {
+            with(savedInstanceState) {
+                Data.fragNum = getInt(Code.FRAG_NUM)
+                Data.reID = getLong(Code.RE_ID)
+                Data.isEdit = getBoolean(Code.IS_EDIT)
+                Data.photoNum = getInt(Code.PHOTO_NUM)
+            }
+        } else {
+            Data.fragNum = intent.getIntExtra(Code.FRAG_NUM, 0)
+            Data.isEdit = intent.getBooleanExtra(Code.IS_EDIT, false)
+            Data.reID = intent.getLongExtra(Code.RE_ID, 1)
+            Data.isEdit = false
+            Data.photoNum = null
+        }
         initActivity()
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putInt(Code.FRAG_NUM, Data.fragNum)
+        outState?.putLong(Code.RE_ID, Data.reID!!)
+        outState?.putBoolean(Code.IS_EDIT, Data.isEdit)
+        if(Data.photoNum != null)
+            outState?.putInt(Code.PHOTO_NUM, Data.photoNum!!)
+        super.onSaveInstanceState(outState)
     }
 
     /**
@@ -86,10 +110,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         this.configureToolBar()
         this.setNavigationView()
         this.setDrawerLayout()
-        this.realEstateList = RealEstateList.newInstance(this)
-        this.realEstateDetails = RealEstateDetails.newInstance(this)
         this.setViewModel()
-        setFragment(0)
+        setFragment(Data.fragNum)
     }
 
     private fun setLang() {
@@ -232,17 +254,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      * @param index Int
      * CHANGE FRAGMENT
      */
-    fun setFragment(index: Int) {
+    override fun setFragment(index: Int) {
+        Data.fragNum = index
         changeToolBarMenu(0)
-        //loadingContent!!.text = getString(R.string.loadingView)
-        //hideKeyboard()
-        // if (fromNotif) {
-        //   fromNotif=false
-        //  execRequest(CODE_DETAILS)
-        //}else {
 
         //A - We only add DetailFragment in Tablet mode (If found frame_layout_detail)
         if (Data.tabMode) {
+            this.realEstateList = RealEstateList.newInstance(itemViewModel, realEstate)
+            this.realEstateDetails = RealEstateDetails.newInstance(itemViewModel)
             invalidateOptionsMenu()
             changeToolBarMenu(1)
             this.supportFragmentManager.beginTransaction()
@@ -258,11 +277,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             // Data.tab = index
             when (index) {
                 0 -> {
+                    this.realEstateList = RealEstateList.newInstance(itemViewModel, realEstate)
                     changeToolBarMenu(1)
                     fragment = this.realEstateList
                 }
 
                 1 -> {
+                    this.realEstateDetails = RealEstateDetails.newInstance(itemViewModel)
                     changeToolBarMenu(2)
                     fragment = this.realEstateDetails
                 }
@@ -283,13 +304,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun openFiltersActivity() {
-        val intent = Intent(this, SetFilters::class.java)
+        val intent = Intent(this, SetFiltersActivity::class.java)
         startActivity(intent)
         finish()
     }
 
     private fun openLoanSimulator() {
-        val intent = Intent(this, LoanSimulator::class.java)
+        val intent = Intent(this, LoanSimulatorActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -321,20 +342,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    fun setRE(re: RealEstate) {
-        this.realEstate = re
+    override fun setRE(realEstate: RealEstate) {
+        this.realEstate = realEstate
         Log.d("MA RE", this.realEstate.toString())
         setEdit(true)
     }
 
-    fun unsetRE() {
-        setEdit(false)
-        realEstate = null
-        poi = null
-        photos = null
+    override fun initDetails() {
+        realEstateDetails!!.init()
     }
 
-    private fun setEdit(bool: Boolean) {
+    override fun setEdit(bool: Boolean) {
         if(toolMenu != null){
             if (bool) editItem.icon = enableEditIcon
             else editItem.icon = disableEditIcon

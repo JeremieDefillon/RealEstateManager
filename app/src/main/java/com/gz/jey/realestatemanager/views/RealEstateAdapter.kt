@@ -1,25 +1,22 @@
- package com.gz.jey.realestatemanager.views
+package com.gz.jey.realestatemanager.views
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.BuildItems
 import java.util.*
 
- class RealEstateAdapter// CONSTRUCTOR
+class RealEstateAdapter// CONSTRUCTOR
 (private val callback: Listener) : RecyclerView.Adapter<RealEstateViewHolder>() {
 
     // FOR DATA
-    private lateinit var context : Context
-    private var selected : Int? = null
+    private lateinit var context: Context
     private var realEstates: List<RealEstate>
 
-    private var width : Int = 0
-    private var height : Int = 0
+    private var width: Int = 0
+    private var height: Int = 0
 
     // CALLBACK
     interface Listener {
@@ -39,7 +36,7 @@ import java.util.*
     override fun onBindViewHolder(viewHolder: RealEstateViewHolder, position: Int) {
         Log.d("RE ADAPTER", "POSITION = $position")
         val re = this.realEstates[position]
-        viewHolder.updateWithRealEstate(this.context, re, this.callback, position ,this.selected)
+        viewHolder.updateWithRealEstate(this.context, re, this.callback)
     }
 
     override fun getItemCount(): Int {
@@ -54,9 +51,8 @@ import java.util.*
         return this.realEstates[position]
     }
 
-    fun updateData(realEstates: List<RealEstate>, selected: Int?, width : Int, height: Int) {
+    fun updateData(realEstates: List<RealEstate>, width: Int, height: Int) {
         this.realEstates = realEstates
-        this.selected = selected
         this.width = width
         this.height = height
         this.notifyDataSetChanged()

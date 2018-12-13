@@ -18,9 +18,9 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.maps.model.LatLng
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.api.ApiStreams
-import com.gz.jey.realestatemanager.controllers.activities.MainActivity
 import com.gz.jey.realestatemanager.controllers.activities.MapsActivity
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogBigPhotos
+import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.models.sql.Photos
@@ -36,8 +36,6 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
 
     private var mView: View? = null
 
-    var mainActivity: MainActivity? = null
-    private var re: RealEstate? = null
     private lateinit var adapter: PhotosAdapter
     private lateinit var photos: List<Photos>
 
@@ -49,8 +47,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
     private lateinit var descriptionValue: TextView
     private lateinit var statGridLayout: GridLayout
     private lateinit var locLayout: LinearLayout
-
-    private var photo: Photos? = null
+    private var dialog : ViewDialogBigPhotos? = null
 
     /**
      * CALLED ON INSTANCE OF THIS FRAGMENT TO CREATE VIEW
@@ -61,7 +58,6 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.real_estate_details, container, false)
-        mainActivity = activity as MainActivity
         return mView
     }
 
@@ -100,10 +96,11 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
     }
 
     private fun getRealEstate() {
-        if (mainActivity!!.realEstate != null) {
+        if (Data.reID != null) {
             scrv.visibility = View.VISIBLE
             noRe.visibility = View.GONE
-            mainActivity!!.itemViewModel.getRealEstate(mainActivity!!.realEstate!!.id!!).observe(this, Observer<RealEstate> { re -> updateRealEstateDetails(re!!) })
+            RealEstateList.itemViewModel!!.getRealEstate(Data.reID!!)
+                    .observe(this, Observer<RealEstate> { re -> updateRealEstateDetails(re!!) })
         } else {
             scrv.visibility = View.GONE
             noRe.visibility = View.VISIBLE
@@ -111,7 +108,6 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
     }
 
     private fun updateRealEstateDetails(item: RealEstate) {
-        val black = ContextCompat.getColor(view!!.context, R.color.colorBlack)
         val second = ContextCompat.getColor(view!!.context, R.color.colorSecondary)
         val grey = ContextCompat.getColor(view!!.context, R.color.colorGrey)
 
@@ -133,9 +129,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
         else getString(R.string.nc)
         descriptionValue.typeface = if (item.description.isNotEmpty()) Typeface.DEFAULT else Typeface.DEFAULT
 
-
         val loc = Utils.formatedLocation(item.streetNumber, item.street, item.zipCode, item.locality, item.state)
-
 
         val loca: View = BuildItems().statItem(context!!, ns)
         locLayout.addView(loca)
@@ -204,7 +198,10 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
                 }
                 6 -> {
                     statLbl.text = getString(R.string.price)
-                    setPriceState(item.price, item.surface, statIcon, statValue)
+                    val p = if(item.price != null)
+                        if(Data.currency == 1) Utils.convertDollarToEuro(item.price!!) else item.price
+                    else null
+                    setPriceState(p, item.surface, statIcon, statValue)
                 }
                 7 -> {
                     val status = if (item.sold) resources.getStringArray(R.array.status_ind)[1] else resources.getStringArray(R.array.status_ind)[0]
@@ -255,11 +252,14 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
                 }
             }
         }
+
+        if(Data.isEdit && item.photos!=null)
+            openPhotos(Data.photoNum!!, item.photos!!)
     }
 
     private fun setPriceState(price: Long?, surface: Int?, icon: ImageView, value: TextView) {
         val symb = if (Data.currency == 1) R.drawable.euro else R.drawable.dollar
-        icon.background = SetImageColor.changeDrawableColor(mainActivity!!, symb, ContextCompat.getColor(view!!.context, R.color.colorSecondary))
+        icon.background = SetImageColor.changeDrawableColor(activity!!, symb, ContextCompat.getColor(view!!.context, R.color.colorSecondary))
         val sb = StringBuilder()
                 .append(Utils.convertedHighPrice(this.context!!, price))
                 .append("\r\n")
@@ -268,29 +268,33 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
     }
 
     private fun openPhotos(pos: Int, photos: List<Photos>) {
-        ViewDialogBigPhotos().showDialog(activity!!, pos, photos)
+        this.dialog = ViewDialogBigPhotos()
+        this.dialog!!.showDialog(activity!!, pos, photos)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        this.mainActivity = null
-    }
-
-    fun openMapActivity(id: Long) {
+    private fun openMapActivity(id: Long) {
         val intent = Intent(activity, MapsActivity::class.java)
         intent.putExtra(Code.RE_ID, id)
         startActivity(intent)
         activity!!.finish()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if(this.dialog != null)
+            this.dialog!!.dialog.dismiss()
+    }
+
     companion object {
+        var itemViewModel : ItemViewModel? = null
+
         /**
          * @param mainActivity MainActivity
          * @return new RealEstateDetails()
          */
-        fun newInstance(mainActivity: MainActivity): RealEstateDetails {
+        fun newInstance(ivm: ItemViewModel): RealEstateDetails {
             val fragment = RealEstateDetails()
-            fragment.mainActivity = mainActivity
+            itemViewModel = ivm
             return fragment
         }
     }

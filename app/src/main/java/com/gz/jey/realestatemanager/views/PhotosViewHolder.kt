@@ -14,7 +14,7 @@ class PhotosViewHolder(photoView: View) : RecyclerView.ViewHolder(photoView), Vi
 
     private var photo: ImageView = photoView.findViewById(R.id.photo)
     private var legend: TextView = photoView.findViewById(R.id.legend)
-    private var cb: TextView = photoView.findViewById(R.id.selector_check)
+    private var cb: ImageView = photoView.findViewById(R.id.selector_check)
 
     // FOR DATA
     private var callbackWeakRef: WeakReference<PhotosAdapter.Listener>? = null

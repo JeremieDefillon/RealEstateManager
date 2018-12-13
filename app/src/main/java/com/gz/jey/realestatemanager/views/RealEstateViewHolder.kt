@@ -5,11 +5,13 @@ import android.net.Uri
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
+import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.Utils
 import java.lang.ref.WeakReference
@@ -20,17 +22,20 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     private var district: TextView = itemView.findViewById(R.id.district)
     private var price: TextView = itemView.findViewById(R.id.price)
     private var photo: ImageView = itemView.findViewById(R.id.photo)
-    private var llButton: LinearLayout = itemView.findViewById(R.id.button)
+    private var itemButton: FrameLayout = itemView.findViewById(R.id.button)
 
     // FOR DATA
     private var callbackWeakRef: WeakReference<RealEstateAdapter.Listener>? = null
 
 
-    fun updateWithRealEstate(context : Context, item: RealEstate, callback: RealEstateAdapter.Listener, position: Int, selected : Int?) {
+    fun updateWithRealEstate(context : Context, item: RealEstate, callback: RealEstateAdapter.Listener) {
         this.callbackWeakRef = WeakReference(callback)
         this.type.text = getFirstLine(context, item.type, item.room, item.surface)
-        this.district.text = getSecondLine(context, item.locality, item.price, item.surface)
-        this.price.text = Utils.convertedHighPrice(context, item.price)
+        val p = if(item.price != null)
+            if(Data.currency == 1) Utils.convertDollarToEuro(item.price!!) else item.price
+        else null
+        this.district.text = getSecondLine(context, item.locality, p, item.surface)
+        this.price.text = Utils.convertedHighPrice(context, p)
 
         val npic = ContextCompat.getDrawable(itemView.context, R.drawable.no_pict)
         Glide.with(itemView.context)
@@ -48,11 +53,11 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
             }
         }
 
-        if(position == selected){
-            llButton.setBackgroundColor(ContextCompat.getColor(itemView.context ,R.color.colorSecondary))
+        if(item.selected>0){
+            itemButton.setBackgroundColor(ContextCompat.getColor(itemView.context ,R.color.colorSecondary))
             price.setTextColor(ContextCompat.getColor(itemView.context ,R.color.colorWhite))
         }else{
-            llButton.setBackgroundColor(ContextCompat.getColor(itemView.context ,R.color.colorWhite))
+            itemButton.setBackgroundColor(ContextCompat.getColor(itemView.context ,R.color.colorWhite))
             price.setTextColor(ContextCompat.getColor(itemView.context ,R.color.colorSecondary))
         }
     }

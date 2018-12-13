@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
+import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.models.sql.Photos
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
@@ -23,9 +24,11 @@ class ViewDialogBigPhotos{
     private lateinit var prevIc: ImageView
     private lateinit var nextIc: ImageView
     private lateinit var closeBtn: ImageView
+    lateinit var dialog : Dialog
 
     fun showDialog(activity: Activity, pos : Int, photos : List<Photos>) {
-        val dialog = Dialog(activity)
+        Data.isEdit = true
+        dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.dialog_big_photo)
@@ -62,13 +65,17 @@ class ViewDialogBigPhotos{
 
         photo.minimumWidth = size.x
         photo.minimumHeight = if(Utils.isLandscape(activity)) size.y else (size.y*0.4f).toInt()
-        closeBtn.setOnClickListener { dialog.dismiss() }
+        closeBtn.setOnClickListener {
+            dialog.dismiss()
+            Data.isEdit = false
+        }
 
         init(activity, pos, photos)
         dialog.show()
     }
 
     private fun init(activity: Activity, pos : Int, photos : List<Photos>){
+        Data.photoNum = pos
         if(pos==0) prevBtn.visibility = View.GONE
         else prevBtn.visibility = View.VISIBLE
 
@@ -88,5 +95,4 @@ class ViewDialogBigPhotos{
         prevBtn.setOnClickListener { init(activity, pos-1, photos) }
         nextBtn.setOnClickListener { init(activity, pos+1, photos) }
     }
-
 }

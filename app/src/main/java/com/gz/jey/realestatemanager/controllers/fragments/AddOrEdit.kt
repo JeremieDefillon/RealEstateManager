@@ -1,6 +1,6 @@
 package com.gz.jey.realestatemanager.controllers.fragments
 
-import android.arch.lifecycle.Observer
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,12 +12,12 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.api.ApiStreams
-import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogDatePicker
-import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogInputAddress
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogInputText
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogMultiChoice
+import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Code
+import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.models.TempRealEstate
 import com.gz.jey.realestatemanager.models.retrofit.GeoCode
 import com.gz.jey.realestatemanager.models.sql.RealEstate
@@ -32,16 +32,15 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
     private var mView: View? = null
 
     // FOR DATA
-    var act: AddOrEditActivity? = null
+    private lateinit var mListener: AddOrEditListener
     private var disposable: Disposable? = null
 
     // ICON
-    lateinit var addIcon: Drawable
-    lateinit var editIcon: Drawable
-    lateinit var checkIcon: Drawable
-    lateinit var uncheckIcon: Drawable
+    private lateinit var addIcon: Drawable
+    private lateinit var checkIcon: Drawable
+    private lateinit var uncheckIcon: Drawable
     private lateinit var lookIcon: Drawable
-    lateinit var validateIcon: Drawable
+    private lateinit var validateIcon: Drawable
     private lateinit var unValidateIcon: Drawable
 
     /**
@@ -53,8 +52,19 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_add_or_edit, container, false)
-        act = activity as AddOrEditActivity
         return mView
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null && savedInstanceState.containsKey(TEMP_RE))
+            tempRE = savedInstanceState.getParcelable(TEMP_RE)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is AddOrEditListener)
+            mListener = context
     }
 
     /**
@@ -69,117 +79,96 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
 
     private fun init() {
         setIcon()
-        getRealEstate()
+        editValues()
+        setItems()
     }
 
     override fun onClickDeleteButton(position: Int) {
         // DELETE
     }
 
-    private fun getRealEstate() {
-        if (act!!.tempRE != null) {
-            Log.d("TEMP RE", act!!.tempRE!!.toString())
-            editValues()
-            setItems()
-        } else {
-            if (act!!.intent.getBooleanExtra(Code.IS_EDIT, false)) {
-                if (act!!.intent.hasExtra(Code.RE_ID))
-                    act!!.itemViewModel.getRealEstate(act!!.intent.getLongExtra(Code.RE_ID, 0))
-                            .observe(this, Observer<RealEstate> { r -> updateRealEstate(r) })
-            } else
-                updateRealEstate(null)
-        }
-    }
-
-    private fun updateRealEstate(realEstate: RealEstate?) {
-        val re = realEstate ?: RealEstate(null, "", "", "", "", "", false, null, null, null, null,
-                null, null, null, null, "", null, false, "", "", "",
-                false, false, false, false, false, false, false, false, null)
-
-        act!!.tempRE = TempRealEstate(re.id, re.streetNumber, re.street, re.zipCode, re.locality, re.state, re.verified, re.latitude, re.longitude, re.type, re.surface,
-                re.room, re.bed, re.bath, re.kitchen, re.description, re.price, re.sold, re.marketDate, re.soldDate, re.agentName,
-                re.poiSchool, re.poiShops, re.poiPark, re.poiSubway, re.poiBus, re.poiTrain, re.poiHospital, re.poiAirport, re.photos)
-
-        editValues()
-        setItems()
-    }
-
     private fun setItems() {
         locate_btn.setCompoundDrawables(lookIcon, null, unValidateIcon, null)
 
         locate_btn.setOnClickListener {
-            val res: ArrayList<String?> = arrayListOf(act!!.tempRE!!.streetNumber, act!!.tempRE!!.street, act!!.tempRE!!.zipCode, act!!.tempRE!!.locality, act!!.tempRE!!.state)
-            ViewDialogInputAddress().showDialog(act!!.mGeoDataClient!!, act!!, res)
+            val res: ArrayList<String?> = arrayListOf(tempRE!!.streetNumber, tempRE!!.street, tempRE!!.zipCode, tempRE!!.locality, tempRE!!.state)
+            mListener.openAddressInput(res)
         }
-        street_num_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.STREET_NUM, act!!.tempRE!!.streetNumber) }
-        street_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.STREET, act!!.tempRE!!.street) }
-        locality_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.LOCALITY, act!!.tempRE!!.locality) }
-        zip_code_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.ZIP_CODE, act!!.tempRE!!.zipCode) }
-        state_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.STATE, act!!.tempRE!!.state) }
+        street_num_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.STREET_NUM, tempRE!!.streetNumber) }
+        street_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.STREET, tempRE!!.street) }
+        locality_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.LOCALITY, tempRE!!.locality) }
+        zip_code_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.ZIP_CODE, tempRE!!.zipCode) }
+        state_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.STATE, tempRE!!.state) }
         type_button.setOnClickListener {
             val res: ArrayList<String> = arrayListOf()
-            if (act!!.tempRE!!.type != null)
-                res.add(act!!.tempRE!!.type.toString())
-            ViewDialogMultiChoice().showDialog(act!!, Code.TYPE, res)
+            if (tempRE!!.type != null)
+                res.add(tempRE!!.type.toString())
+            ViewDialogMultiChoice().showDialog(activity!!, Code.TYPE, res)
         }
-        surface_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.SURFACE, act!!.tempRE!!.surface.toString()) }
-        price_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.PRICE, act!!.tempRE!!.price.toString()) }
+        surface_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.SURFACE, tempRE!!.surface.toString()) }
+        val p = if (tempRE!!.price != null)
+            if (Data.currency == 1) Utils.convertDollarToEuro(tempRE!!.price!!) else tempRE!!.price
+        else null
+        price_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.PRICE, p.toString()) }
         poi_button.setOnClickListener {
             val res: ArrayList<String> = arrayListOf()
-            if (act!!.tempRE!!.poiSchool) res.add("0")
-            if (act!!.tempRE!!.poiShops) res.add("1")
-            if (act!!.tempRE!!.poiPark) res.add("2")
-            if (act!!.tempRE!!.poiSubway) res.add("3")
-            if (act!!.tempRE!!.poiBus) res.add("4")
-            if (act!!.tempRE!!.poiTrain) res.add("5")
-            if (act!!.tempRE!!.poiHospital) res.add("6")
-            if (act!!.tempRE!!.poiAirport) res.add("7")
-            ViewDialogMultiChoice().showDialog(act!!, Code.POI, res)
+            if (tempRE!!.poiSchool) res.add("0")
+            if (tempRE!!.poiShops) res.add("1")
+            if (tempRE!!.poiPark) res.add("2")
+            if (tempRE!!.poiSubway) res.add("3")
+            if (tempRE!!.poiBus) res.add("4")
+            if (tempRE!!.poiTrain) res.add("5")
+            if (tempRE!!.poiHospital) res.add("6")
+            if (tempRE!!.poiAirport) res.add("7")
+            ViewDialogMultiChoice().showDialog(activity!!, Code.POI, res)
         }
-        total_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.ROOM_NUM, act!!.tempRE!!.room.toString()) }
-        bedroom_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.BED_NUM, act!!.tempRE!!.bed.toString()) }
-        bathroom_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.BATH_NUM, act!!.tempRE!!.bath.toString()) }
-        kitchen_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.KITCHEN_NUM, act!!.tempRE!!.kitchen.toString()) }
-        description_button.setOnClickListener { ViewDialogInputText().showDialog(act!!, Code.DESCRIPTION, act!!.tempRE!!.description) }
-        photo_button.setOnClickListener {
-
-            act!!.setFragment(1)
-        }
+        total_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.ROOM_NUM, tempRE!!.room.toString()) }
+        bedroom_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.BED_NUM, tempRE!!.bed.toString()) }
+        bathroom_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.BATH_NUM, tempRE!!.bath.toString()) }
+        kitchen_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.KITCHEN_NUM, tempRE!!.kitchen.toString()) }
+        description_button.setOnClickListener { ViewDialogInputText().showDialog(activity!!, Code.DESCRIPTION, tempRE!!.description) }
+        photo_button.setOnClickListener { mListener.setFragment(1)}
+        photo_icon.background = addIcon
         sold_button.setOnClickListener { checkSold() }
-        market_date_button.setOnClickListener { ViewDialogDatePicker().showDialog(act!!, Code.SALE_DATE) }
-        sold_date_button.setOnClickListener { ViewDialogDatePicker().showDialog(act!!, Code.SOLD_DATE) }
+        market_date_button.setOnClickListener { ViewDialogDatePicker().showDialog(activity!!, Code.SALE_DATE) }
+        sold_date_button.setOnClickListener { ViewDialogDatePicker().showDialog(activity!!, Code.SOLD_DATE) }
     }
 
-
     fun insertStandardValue(code: String, value: String) {
+
         when (code) {
-            Code.STREET_NUM -> act!!.tempRE!!.streetNumber = value
-            Code.STREET -> act!!.tempRE!!.street = value
-            Code.ZIP_CODE -> act!!.tempRE!!.zipCode = value
-            Code.LOCALITY -> act!!.tempRE!!.locality = value
-            Code.STATE -> act!!.tempRE!!.state = value
-            Code.TYPE -> act!!.tempRE!!.type = value.toInt()
-            Code.SURFACE -> act!!.tempRE!!.surface = value.toInt()
-            Code.PRICE -> act!!.tempRE!!.price = value.toLong()
+            Code.STREET_NUM -> tempRE!!.streetNumber = value
+            Code.STREET -> tempRE!!.street = value
+            Code.ZIP_CODE -> tempRE!!.zipCode = value
+            Code.LOCALITY -> tempRE!!.locality = value
+            Code.STATE -> tempRE!!.state = value
+            Code.TYPE -> tempRE!!.type = value.toInt()
+            Code.SURFACE -> tempRE!!.surface = value.toInt()
+            Code.PRICE -> {
+                val p = if (tempRE!!.price != null)
+                    if (Data.currency == 1) Utils.convertEuroToDollar(value.toLong()) else value.toLong()
+                else null
+                tempRE!!.price = p
+            }
             Code.POI -> {
                 val v: ArrayList<Boolean> = separateValue(value)
-                act!!.tempRE!!.poiSchool = v[0]
-                act!!.tempRE!!.poiShops = v[1]
-                act!!.tempRE!!.poiPark = v[2]
-                act!!.tempRE!!.poiSubway = v[3]
-                act!!.tempRE!!.poiBus = v[4]
-                act!!.tempRE!!.poiTrain = v[5]
-                act!!.tempRE!!.poiHospital = v[6]
-                act!!.tempRE!!.poiAirport = v[7]
+                tempRE!!.poiSchool = v[0]
+                tempRE!!.poiShops = v[1]
+                tempRE!!.poiPark = v[2]
+                tempRE!!.poiSubway = v[3]
+                tempRE!!.poiBus = v[4]
+                tempRE!!.poiTrain = v[5]
+                tempRE!!.poiHospital = v[6]
+                tempRE!!.poiAirport = v[7]
             }
-            Code.ROOM_NUM -> act!!.tempRE!!.room = value.toInt()
-            Code.BED_NUM -> act!!.tempRE!!.bed = value.toInt()
-            Code.BATH_NUM -> act!!.tempRE!!.bath = value.toInt()
-            Code.KITCHEN_NUM -> act!!.tempRE!!.kitchen = value.toInt()
-            Code.DESCRIPTION -> act!!.tempRE!!.description = value
-            Code.SALE_DATE -> act!!.tempRE!!.marketDate = value
-            Code.SOLD_DATE -> act!!.tempRE!!.soldDate = value
-            Code.AGENT -> act!!.tempRE!!.agentName = value
+            Code.ROOM_NUM -> tempRE!!.room = value.toInt()
+            Code.BED_NUM -> tempRE!!.bed = value.toInt()
+            Code.BATH_NUM -> tempRE!!.bath = value.toInt()
+            Code.KITCHEN_NUM -> tempRE!!.kitchen = value.toInt()
+            Code.DESCRIPTION -> tempRE!!.description = value
+            Code.SALE_DATE -> tempRE!!.marketDate = value
+            Code.SOLD_DATE -> tempRE!!.soldDate = value
+            Code.AGENT -> tempRE!!.agentName = value
         }
 
         editValues()
@@ -205,140 +194,153 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
                 gc.results.isNotEmpty() &&
                 gc.results[0].geometry != null &&
                 gc.results[0].geometry!!.location != null &&
-                gc.results[0].address_components != null){
+                gc.results[0].address_components != null) {
 
             val lat = gc.results[0].geometry!!.location!!.lat
             val lng = gc.results[0].geometry!!.location!!.lng
             if (lat != null && lng != null) {
-                act!!.tempRE!!.latitude = lat
-                act!!.tempRE!!.longitude = lng
+                tempRE!!.latitude = lat
+                tempRE!!.longitude = lng
             }
 
             for (ac in gc.results[0].address_components!!) {
                 if (ac.types != null)
                     for (t in ac.types)
                         when (t) {
-                            "street_number" -> act!!.tempRE!!.streetNumber = ac.long_name ?: ""
-                            "route" -> act!!.tempRE!!.street = ac.long_name ?: ""
-                            "locality" -> act!!.tempRE!!.locality = ac.long_name ?: ""
-                            "postal_code" -> act!!.tempRE!!.zipCode = ac.long_name ?: ""
-                            "country" -> act!!.tempRE!!.state = ac.long_name ?: ""
+                            "street_number" -> tempRE!!.streetNumber = ac.long_name ?: ""
+                            "route" -> tempRE!!.street = ac.long_name ?: ""
+                            "locality" -> tempRE!!.locality = ac.long_name ?: ""
+                            "postal_code" -> tempRE!!.zipCode = ac.long_name ?: ""
+                            "country" -> tempRE!!.state = ac.long_name ?: ""
                         }
             }
-            act!!.tempRE!!.verified = true
+            tempRE!!.verified = true
         } else
-            act!!.tempRE!!.verified = false
+            tempRE!!.verified = false
 
         editValues()
     }
 
     private fun editValues() {
-        street_num_value.text = act!!.tempRE!!.streetNumber
-        street_value.text = act!!.tempRE!!.street
-        locality_value.text = act!!.tempRE!!.locality
-        zip_code_value.text = act!!.tempRE!!.zipCode
-        state_value.text = act!!.tempRE!!.state
-        type_value.text = if (act!!.tempRE!!.type != null) resources.getStringArray(R.array.type_ind)[act!!.tempRE!!.type!!] else ""
-        surface_value.text = if (act!!.tempRE!!.surface != null) Utils.getSurfaceFormat(act!!, act!!.tempRE!!.surface) else ""
-        price_value.text = if (act!!.tempRE!!.price != null) Utils.convertedHighPrice(act!!, act!!.tempRE!!.price) else ""
+
+        if (tempRE != null) {
+            Log.d("TEMP RE", "NOT NUL")
+            if (tempRE!!.streetNumber.isNotEmpty()) {
+                Log.d("STR NUM", tempRE!!.streetNumber)
+            } else {
+                Log.d("STR NUM", "EMPTY")
+            }
+        } else {
+            Log.d("TEMP RE", "NUL")
+        }
+        street_num_value.text = tempRE!!.streetNumber
+        street_value.text = tempRE!!.street
+        locality_value.text = tempRE!!.locality
+        zip_code_value.text = tempRE!!.zipCode
+        state_value.text = tempRE!!.state
+        type_value.text = if (tempRE!!.type != null) resources.getStringArray(R.array.type_ind)[tempRE!!.type!!] else ""
+        surface_value.text = if (tempRE!!.surface != null) Utils.getSurfaceFormat(activity!!, tempRE!!.surface) else ""
+        price_value.text = if (tempRE!!.price != null) {
+            val p = if (tempRE!!.price != null)
+                if (Data.currency == 1) Utils.convertDollarToEuro(tempRE!!.price!!) else tempRE!!.price
+            else null
+            Utils.convertedHighPrice(this.context!!, p)
+        } else ""
         poi_value.text = getPoiList()
-        total_value.text = if (act!!.tempRE!!.room != null) act!!.tempRE!!.room.toString() else ""
-        bedroom_value.text = if (act!!.tempRE!!.bed != null) act!!.tempRE!!.bed.toString() else ""
-        bathroom_value.text = if (act!!.tempRE!!.bath != null) act!!.tempRE!!.bath.toString() else ""
-        kitchen_value.text = if (act!!.tempRE!!.kitchen != null) act!!.tempRE!!.kitchen.toString() else ""
-        description_value.text = act!!.tempRE!!.description
-        market_date_value.text = act!!.tempRE!!.marketDate
-        sold_date_value.text = act!!.tempRE!!.soldDate
-        agent_value.text = act!!.tempRE!!.agentName
+        total_value.text = if (tempRE!!.room != null) tempRE!!.room.toString() else ""
+        bedroom_value.text = if (tempRE!!.bed != null) tempRE!!.bed.toString() else ""
+        bathroom_value.text = if (tempRE!!.bath != null) tempRE!!.bath.toString() else ""
+        kitchen_value.text = if (tempRE!!.kitchen != null) tempRE!!.kitchen.toString() else ""
+        description_value.text = tempRE!!.description
+        market_date_value.text = tempRE!!.marketDate
+        sold_date_value.text = tempRE!!.soldDate
+        agent_value.text = tempRE!!.agentName
 
         checkingValidate()
     }
 
     fun saveRealEstate() {
         val re = RealEstate(
-                act!!.tempRE!!.id,
-                act!!.tempRE!!.streetNumber,
-                act!!.tempRE!!.street,
-                act!!.tempRE!!.zipCode,
-                act!!.tempRE!!.locality,
-                act!!.tempRE!!.state,
-                act!!.tempRE!!.verified,
-                act!!.tempRE!!.latitude,
-                act!!.tempRE!!.longitude,
-                act!!.tempRE!!.type,
-                act!!.tempRE!!.surface,
-                act!!.tempRE!!.room,
-                act!!.tempRE!!.bed,
-                act!!.tempRE!!.bath,
-                act!!.tempRE!!.kitchen,
-                act!!.tempRE!!.description,
-                act!!.tempRE!!.price,
-                act!!.tempRE!!.sold,
-                act!!.tempRE!!.marketDate,
-                act!!.tempRE!!.soldDate,
-                act!!.tempRE!!.agentName,
-                act!!.tempRE!!.poiSchool,
-                act!!.tempRE!!.poiShops,
-                act!!.tempRE!!.poiPark,
-                act!!.tempRE!!.poiSubway,
-                act!!.tempRE!!.poiBus,
-                act!!.tempRE!!.poiTrain,
-                act!!.tempRE!!.poiHospital,
-                act!!.tempRE!!.poiAirport,
-                act!!.tempRE!!.photos)
+                tempRE!!.id,
+                tempRE!!.streetNumber,
+                tempRE!!.street,
+                tempRE!!.zipCode,
+                tempRE!!.locality,
+                tempRE!!.state,
+                tempRE!!.verified,
+                tempRE!!.latitude,
+                tempRE!!.longitude,
+                tempRE!!.type,
+                tempRE!!.surface,
+                tempRE!!.room,
+                tempRE!!.bed,
+                tempRE!!.bath,
+                tempRE!!.kitchen,
+                tempRE!!.description,
+                tempRE!!.price,
+                tempRE!!.sold,
+                tempRE!!.marketDate,
+                tempRE!!.soldDate,
+                tempRE!!.agentName,
+                tempRE!!.poiSchool,
+                tempRE!!.poiShops,
+                tempRE!!.poiPark,
+                tempRE!!.poiSubway,
+                tempRE!!.poiBus,
+                tempRE!!.poiTrain,
+                tempRE!!.poiHospital,
+                tempRE!!.poiAirport,
+                tempRE!!.photos)
 
-        if (act!!.tempRE!!.id != null) act!!.itemViewModel.updateRealEstate(re)
-        else act!!.itemViewModel.createRealEstate(re)
+        if (tempRE!!.id != null) itemViewModel!!.updateRealEstate(re)
+        else itemViewModel!!.createRealEstate(re)
 
-        act!!.backToMainActivity()
+        mListener.backToMainActivity()
     }
 
     private fun checkSold() {
-        act!!.tempRE!!.sold = !act!!.tempRE!!.sold
+        tempRE!!.sold = !tempRE!!.sold
         checkingValidate()
     }
 
     private fun checkingValidate() {
-        act!!.setSave((act!!.tempRE!!.street.isNotEmpty()
-                && act!!.tempRE!!.locality.isNotEmpty()
-                && act!!.tempRE!!.type != null
-                && act!!.tempRE!!.surface != null
-                && act!!.tempRE!!.price != null
-                && act!!.tempRE!!.room != null
-                && act!!.tempRE!!.marketDate.isNotEmpty()
-                && ((act!!.tempRE!!.sold && act!!.tempRE!!.soldDate.isNotEmpty()) || (!act!!.tempRE!!.sold))
-                && (act!!.tempRE!!.photos != null && act!!.tempRE!!.photos!!.isNotEmpty())))
+        mListener.setSave((tempRE!!.street.isNotEmpty()
+                && tempRE!!.locality.isNotEmpty()
+                && tempRE!!.type != null
+                && tempRE!!.surface != null
+                && tempRE!!.price != null
+                && tempRE!!.room != null
+                && tempRE!!.marketDate.isNotEmpty()
+                && ((tempRE!!.sold && tempRE!!.soldDate.isNotEmpty()) || (!tempRE!!.sold))
+                && (tempRE!!.photos != null && tempRE!!.photos!!.isNotEmpty())))
 
-        sold_check.isChecked = act!!.tempRE!!.sold
-        val col = if (act!!.tempRE!!.sold) ContextCompat.getColor(context!!, R.color.colorSecondaryDark) else ContextCompat.getColor(context!!, R.color.colorBlack)
+        sold_check.isChecked = tempRE!!.sold
+        val col = if (tempRE!!.sold) ContextCompat.getColor(context!!, R.color.colorSecondaryDark) else ContextCompat.getColor(context!!, R.color.colorBlack)
         sold_date_lbl.setTextColor(col)
-        if (act!!.tempRE!!.verified)
+        if (tempRE!!.verified)
             locate_btn.setCompoundDrawables(lookIcon, null, validateIcon, null)
         else
             locate_btn.setCompoundDrawables(lookIcon, null, unValidateIcon, null)
 
-        if (act!!.tempRE!!.description.isNotEmpty()) {
-            description_icon.background = editIcon
-            description_value.text = act!!.tempRE!!.description
+        if (tempRE!!.description.isNotEmpty()) {
+            description_icon.visibility = View.GONE
+            description_value.text = tempRE!!.description
         } else {
+            description_icon.visibility = View.VISIBLE
             description_icon.background = addIcon
-            description_value.text = act!!.tempRE!!.description
+            description_value.text = tempRE!!.description
         }
-        if (act!!.tempRE!!.photos != null && act!!.tempRE!!.photos!!.isNotEmpty()) {
-            var m = false
-            for (p in act!!.tempRE!!.photos!!) {
+        if (tempRE!!.photos != null && tempRE!!.photos!!.isNotEmpty()) {
+            photo_icon.visibility = View.VISIBLE
+            photo_info.visibility = View.VISIBLE
+            photo_value.background = null
+            for (p in tempRE!!.photos!!) {
                 if (p.main) {
-                    m = true
                     photo_icon.visibility = View.GONE
                     photo_info.visibility = View.GONE
                     glideThis(p.image!!)
                     break
                 }
-            }
-            if (!m) {
-                photo_icon.visibility = View.VISIBLE
-                photo_info.visibility = View.VISIBLE
-                photo_value.background = null
             }
         } else {
             photo_info.visibility = View.VISIBLE
@@ -348,13 +350,12 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
     }
 
     private fun setIcon() {
-        addIcon = SetImageColor.changeDrawableColor(act!!, R.drawable.add_box, ContextCompat.getColor(act!!, R.color.colorSecondary))
-        editIcon = SetImageColor.changeDrawableColor(act!!, R.drawable.edit, ContextCompat.getColor(act!!, R.color.colorGrey))
-        checkIcon = SetImageColor.changeDrawableColor(act!!, R.drawable.check_box, ContextCompat.getColor(act!!, R.color.colorSecondary))
-        uncheckIcon = SetImageColor.changeDrawableColor(act!!, R.drawable.uncheck_box, ContextCompat.getColor(act!!, R.color.colorGrey))
-        lookIcon = SetImageColor.changeDrawableColor(act!!, R.drawable.search, ContextCompat.getColor(act!!, R.color.colorPrimary))
-        validateIcon = SetImageColor.changeDrawableColor(act!!, R.drawable.check_circle, ContextCompat.getColor(act!!, R.color.colorSecondary))
-        unValidateIcon = SetImageColor.changeDrawableColor(act!!, R.drawable.check_circle, ContextCompat.getColor(act!!, R.color.colorGrey))
+        addIcon = SetImageColor.changeDrawableColor(activity!!, R.drawable.add_box, ContextCompat.getColor(activity!!, R.color.colorSecondary))
+        checkIcon = SetImageColor.changeDrawableColor(activity!!, R.drawable.check_box, ContextCompat.getColor(activity!!, R.color.colorSecondary))
+        uncheckIcon = SetImageColor.changeDrawableColor(activity!!, R.drawable.uncheck_box, ContextCompat.getColor(activity!!, R.color.colorGrey))
+        lookIcon = SetImageColor.changeDrawableColor(activity!!, R.drawable.search, ContextCompat.getColor(activity!!, R.color.colorPrimary))
+        validateIcon = SetImageColor.changeDrawableColor(activity!!, R.drawable.check_circle, ContextCompat.getColor(activity!!, R.color.colorSecondary))
+        unValidateIcon = SetImageColor.changeDrawableColor(activity!!, R.drawable.check_circle, ContextCompat.getColor(activity!!, R.color.colorGrey))
     }
 
     private fun glideThis(ph: String) {
@@ -374,14 +375,14 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
 
     private fun getPoiList(): String {
         val sb = StringBuilder()
-        if (act!!.tempRE!!.poiSchool) sb.append(resources.getStringArray(R.array.poi_ind)[0] + "\r\n")
-        if (act!!.tempRE!!.poiShops) sb.append(resources.getStringArray(R.array.poi_ind)[1] + "\r\n")
-        if (act!!.tempRE!!.poiPark) sb.append(resources.getStringArray(R.array.poi_ind)[2] + "\r\n")
-        if (act!!.tempRE!!.poiSubway) sb.append(resources.getStringArray(R.array.poi_ind)[3] + "\r\n")
-        if (act!!.tempRE!!.poiBus) sb.append(resources.getStringArray(R.array.poi_ind)[4] + "\r\n")
-        if (act!!.tempRE!!.poiTrain) sb.append(resources.getStringArray(R.array.poi_ind)[5] + "\r\n")
-        if (act!!.tempRE!!.poiHospital) sb.append(resources.getStringArray(R.array.poi_ind)[6] + "\r\n")
-        if (act!!.tempRE!!.poiAirport) sb.append(resources.getStringArray(R.array.poi_ind)[7] + "\r\n")
+        if (tempRE!!.poiSchool) sb.append(resources.getStringArray(R.array.poi_ind)[0] + "\r\n")
+        if (tempRE!!.poiShops) sb.append(resources.getStringArray(R.array.poi_ind)[1] + "\r\n")
+        if (tempRE!!.poiPark) sb.append(resources.getStringArray(R.array.poi_ind)[2] + "\r\n")
+        if (tempRE!!.poiSubway) sb.append(resources.getStringArray(R.array.poi_ind)[3] + "\r\n")
+        if (tempRE!!.poiBus) sb.append(resources.getStringArray(R.array.poi_ind)[4] + "\r\n")
+        if (tempRE!!.poiTrain) sb.append(resources.getStringArray(R.array.poi_ind)[5] + "\r\n")
+        if (tempRE!!.poiHospital) sb.append(resources.getStringArray(R.array.poi_ind)[6] + "\r\n")
+        if (tempRE!!.poiAirport) sb.append(resources.getStringArray(R.array.poi_ind)[7] + "\r\n")
 
         return if (sb.toString().isNotEmpty()) sb.substring(0, sb.toString().length - 2)
         else ""
@@ -389,19 +390,32 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
 
     override fun onDestroy() {
         super.onDestroy()
-        this.act = null
         this.disposable = null
     }
 
     companion object {
+        const val TEMP_RE = "TEMP_RE"
+        var tempRE: TempRealEstate? = null
+        var itemViewModel: ItemViewModel? = null
         /**
          * @param addOrEditActivity MainActivity
          * @return new RealEstateList()
          */
-        fun newInstance(addOrEditActivity: AddOrEditActivity): AddOrEdit {
+        fun newInstance(tempRealEstate: TempRealEstate, vm: ItemViewModel): AddOrEdit {
             val fragment = AddOrEdit()
-            fragment.act = addOrEditActivity
+            val bundle = Bundle()
+            bundle.putParcelable(TEMP_RE, tempRealEstate)
+            fragment.arguments = bundle
+            tempRE = tempRealEstate
+            itemViewModel = vm
             return fragment
         }
+    }
+
+    interface AddOrEditListener {
+        fun openAddressInput(res : ArrayList<String?>)
+        fun setFragment(v : Int)
+        fun backToMainActivity()
+        fun setSave(b : Boolean)
     }
 }

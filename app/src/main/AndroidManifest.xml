@@ -37,10 +37,10 @@
             android:name=".controllers.activities.AddOrEditActivity"
             android:parentActivityName="controllers.activities.MainActivity" />
         <activity
-            android:name=".controllers.activities.SetFilters"
+            android:name=".controllers.activities.SetFiltersActivity"
             android:parentActivityName="controllers.activities.MainActivity" />
         <activity
-            android:name=".controllers.activities.LoanSimulator"
+            android:name=".controllers.activities.LoanSimulatorActivity"
             android:parentActivityName="controllers.activities.MainActivity" />
         <activity
             android:name=".controllers.activities.SettingsActivity"
@@ -49,10 +49,6 @@
         <!-- CONTENT PROVIDER -->
         <provider
             android:name=".provider.RealEstateContentProvider"
-            android:authorities="com.gz.jey.realestatemanager.provider"
-            android:exported="true" />
-        <provider
-            android:name=".provider.SettingsContentProvider"
             android:authorities="com.gz.jey.realestatemanager.provider"
             android:exported="true" />
         <!--

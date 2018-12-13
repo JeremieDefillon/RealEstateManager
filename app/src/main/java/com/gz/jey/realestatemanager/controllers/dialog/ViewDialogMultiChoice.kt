@@ -8,10 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.widget.*
-import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
-import com.gz.jey.realestatemanager.controllers.activities.SetFilters
+import com.gz.jey.realestatemanager.controllers.activities.SetFiltersActivity
 import com.gz.jey.realestatemanager.models.Code
 import kotlin.collections.ArrayList
 
@@ -140,7 +139,7 @@ class ViewDialogMultiChoice {
                         if (chk[i].isChecked)
                             result.add(i.toString())
                     }
-                    val act = activity as SetFilters
+                    val act = activity as SetFiltersActivity
                     act.insertMultiValues(code, result)
                     dialog.dismiss()
                 }
@@ -154,7 +153,7 @@ class ViewDialogMultiChoice {
                             break
                         }
                     }
-                    val act = activity as SetFilters
+                    val act = activity as SetFiltersActivity
                     act.insertMultiValues(code, result)
                     dialog.dismiss()
                 }

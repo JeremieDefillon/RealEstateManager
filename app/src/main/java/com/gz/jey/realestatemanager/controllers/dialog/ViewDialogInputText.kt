@@ -15,13 +15,11 @@ import android.widget.Button
 import android.widget.TextView
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.AddOrEditActivity
-import com.gz.jey.realestatemanager.controllers.activities.SetFilters
+import com.gz.jey.realestatemanager.controllers.activities.SetFiltersActivity
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.utils.Utils
 import java.lang.Exception
-import java.util.*
 import kotlin.collections.ArrayList
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.view.inputmethod.InputMethodManager
 import com.gz.jey.realestatemanager.models.Data
 
@@ -163,7 +161,7 @@ class ViewDialogInputText {
             val res : ArrayList<String> = ArrayList()
             res.add(inputText.text.toString())
             if(code.split('_').contains("FILTER")){
-                val act = activity as SetFilters
+                val act = activity as SetFiltersActivity
                 act.insertStandardValue(code, inputText.text.toString())
             }else{
                 val act = activity as AddOrEditActivity

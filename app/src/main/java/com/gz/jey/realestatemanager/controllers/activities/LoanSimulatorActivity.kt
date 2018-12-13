@@ -29,7 +29,7 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.*
 
-class LoanSimulator : AppCompatActivity(), AmortizationsAdapter.Listener {
+class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener {
 
     private val amortizations : ArrayList<Amortizations> = ArrayList()
     var toolbar: Toolbar? = null

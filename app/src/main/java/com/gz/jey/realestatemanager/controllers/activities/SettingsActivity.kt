@@ -130,9 +130,10 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun getAssetJsonData(): String? {
+        val fileName = if(Data.tabMode) "all_re_tablet.json" else "all_re_phone.json"
         val json: String?
         json = try {
-            val inputStream: InputStream = assets.open("all_re.json")
+            val inputStream: InputStream = assets.open(fileName)
             val inputStreamReader = InputStreamReader(inputStream)
             val br = BufferedReader(inputStreamReader)
             val line = br.readText()

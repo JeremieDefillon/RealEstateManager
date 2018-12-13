@@ -19,7 +19,7 @@ object Utils{
      * @param dollars
      * @return
      */
-    fun convertDollarToEuro(dollars: Int): Int = Math.round(dollars * 0.812).toInt()
+    fun convertDollarToEuro(dollars: Long): Long = Math.round(dollars * 0.812)
 
     /**
      * Conversion d'un prix d'un bien immobilier (Euros vers Dollars)
@@ -27,7 +27,7 @@ object Utils{
      * @param euros
      * @return
      */
-    fun convertEuroToDollar(euros: Int): Int = Math.round(euros / 0.812).toInt()
+    fun convertEuroToDollar(euros: Long): Long = Math.round(euros / 0.812)
 
     /**
      * Conversion de la date d'aujourd'hui en un format plus approprié
@@ -78,7 +78,7 @@ object Utils{
         if(price!=null){
             val text = price.toString()
             var hp : String
-            val s = if(Data.currency==0) "," else "."
+            val s = if(Data.currency==0) "," else " "
             val end = text.length
             val step = 3
             val over = end-1
