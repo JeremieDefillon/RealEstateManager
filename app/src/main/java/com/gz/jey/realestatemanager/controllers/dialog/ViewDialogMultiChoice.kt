@@ -154,7 +154,7 @@ class ViewDialogMultiChoice {
                         }
                     }
                     val act = activity as SetFiltersActivity
-                    act.insertMultiValues(code, result)
+                    act.insertStandardValue(code, result[0])
                     dialog.dismiss()
                 }
             }

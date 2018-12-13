@@ -40,6 +40,7 @@ data class RealEstate(
         var poiAirport : Boolean = false,
         @TypeConverters(PhotosConverter::class)
         var photos: List<Photos>? = null,
+        var photoNum: Int = 0,
         var selected: Int = 0
 ) {
     companion object {
@@ -73,6 +74,7 @@ data class RealEstate(
             if (values.containsKey("poiTrain")) re.poiTrain = values.getAsBoolean("poiTrain")
             if (values.containsKey("poiHospital")) re.poiHospital = values.getAsBoolean("poiHospital")
             if (values.containsKey("poiAirport")) re.poiAirport = values.getAsBoolean("poiAirport")
+            if (values.containsKey("photoNum")) re.photoNum = values.getAsInteger("photoNum")
             if (values.containsKey("selected")) re.selected = values.getAsInteger("selected")
             return re
         }
@@ -108,6 +110,7 @@ data class RealEstate(
             false,
             false,
             null,
+            0,
             0)
 
 }

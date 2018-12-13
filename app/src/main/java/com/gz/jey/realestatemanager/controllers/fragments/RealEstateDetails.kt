@@ -91,7 +91,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
     }
 
     fun init() {
-        Log.d("RE DETAILS", "OK")
+        Log.d("RE DETAILS OK ID", Data.reID.toString())
         getRealEstate()
     }
 

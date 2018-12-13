@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             Data.fragNum = intent.getIntExtra(Code.FRAG_NUM, 0)
             Data.isEdit = intent.getBooleanExtra(Code.IS_EDIT, false)
-            Data.reID = intent.getLongExtra(Code.RE_ID, 1)
+            Data.reID = if(intent.hasExtra(Code.RE_ID))intent.getLongExtra(Code.RE_ID, 1)else null
             Data.isEdit = false
             Data.photoNum = null
         }

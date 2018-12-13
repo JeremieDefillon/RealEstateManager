@@ -10,13 +10,7 @@ class BuildRequestSQL {
     fun setBuild(fi: Filters): SimpleSQLiteQuery? {
         val array = getArrayIndex(fi)
         val str = StringBuilder()
-        str.append("SELECT *")
-        if(fi.minPhoto != null){
-            str.append(", COUNT(*) AS len")
-        }
-        str.append(" FROM RealEstate AS re LEFT OUTER JOIN Photos AS ph ON ph.reid=re.id WHERE ")
-       /* if((fi.minPhoto!=null && array.size > 1) || (fi.minPhoto==null && array.size > 0))
-            str.append("WHERE ")*/
+        str.append("SELECT * FROM RealEstate WHERE ")
         val typs = if (fi.type != null) fi.type!!.size  else 0
         val pois = if (fi.poi != null) fi.poi!!.size else 0
         var tot = if(typs+pois==0) 0 else (typs + pois)
@@ -61,7 +55,7 @@ class BuildRequestSQL {
                 }
                 6 -> {
                     count++
-                    args[count] = fi.status!!
+                    args[count] = fi.status == 1
                     str.append(uniqValStr(count, a, fi))
                 }
                 7 -> {
@@ -91,7 +85,7 @@ class BuildRequestSQL {
                 }
                 12 -> {
                     count++
-                    args[count] = fi.minPhoto!!-1
+                    args[count] = fi.minPhoto!!
                     str.append(uniqValStr(count, a, fi))
                 }
             }
@@ -101,6 +95,7 @@ class BuildRequestSQL {
         for (i in args)
             ar.add(i.toString())
 
+        // AS re LEFT OUTER JOIN Photos AS ph ON ph.reid=id
         Log.d("SQL FILTERS", str.toString() + " <> " + ar.toString())
 
         return if(args.isNotEmpty())
@@ -111,20 +106,20 @@ class BuildRequestSQL {
 
     private fun uniqValStr(count: Int, index: Int, fi : Filters): String {
         val req = StringBuilder()
-        if (count > 0 && index!=12) req.append(" AND ")
+        if (count > 0) req.append(" AND ")
         var table = ""
         when (index) {
-            2 -> table = "re.room>=?"
-            3 -> table = "re.room<=?"
-            4 -> table = "re.district=?"
-            5 -> table = "re.distance=?"
-            6 -> table = "re.status=?"
-            7 -> table = if(fi.status==0) "re.marketDate>=?" else "re.soldDate>=?"
-            8 -> table = "re.price>=?"
-            9 -> table = "re.price<=?"
-            10 -> table = "re.surface>=?"
-            11 -> table = "re.surface<=?"
-            12 -> table = "ph.reid=re.id GROUP BY ph.id HAVING len>?"
+            2 -> table = "room>=?"
+            3 -> table = "room<=?"
+            4 -> table = "locality=? COLLATE NOCASE"
+            5 -> table = "distance=?"
+            6 -> table = "sold=?"
+            7 -> table = if(fi.status==0) "marketDate>=?" else "soldDate>=?"
+            8 -> table = "price>=?"
+            9 -> table = "price<=?"
+            10 -> table = "surface>=?"
+            11 -> table = "surface<=?"
+            12 -> table = "photoNum>=?"
         }
         req.append(table)
         return req.toString()
@@ -137,7 +132,7 @@ class BuildRequestSQL {
         for (i in 0 until max) {
             if (i != 0)
                 req.append(" OR ")
-            req.append("re.type=?")
+            req.append("type=?")
         }
         if (max > 1) req.append(")")
         return req.toString()
@@ -151,14 +146,14 @@ class BuildRequestSQL {
             if (i != 0)
                req.append(" AND ")
             when (p) {
-                0 -> table = "re.poiSchool=?"
-                1 -> table = "re.poiShops=?"
-                2 -> table = "re.poiPark=?"
-                3 -> table = "re.poiSubway=?"
-                4 -> table = "re.poiBus=?"
-                5 -> table = "re.poiTrain=?"
-                6 -> table = "re.poiHospital=?"
-                7 -> table = "re.poiAirport=?"
+                0 -> table = "poiSchool=?"
+                1 -> table = "poiShops=?"
+                2 -> table = "poiPark=?"
+                3 -> table = "poiSubway=?"
+                4 -> table = "poiBus=?"
+                5 -> table = "poiTrain=?"
+                6 -> table = "poiHospital=?"
+                7 -> table = "poiAirport=?"
             }
             req.append(table)
         }
@@ -174,7 +169,6 @@ class BuildRequestSQL {
     private fun multiPoiArgs(count: Int, args: Array<Any>, value: List<Int>): Array<Any> {
         for ((i) in value.withIndex()) {
             args[count + i] = true
-            Log.d("ARGS POI", count.toString() + " " + args[count + i].toString())
         }
         return args
     }
