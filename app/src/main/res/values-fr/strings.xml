@@ -26,6 +26,8 @@
     <string name="finish">Fini</string>
     <string name="add">Ajouter</string>
     <string name="remove">Retirer</string>
+    <string name="add_re">"Ajout de Bien Immo"</string>
+    <string name="edit_re">"Modif de Bien Immo"</string>
     <string name="home">Maison</string>
     <string name="loan_simulator">Simulateur de Prêt</string>
     <string name="simulate_loan">Simuler votre Prêt</string>
@@ -65,6 +67,9 @@
     <string name="nc">NC</string>
     <string name="m2">m²</string>
     <string name="km">km</string>
+
+    <string name="added_new_re">Nouveau Bien immo ajouté !</string>
+    <string name="edited_re">Bien immo modifié !</string>
 
     // FAIL
     <string name="no_results">Il n\'y a aucun bien enregistré !</string>

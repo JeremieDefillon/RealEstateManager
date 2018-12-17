@@ -5,7 +5,7 @@
 
     <group android:id="@+id/group0"
             android:checkableBehavior="single">
-        <item android:id="@+id/restaurant_menu"
+        <item android:id="@+id/filters"
             android:icon="@drawable/search"
             android:title="@string/search">
         </item>
@@ -17,7 +17,7 @@
             android:icon="@drawable/settings"
             android:title="@string/settings">
         </item>
-        <item android:id="@+id/power_settings"
+        <item android:id="@+id/power_off"
             android:icon="@drawable/power_settings"
             android:title="@string/power_off">
         </item>

@@ -242,7 +242,7 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     interface RealEstateListListener {
         fun initDetails()
         fun setRE(realEstate: RealEstate)
-        fun setFragment(i: Int)
+        fun setFragment(index : Int)
         fun setEdit(bool : Boolean)
     }
 }

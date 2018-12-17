@@ -4,6 +4,8 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.TypeConverters
 import android.content.ContentValues
+import android.os.Parcel
+import android.os.Parcelable
 import com.gz.jey.realestatemanager.utils.PhotosConverter
 
 @Entity(tableName = "RealEstate")
@@ -42,8 +44,122 @@ data class RealEstate(
         var photos: List<Photos>? = null,
         var photoNum: Int = 0,
         var selected: Int = 0
-) {
-    companion object {
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+            parcel.readValue(Long::class.java.classLoader) as? Long,
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readValue(Double::class.java.classLoader) as? Double,
+            parcel.readValue(Double::class.java.classLoader) as? Double,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readString(),
+            parcel.readValue(Long::class.java.classLoader) as? Long,
+            parcel.readByte() != 0.toByte(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readValue(Photos::class.java.classLoader) as? List<Photos>,
+            parcel.readInt(),
+            parcel.readInt())
+
+    constructor() : this(null,
+            "",
+            "",
+            "",
+            "",
+            "",
+            false,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "",
+            null,
+            false,
+            "",
+            "",
+            "",
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            null,
+            0,
+            0)
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeValue(id)
+        parcel.writeString(streetNumber)
+        parcel.writeString(street)
+        parcel.writeString(zipCode)
+        parcel.writeString(locality)
+        parcel.writeString(state)
+        parcel.writeByte(if (verified) 1 else 0)
+        parcel.writeValue(latitude)
+        parcel.writeValue(longitude)
+        parcel.writeValue(type)
+        parcel.writeValue(surface)
+        parcel.writeValue(room)
+        parcel.writeValue(bed)
+        parcel.writeValue(bath)
+        parcel.writeValue(kitchen)
+        parcel.writeString(description)
+        parcel.writeValue(price)
+        parcel.writeByte(if (sold) 1 else 0)
+        parcel.writeString(marketDate)
+        parcel.writeString(soldDate)
+        parcel.writeString(agentName)
+        parcel.writeByte(if (poiSchool) 1 else 0)
+        parcel.writeByte(if (poiShops) 1 else 0)
+        parcel.writeByte(if (poiPark) 1 else 0)
+        parcel.writeByte(if (poiSubway) 1 else 0)
+        parcel.writeByte(if (poiBus) 1 else 0)
+        parcel.writeByte(if (poiTrain) 1 else 0)
+        parcel.writeByte(if (poiHospital) 1 else 0)
+        parcel.writeByte(if (poiAirport) 1 else 0)
+        parcel.writeTypedList(photos)
+        parcel.writeInt(photoNum)
+        parcel.writeInt(selected)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<RealEstate> {
+        override fun createFromParcel(parcel: Parcel): RealEstate {
+            return RealEstate(parcel)
+        }
+
+        override fun newArray(size: Int): Array<RealEstate?> {
+            return arrayOfNulls(size)
+        }
+
         // --- UTILS ---
         fun fromContentValues(values: ContentValues): RealEstate {
             val re = RealEstate()
@@ -79,38 +195,5 @@ data class RealEstate(
             return re
         }
     }
-
-    constructor() : this(null,
-            "",
-            "",
-            "",
-            "",
-            "",
-            false,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "",
-            null,
-            false,
-            "",
-            "",
-            "",
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            null,
-            0,
-            0)
 
 }

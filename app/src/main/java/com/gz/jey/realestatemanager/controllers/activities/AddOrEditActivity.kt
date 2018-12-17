@@ -1,6 +1,7 @@
 package com.gz.jey.realestatemanager.controllers.activities
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -60,6 +61,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
     companion object {
         const val TAG = "AddOrEditActivity"
         const val RE_TEMP = "RE_TEMP"
+        const val REAL_ESTATE = "REAL_ESTATE"
         const val PHOTOS_LIST = "PHOTOS_LIST"
     }
     // FRAGMENTS
@@ -109,6 +111,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_add_or_edit)
+        Data.lang = if(Locale.getDefault().language =="fr") 1 else 0
         if (savedInstanceState != null) {
             with(savedInstanceState) {
                 Data.fragNum = getInt(Code.FRAG_NUM)
@@ -238,9 +241,9 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
     private fun configureToolBar() {
         this.toolbar = findViewById(R.id.toolbar)
         if (intent.getBooleanExtra(Code.IS_EDIT, false))
-            toolbar!!.title = "Edit Real Estate"
+            toolbar!!.title = getString(R.string.edit_re)
         else
-            toolbar!!.title = "Add Real Estate"
+            toolbar!!.title = getString(R.string.add_re)
         setSupportActionBar(toolbar)
         invalidateOptionsMenu()
     }
@@ -318,10 +321,21 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
                 .commit()
     }
 
-    override fun backToMainActivity() {
+    private fun backToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    override fun savedRe(re: RealEstate) {
+        val intent = Intent(applicationContext, NotificationReceiver::class.java)
+        intent.putExtra(REAL_ESTATE, re)
+        val pendingIntent = PendingIntent.getBroadcast(applicationContext,
+                987, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+
+        pendingIntent.send()
+
+        backToMainActivity()
     }
 
     override fun savePhotos() {

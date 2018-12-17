@@ -1,7 +1,5 @@
 package com.gz.jey.realestatemanager.controllers.activities
 
-import android.arch.lifecycle.ViewModelProviders
-import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,13 +11,12 @@ import android.text.InputType
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.dialog.ToastMessage
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogAmortizationTable
-import com.gz.jey.realestatemanager.injection.Injection
-import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Amortizations
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.Data
@@ -73,8 +70,6 @@ class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener
      * INIT ACTIVITY
      */
     private fun init() {
-        val mViewModelFactory = Injection.provideViewModelFactory(this)
-        val itemViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ItemViewModel::class.java)
 
         amortization_btn.visibility = View.GONE
         amortization_btn.setOnClickListener { openAmortization() }
@@ -88,6 +83,7 @@ class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener
         years_value.inputType = InputType.TYPE_CLASS_NUMBER
 
         capital_value.hint = "?"
+        capital_symb.text = symb
         rate_value.hint = "?"
         years_value.hint = "?"
         monthly_value.hint = "?"
@@ -137,20 +133,44 @@ class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener
            val capRefund0 = monthlyFee-interestFee0
            val capFee0 = (totalCapital!! - capRefund0)
 
+           var totm = 0f
+           var toti = 0f
+           var totc = 0f
+           var totf = 0f
+
            val it0 = Amortizations(1, monthlyFee, interestFee0, capRefund0, capFee0)
            amortizations.add(it0)
+           totm += monthlyFee
+           toti += interestFee0
+           totc += capRefund0
+           totf = capFee0
 
            for(i in 1 until months){
                val interestFee = getInterestCost(amortizations[i-1].capital_fee)
                val capRefund = monthlyFee - interestFee
                val capFee = (amortizations[i-1].capital_fee - capRefund)
 
-               val it = if(i==months-1 && capFee >0.0f)
-                   Amortizations(i+1, monthlyFee+capFee, interestFee, capRefund+capFee, 0.00f)
-               else
-                   Amortizations(i+1, monthlyFee, interestFee, capRefund, capFee)
-
+               val it = Amortizations(i+1, monthlyFee, interestFee, capRefund, capFee)
                amortizations.add(it)
+
+               totm += monthlyFee
+               toti += interestFee
+               totc += capRefund
+               totf = capFee
+           }
+
+           if(totc > totalCapital!!) {
+               Log.d("CAPITAL SUP", totc.toString())
+               val over = totc-totalCapital!!
+               amortizations[months-1].monthly_payed = amortizations[months-1].monthly_payed - over
+               amortizations[months-1].capital_refunded = amortizations[months-1].capital_refunded - over
+               amortizations[months-1].capital_fee = 0.00f
+           }else if(totc < totalCapital!!) {
+               Log.d("CAPITAL MOINS", totc.toString())
+               val miss = totalCapital!!-totc
+               amortizations[months-1].monthly_payed = amortizations[months-1].monthly_payed + miss
+               amortizations[months-1].capital_refunded = amortizations[months-1].capital_refunded + miss
+               amortizations[months-1].capital_fee = 0.00f
            }
 
            amortization_btn.visibility = View.VISIBLE

@@ -208,19 +208,23 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
                     statLbl.text = getString(R.string.status)
                     when (item.sold) {
                         false -> {
+                            val date = if(Data.lang==1)Utils.getDateFr(item.marketDate)
+                            else Utils.getDateEn(item.marketDate)
                             statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.check_circle, grey)
                             val sb = StringBuilder()
                                     .append(status)
                                     .append(" since \r\n")
-                                    .append(item.marketDate)
+                                    .append(date)
                             statValue.text = sb.toString()
                         }
                         true -> {
+                            val date = if(Data.lang==1)Utils.getDateFr(item.soldDate)
+                            else Utils.getDateEn(item.soldDate)
                             statIcon.background = SetImageColor.changeDrawableColor(view!!.context, R.drawable.check_circle, second)
                             val sb = StringBuilder()
                                     .append(status)
                                     .append(" since \r\n")
-                                    .append(item.soldDate)
+                                    .append(date)
                             statValue.text = sb.toString()
                         }
                     }

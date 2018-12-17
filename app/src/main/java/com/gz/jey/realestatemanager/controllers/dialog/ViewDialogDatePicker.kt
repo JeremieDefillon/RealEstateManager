@@ -15,7 +15,6 @@ import com.gz.jey.realestatemanager.models.Code
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class ViewDialogDatePicker {
 
     private lateinit var titleCanvas : TextView
@@ -24,7 +23,11 @@ class ViewDialogDatePicker {
     private lateinit var editBtn : Button
     private lateinit var image : ImageView
 
-
+    /**
+     * @param activity Activity
+     * @param code String
+     * to show the dialog
+     */
     fun showDialog(activity: Activity, code : String) {
 
         val dialog = Dialog(activity)
@@ -54,7 +57,7 @@ class ViewDialogDatePicker {
             val calendar = Calendar.getInstance()
             calendar.set(year, month, day)
 
-            val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val date = format.format(calendar.time)
             Log.d("Date", date)
             if(code == Code.SALE_DATE || code == Code.SOLD_DATE){

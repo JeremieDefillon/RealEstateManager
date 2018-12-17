@@ -22,6 +22,7 @@ import com.gz.jey.realestatemanager.database.ItemDatabase
 import com.gz.jey.realestatemanager.injection.Injection
 import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Code
+import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.models.sql.Filters
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import com.gz.jey.realestatemanager.utils.Utils
@@ -57,6 +58,7 @@ class SetFiltersActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_filters)
+        Data.lang = if(Locale.getDefault().language =="fr") 1 else 0
         init()
     }
 
@@ -113,7 +115,7 @@ class SetFiltersActivity : AppCompatActivity() {
      */
     private fun configureToolBar() {
         this.toolbar = findViewById(R.id.toolbar)
-        this.toolbar!!.title = "Search with Filters"
+        this.toolbar!!.title = getString(R.string.search_filters)
         setSupportActionBar(toolbar)
         Objects.requireNonNull<ActionBar>(supportActionBar).setHomeAsUpIndicator(R.drawable.back_button)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -175,8 +177,10 @@ class SetFiltersActivity : AppCompatActivity() {
                 insertStandardValue(Code.FILTER_DISTANCE, filters!!.distance.toString())
             if (filters!!.status != null)
                 insertStandardValue(Code.FILTER_STATUS, filters!!.status.toString())
-            if (filters!!.date != null)
+            if (filters!!.date != null) {
+                Log.d("FILTER DATE", filters!!.date.toString())
                 insertStandardValue(Code.FILTER_DATE, filters!!.date.toString())
+            }
             if (filters!!.minPrice != null)
                 insertStandardValue(Code.FILTER_MIN_PRICE, filters!!.minPrice.toString())
             if (filters!!.maxPrice != null)
@@ -242,9 +246,9 @@ class SetFiltersActivity : AppCompatActivity() {
                 ViewDialogMultiChoice().showDialog(this, Code.FILTER_STATUS, res)
             }
             7 -> {
-                if (filters!!.date != null)
+                if (filters!!.date != null) {
                     res.add(filters!!.date.toString())
-                else
+                }else
                     res.add("")
                 ViewDialogDatePicker().showDialog(this, Code.FILTER_DATE)
             }
@@ -298,7 +302,6 @@ class SetFiltersActivity : AppCompatActivity() {
             Log.d("FILTER ID", "NEW ID")
             backToMainActivity(true)
         }
-
     }
 
     private fun backToMainActivity(setFilter: Boolean) {
@@ -352,7 +355,7 @@ class SetFiltersActivity : AppCompatActivity() {
                 max_rooms_value.text = res
             }
             Code.FILTER_LOCALITY -> {
-                filters!!.locality = res
+                filters!!.locality = if(res.isNotEmpty()) res else null
                 locality_value.text = res
             }
             Code.FILTER_DISTANCE -> {
@@ -366,7 +369,8 @@ class SetFiltersActivity : AppCompatActivity() {
             }
             Code.FILTER_DATE -> {
                 filters!!.date = res
-                date_value.text = res
+                val date = if (Data.lang==1) Utils.getDateFr(filters!!.date!!) else Utils.getDateEn(filters!!.date!!)
+                date_value.text = date
             }
             Code.FILTER_MIN_PRICE -> {
                 try {

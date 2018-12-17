@@ -145,10 +145,9 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
             Code.TYPE -> tempRE!!.type = value.toInt()
             Code.SURFACE -> tempRE!!.surface = value.toInt()
             Code.PRICE -> {
-                val p = if (tempRE!!.price != null)
+                tempRE!!.price = if (value.isNotEmpty())
                     if (Data.currency == 1) Utils.convertEuroToDollar(value.toLong()) else value.toLong()
                 else null
-                tempRE!!.price = p
             }
             Code.POI -> {
                 val v: ArrayList<Boolean> = separateValue(value)
@@ -240,20 +239,18 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         state_value.text = tempRE!!.state
         type_value.text = if (tempRE!!.type != null) resources.getStringArray(R.array.type_ind)[tempRE!!.type!!] else ""
         surface_value.text = if (tempRE!!.surface != null) Utils.getSurfaceFormat(activity!!, tempRE!!.surface) else ""
-        price_value.text = if (tempRE!!.price != null) {
-            val p = if (tempRE!!.price != null)
-                if (Data.currency == 1) Utils.convertDollarToEuro(tempRE!!.price!!) else tempRE!!.price
-            else null
-            Utils.convertedHighPrice(this.context!!, p)
-        } else ""
+        val p = if (tempRE!!.price != null)
+            if (Data.currency == 1) Utils.convertDollarToEuro(tempRE!!.price!!) else tempRE!!.price
+        else null
+        price_value.text = if (tempRE!!.price != null) Utils.convertedHighPrice(this.context!!, p) else ""
         poi_value.text = getPoiList()
         total_value.text = if (tempRE!!.room != null) tempRE!!.room.toString() else ""
         bedroom_value.text = if (tempRE!!.bed != null) tempRE!!.bed.toString() else ""
         bathroom_value.text = if (tempRE!!.bath != null) tempRE!!.bath.toString() else ""
         kitchen_value.text = if (tempRE!!.kitchen != null) tempRE!!.kitchen.toString() else ""
         description_value.text = tempRE!!.description
-        market_date_value.text = tempRE!!.marketDate
-        sold_date_value.text = tempRE!!.soldDate
+        market_date_value.text = if(Data.lang==1)Utils.getDateFr(tempRE!!.marketDate) else Utils.getDateEn(tempRE!!.marketDate)
+        sold_date_value.text = if(Data.lang==1)Utils.getDateFr(tempRE!!.soldDate) else Utils.getDateEn(tempRE!!.soldDate)
         agent_value.text = tempRE!!.agentName
 
         checkingValidate()
@@ -295,7 +292,7 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         if (tempRE!!.id != null) itemViewModel!!.updateRealEstate(re)
         else itemViewModel!!.createRealEstate(re)
 
-        mListener.backToMainActivity()
+        mListener.savedRe(re)
     }
 
     private fun checkSold() {
@@ -414,8 +411,8 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
 
     interface AddOrEditListener {
         fun openAddressInput(res : ArrayList<String?>)
-        fun setFragment(v : Int)
-        fun backToMainActivity()
+        fun setFragment(index : Int)
+        fun savedRe(re : RealEstate)
         fun setSave(b : Boolean)
     }
 }

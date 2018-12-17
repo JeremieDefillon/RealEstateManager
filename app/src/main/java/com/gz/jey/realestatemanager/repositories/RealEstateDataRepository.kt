@@ -5,6 +5,9 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.persistence.db.SupportSQLiteQuery
 import com.gz.jey.realestatemanager.database.dao.RealEstateDao
 import com.gz.jey.realestatemanager.models.sql.RealEstate
+import android.arch.lifecycle.MediatorLiveData
+
+
 
 class RealEstateDataRepository(private val realEstateDao: RealEstateDao) {
 

@@ -44,6 +44,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_settings)
+        Data.lang = if(Locale.getDefault().language =="fr") 1 else 0
         initActivity()
     }
 

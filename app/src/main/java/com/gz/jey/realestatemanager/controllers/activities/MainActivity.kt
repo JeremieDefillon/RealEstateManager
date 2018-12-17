@@ -26,17 +26,15 @@ import com.gz.jey.realestatemanager.controllers.fragments.RealEstateList
 import com.gz.jey.realestatemanager.database.ItemDatabase
 import com.gz.jey.realestatemanager.injection.Injection
 import com.gz.jey.realestatemanager.injection.ItemViewModel
-import com.gz.jey.realestatemanager.models.*
+import com.gz.jey.realestatemanager.models.Code
+import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.models.sql.Photos
 import com.gz.jey.realestatemanager.models.sql.RealEstate
-import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, RealEstateList.RealEstateListListener {
 
-
-    private val TAG = "MainActivity"
     // FRAGMENTS
     var realEstateList: RealEstateList? = null
     var realEstateDetails: RealEstateDetails? = null
@@ -70,6 +68,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
+        Data.lang = if(Locale.getDefault().language =="fr") 1 else 0
         if (savedInstanceState != null) {
             with(savedInstanceState) {
                 Data.fragNum = getInt(Code.FRAG_NUM)
@@ -87,7 +86,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         initActivity()
     }
 
-
+    /**
+     * @param outState Bundle
+     * to save instance state
+     */
     override fun onSaveInstanceState(outState: Bundle?) {
         outState?.putInt(Code.FRAG_NUM, Data.fragNum)
         outState?.putLong(Code.RE_ID, Data.reID!!)
@@ -103,7 +105,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun initActivity() {
         initDatas()
         Data.tabMode = (findViewById<View>(R.id.fragment_details) != null)
-        setLang()
         setIcon()
         fragmentContainer = findViewById(R.id.fragment_container)
         //saveDatas()
@@ -114,10 +115,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setFragment(Data.fragNum)
     }
 
-    private fun setLang() {
-        // Data.lang = if(Locale.getDefault().displayLanguage=="fr") 1 else 0
-    }
-
+    /**
+     * TO SET ICON
+     */
     private fun setIcon() {
         enableEditIcon = SetImageColor.changeDrawableColor(this, R.drawable.edit, ContextCompat.getColor(this, R.color.colorWhite))
         disableEditIcon = SetImageColor.changeDrawableColor(this, R.drawable.edit, ContextCompat.getColor(this, R.color.colorGrey))
@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     /**
      * @param item MenuItem
-     * @return boolean
+     * @return true
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
@@ -183,6 +183,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     // DATA
     // -------------------
 
+    /**
+     * SET VIEW MODEL
+     */
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
         this.itemViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ItemViewModel::class.java)
@@ -243,8 +246,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle Navigation Item Click
         item.isChecked = true
         when (item.itemId) {
+            R.id.filters -> openFiltersActivity()
             R.id.loan -> openLoanSimulator()
             R.id.settings -> openSettingsActivity()
+            R.id.power_off -> {
+                finish()
+                System.exit(0)
+            }
         }
         this.drawerLayout!!.closeDrawer(GravityCompat.START)
         return true
@@ -295,6 +303,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * @param isEdit Boolean
+     * To Launch Add & Edit Activity
+     */
     fun addOrEditActivity(isEdit: Boolean) {
         val intent = Intent(this, AddOrEditActivity::class.java)
         intent.putExtra(Code.IS_EDIT, isEdit)
@@ -303,25 +315,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         finish()
     }
 
+    /**
+     * To Launch Filters Activity
+     */
     fun openFiltersActivity() {
         val intent = Intent(this, SetFiltersActivity::class.java)
         startActivity(intent)
         finish()
     }
 
+    /**
+     * To Launch Loan Simulator Activity
+     */
     private fun openLoanSimulator() {
         val intent = Intent(this, LoanSimulatorActivity::class.java)
         startActivity(intent)
         finish()
     }
 
+    /**
+     * To Launch Settings Activity
+     */
     private fun openSettingsActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-    private fun changeToolBarMenu(em: Int) {
+    /**
+     * @param em Int
+     * To change Toolbar Menu
+     */
+    private fun changeToolBarMenu(em : Int) {
         when (em) {
             0 -> {
                 existMenu = false
@@ -342,16 +367,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * @param realEstate RealEstate
+     * To Set the real estate
+     */
     override fun setRE(realEstate: RealEstate) {
         this.realEstate = realEstate
         Log.d("MA RE", this.realEstate.toString())
         setEdit(true)
     }
 
+    /**
+     * To init the details or real estate inside details fragment
+     */
     override fun initDetails() {
         realEstateDetails!!.init()
     }
 
+
+    /**
+     * @param bool Boolean
+     * To set or unset edit icon
+     */
     override fun setEdit(bool: Boolean) {
         if(toolMenu != null){
             if (bool) editItem.icon = enableEditIcon

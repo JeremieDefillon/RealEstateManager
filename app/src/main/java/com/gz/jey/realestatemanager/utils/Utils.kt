@@ -49,6 +49,24 @@ object Utils{
     }
 
     /**
+     * Convert a given date into fr date format
+     * @return String as dd/mm/yyyy format
+     */
+    fun getDateFr(date : String): String {
+        val dts = date.split("-")
+        return if(dts.size==3) dts[2]+"/"+dts[1]+"/"+dts[0] else ""
+    }
+
+    /**
+     * Convert a given date into en date format
+     * @return String as yyyy/mm/dd format
+     */
+    fun getDateEn(date : String): String {
+        val dts = date.split("-")
+        return if(dts.size==3) dts[0]+"/"+dts[1]+"/"+dts[2] else ""
+    }
+
+    /**
      * Vérification de la connexion réseau
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
      * @param context

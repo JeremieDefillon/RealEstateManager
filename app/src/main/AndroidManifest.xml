@@ -65,7 +65,9 @@
 
         <activity
             android:name=".controllers.activities.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps" />
+
+        <receiver android:name=".controllers.activities.NotificationReceiver"/>
     </application>
 
 </manifest>

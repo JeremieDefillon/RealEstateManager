@@ -34,7 +34,6 @@ class RealEstateAdapter// CONSTRUCTOR
     }
 
     override fun onBindViewHolder(viewHolder: RealEstateViewHolder, position: Int) {
-        Log.d("RE ADAPTER", "POSITION = $position")
         val re = this.realEstates[position]
         viewHolder.updateWithRealEstate(this.context, re, this.callback)
     }
