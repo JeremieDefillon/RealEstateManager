@@ -4,14 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import android.net.wifi.WifiManager
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
 import com.gz.jey.realestatemanager.models.Data
-import java.text.SimpleDateFormat
-import java.util.*
 
 object Utils{
 
@@ -32,25 +27,6 @@ object Utils{
     fun convertEuroToDollar(euros: Long): Long = Math.round(euros / 0.812)
 
     /**
-     * Conversion de la date d'aujourd'hui en un format plus approprié
-     * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
-     * @return
-     */
-    fun getTodayDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy/MM/dd")
-        return dateFormat.format(Date())
-    }
-
-    /**
-     * convert today date in string format
-     * @return String as dd/mm/yyyy format
-     */
-    fun getTodayDateStr(): String {
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
-        return dateFormat.format(Date())
-    }
-
-    /**
      * Convert a given date into fr date format
      * @return String as dd/mm/yyyy format
      */
@@ -66,28 +42,6 @@ object Utils{
     fun getDateEn(date : String): String {
         val dts = date.split("-")
         return if(dts.size==3) dts[0]+"/"+dts[1]+"/"+dts[2] else ""
-    }
-
-    /**
-     * Vérification de la connexion réseau
-     * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
-     * @param context
-     * @return Boolean
-     */
-    fun isInternetAvailable(context: Context): Boolean {
-        val wifi = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        return wifi.isWifiEnabled
-    }
-
-    /**
-     * check if device is connected to internet
-     * @param context
-     * @return Boolean
-     */
-    fun isConnected(context: Context): Boolean {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo = cm.activeNetworkInfo
-        return activeNetwork.isConnectedOrConnecting
     }
 
     /**
