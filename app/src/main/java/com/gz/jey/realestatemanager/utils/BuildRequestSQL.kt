@@ -7,6 +7,11 @@ import com.gz.jey.realestatemanager.models.sql.Filters
 
 class BuildRequestSQL {
 
+    /**
+     * TO SET BUILD
+     * @param fi Filters
+     * @return SimpleSQLiteQuery
+     */
     fun setBuild(fi: Filters): SimpleSQLiteQuery? {
         val array = getArrayIndex(fi)
         val str = StringBuilder()
@@ -104,6 +109,13 @@ class BuildRequestSQL {
             null
     }
 
+    /**
+     * TO GET UNIQUE VALUE INSIDE A COLUMN
+     * @param count Int
+     * @param index Int
+     * @param fi Filters
+     * @return String
+     */
     private fun uniqValStr(count: Int, index: Int, fi : Filters): String {
         val req = StringBuilder()
         if (count > 0) req.append(" AND ")
@@ -125,6 +137,12 @@ class BuildRequestSQL {
         return req.toString()
     }
 
+    /**
+     * TO GET MULTIPLE VALUE INSIDE A COLUMN
+     * @param count Int
+     * @param max Int
+     * @return String
+     */
     private fun multiTypeStr(count: Int, max: Int): String {
         val req = StringBuilder()
         if (count > 0) req.append(" AND ")
@@ -138,6 +156,12 @@ class BuildRequestSQL {
         return req.toString()
     }
 
+    /**
+     * TO GET MUTLI POINTS OF INTEREST
+     * @param count Int
+     * @param poi List<Int>
+     * @return String
+     */
     private fun multiPoiStr(count: Int, poi: List<Int>): String {
         val req = StringBuilder()
         if (count > 0) req.append(" AND ")
@@ -160,12 +184,26 @@ class BuildRequestSQL {
         return req.toString()
     }
 
+    /**
+     * TO GET MUTLI TYPE ARGS
+     * @param count Int
+     * @param args Array<Any>
+     * @param value List<Int>
+     * @return Array<Any>
+     */
     private fun multiTypeArgs(count: Int, args: Array<Any>, value: List<Int>): Array<Any> {
         for ((i,v) in value.withIndex())
             args[count+i] = v
         return args
     }
 
+    /**
+     * TO GET MUTLI POINTS OF INTEREST ARGS
+     * @param count Int
+     * @param args Array<Any>
+     * @param value List<Int>
+     * @return Array<Any>
+     */
     private fun multiPoiArgs(count: Int, args: Array<Any>, value: List<Int>): Array<Any> {
         for ((i) in value.withIndex()) {
             args[count + i] = true
@@ -173,6 +211,11 @@ class BuildRequestSQL {
         return args
     }
 
+    /**
+     * TO GET ARRAY INDEX
+     * @param fi Filters
+     * @return ArrayList<Int>
+     */
     private fun getArrayIndex(fi: Filters): ArrayList<Int> {
         val array: ArrayList<Int> = ArrayList()
         if (fi.type != null) array.add(0)

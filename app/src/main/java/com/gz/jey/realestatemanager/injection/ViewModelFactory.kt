@@ -12,6 +12,11 @@ class ViewModelFactory(
         private val executor: Executor
 ) : ViewModelProvider.Factory {
 
+    /**
+     * TO CREATE VIEW MODEL
+     * @param modelClass Class<T>
+     * @return T
+     */
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ItemViewModel::class.java)) {
             return ItemViewModel(itemDataSource, filtersDataSource, executor) as T

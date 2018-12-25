@@ -7,18 +7,30 @@ import com.gz.jey.realestatemanager.models.sql.Filters
 class FiltersDataRepository(private val filtersDao: FiltersDao) {
 
     // --- GET ---
-
-    fun getFilters(id : Long): LiveData<Filters> {
+    /**
+     * TO GET FILTERS
+     * @param id Long
+     * @return LiveData<Filters>
+     */
+    fun getFilters(id: Long): LiveData<Filters> {
         return this.filtersDao.getFilters(id)
     }
 
     // --- CREATE ---
-
-    fun createFilters(filters: Filters) {
-        filtersDao.insertFilters(filters)
+    /**
+     * TO CREATE FILTERS
+     * @param filters Filters
+     * @return Long
+     */
+    fun createFilters(filters: Filters) : Long{
+        return filtersDao.insertFilters(filters)
     }
 
     // --- UPDATE ---
+    /**
+     * TO UPDATE FILTERS
+     * @param filters Filters
+     */
     fun updateFilters(filters: Filters) {
         filtersDao.updateFilters(filters)
     }

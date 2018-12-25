@@ -26,7 +26,7 @@ abstract class ItemDatabase : RoomDatabase() {
         private var INSTANCE: ItemDatabase? = null
 
         /**
-         * TO GET INSTANCE
+         * TO GET ITEM DATABASE
          * @param context Context
          * @return ItemDatabase
          */

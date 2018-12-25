@@ -15,8 +15,8 @@ interface FiltersDao {
     @Query("SELECT * FROM Filters WHERE id=:id")
     fun getFiltersWithCursor(id : Long): Cursor
 
-    @Query("DELETE FROM Filters")
-    fun deleteFilters(): Int
+    @Query("DELETE FROM Filters WHERE id=:id")
+    fun deleteFilters(id : Long): Int
 
     @Insert
     fun insertFilters(filters: Filters): Long

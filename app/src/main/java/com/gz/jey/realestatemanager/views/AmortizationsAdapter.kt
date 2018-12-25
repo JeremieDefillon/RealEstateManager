@@ -2,7 +2,6 @@
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.gz.jey.realestatemanager.R
@@ -41,14 +40,6 @@ import java.util.*
 
     override fun getItemCount(): Int {
         return this.amortizations.size
-    }
-
-    fun getAllAmortizations(): List<Amortizations> {
-        return this.amortizations
-    }
-
-    fun getAmortizations(position: Int): Amortizations {
-        return this.amortizations[position]
     }
 
     fun updateData(amortizations: List<Amortizations>, currency: Int) {

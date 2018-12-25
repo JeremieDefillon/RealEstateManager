@@ -288,7 +288,6 @@ class BuildItems{
         return itemView
     }
 
-
     /**
      * TO BUILD A MAP IMAGE
      * @param context Context

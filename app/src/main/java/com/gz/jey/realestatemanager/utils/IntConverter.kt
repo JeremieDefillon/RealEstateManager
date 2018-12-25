@@ -8,6 +8,12 @@ import java.util.*
 
 class IntConverter {
     private val gson = Gson()
+
+    /**
+     * CONVERT DATA STRING TO LIST INT
+     * @param data String
+     * @return List<Int>
+     */
     @TypeConverter
     fun stringToList(data: String?): List<Int>? {
         if (data == null)
@@ -17,6 +23,11 @@ class IntConverter {
         return gson.fromJson(data, listType)
     }
 
+    /**
+     * CONVERT LIST INT TO STRING
+     * @param someObjects List<Int>
+     * @return String
+     */
     @TypeConverter
     fun ListToString(someObjects: List<Int>?): String {
         return gson.toJson(someObjects)
