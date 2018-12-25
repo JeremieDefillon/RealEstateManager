@@ -18,6 +18,9 @@ class PhotosAdapter// CONSTRUCTOR
     private var photos: List<Photos>? = null
 
     // CALLBACK
+    /**
+     * INTERFACE FOR ON CLICK DELETE BUTTON
+     */
     interface Listener {
         fun onClickDeleteButton(position: Int)
     }
@@ -26,6 +29,12 @@ class PhotosAdapter// CONSTRUCTOR
         this.photos = ArrayList()
     }
 
+    /**
+     * ON CREATE VIEW
+     * @param parent ViewGroup
+     * @param viewType Int
+     * @return PhotosViewHolder
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotosViewHolder {
         context = parent.context
         val numPic = if (Data.tabMode)
@@ -39,19 +48,37 @@ class PhotosAdapter// CONSTRUCTOR
         return PhotosViewHolder(view)
     }
 
+    /**
+     * ON BIND VIEW
+     * @param viewHolder AmortizationsViewHolder
+     * @param position Int
+     */
     override fun onBindViewHolder(viewHolder: PhotosViewHolder, position: Int) {
         val photo = this.photos!![position]
         viewHolder.updateWithPhotos(photo, this.context, this.callback)
     }
 
+    /**
+     * TO GET COUNT OF ITEMS
+     * @return Int
+     */
     override fun getItemCount(): Int {
         return this.photos!!.size
     }
 
+    /**
+     * TO GET ALL PHOTOS
+     * @return List<Photos>
+     */
     fun getAllPhotos(): List<Photos> {
         return this.photos!!
     }
 
+    /**
+     * TO UPDATE DATAS
+     * @param photos List<Photos>
+     * @param screenX Int
+     */
     fun updateData(photos: List<Photos>, screenX: Int) {
         this.photos = photos
         this.screenX = screenX

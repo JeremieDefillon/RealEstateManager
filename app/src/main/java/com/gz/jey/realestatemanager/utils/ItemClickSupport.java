@@ -7,6 +7,10 @@ public class ItemClickSupport {
     private final RecyclerView mRecyclerView;
     private OnItemClickListener mOnItemClickListener;
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        /**
+         * ON CLICK
+         * @param v View
+         */
         @Override
         public void onClick(View v) {
             if (mOnItemClickListener != null) {
@@ -16,6 +20,11 @@ public class ItemClickSupport {
         }
     };
 
+    /**
+     * ITEM CLICK SUPPORT
+     * @param recyclerView RecyclerView
+     * @param itemID Int
+     */
     private ItemClickSupport(RecyclerView recyclerView, int itemID) {
         mRecyclerView = recyclerView;
         mRecyclerView.setTag(itemID, this);
@@ -35,6 +44,12 @@ public class ItemClickSupport {
         mRecyclerView.addOnChildAttachStateChangeListener(mAttachListener);
     }
 
+    /**
+     * TO ADD CLICK ELEMENT TO ITEM CLICK SUPPORT
+     * @param view RecyclerView
+     * @param itemID int
+     * @return ITEM CLICK SUPPORT
+     */
     public static ItemClickSupport addTo(RecyclerView view, int itemID) {
         ItemClickSupport support = (ItemClickSupport) view.getTag(itemID);
         if (support == null) {
@@ -43,11 +58,19 @@ public class ItemClickSupport {
         return support;
     }
 
+    /**
+     * TO SET ON ITEM CLICK LISTENER
+     * @param listener OnItemClickListener
+     * @return ITEM CLICK SUPPORT
+     */
     public ItemClickSupport setOnItemClickListener(OnItemClickListener listener) {
         mOnItemClickListener = listener;
         return this;
     }
 
+    /**
+     * INTERFACE FOR ON ITEM CLICKED
+     */
     public interface OnItemClickListener {
 
         void onItemClicked(RecyclerView recyclerView, int position, View v);

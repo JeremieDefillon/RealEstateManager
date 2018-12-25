@@ -86,7 +86,7 @@ class LegendsManager : Fragment() {
                 }
         }
 
-        if (counter >= photosList.size - 1)
+        if (counter >= photosList.size)
             next_btn.visibility = View.GONE
 
         for ((i, p) in photosList.withIndex())
@@ -154,7 +154,7 @@ class LegendsManager : Fragment() {
         Log.d("PHOTOS IN LEGEND", photosList.toString())
 
         val cNext = counter + 1
-        if (cNext < photosList.size - 1) {
+        if (cNext < photosList.size) {
             for (i in cNext until photosList.size)
                 if (photosList[i].selected) {
                     next = i

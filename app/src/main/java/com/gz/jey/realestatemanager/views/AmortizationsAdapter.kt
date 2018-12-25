@@ -17,6 +17,9 @@ import java.util.*
     private var amortizations: List<Amortizations>
 
     // CALLBACK
+     /**
+      * INTERFACE FOR ON CLICK DELETE BUTTON
+      */
     interface Listener {
         fun onClickDeleteButton(position: Int)
     }
@@ -25,6 +28,12 @@ import java.util.*
         this.amortizations = ArrayList()
     }
 
+     /**
+      * ON CREATE VIEW
+      * @param parent ViewGroup
+      * @param viewType Int
+      * @return AmortizationsViewHolder
+      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AmortizationsViewHolder {
         context = parent.context
         val inflater = LayoutInflater.from(context)
@@ -33,15 +42,29 @@ import java.util.*
         return AmortizationsViewHolder(view)
     }
 
+     /**
+      * ON BIND VIEW
+      * @param viewHolder AmortizationsViewHolder
+      * @param position Int
+      */
     override fun onBindViewHolder(viewHolder: AmortizationsViewHolder, position: Int) {
         val am = this.amortizations[position]
-        viewHolder.updateWithAmortizations(this.context, am, currency ,this.callback, position)
+        viewHolder.updateWithAmortizations( am,this.callback)
     }
 
+     /**
+      * TO GET COUNT OF ITEMS
+      * @return Int
+      */
     override fun getItemCount(): Int {
         return this.amortizations.size
     }
 
+     /**
+      * TO UPDATE DATAS
+      * @param amortizations List<Amortizations>
+      * @param currency Int
+      */
     fun updateData(amortizations: List<Amortizations>, currency: Int) {
         this.amortizations = amortizations
         this.currency = currency

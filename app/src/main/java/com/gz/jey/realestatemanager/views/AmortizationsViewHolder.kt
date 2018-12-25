@@ -19,8 +19,12 @@ class AmortizationsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
     private var cRefund : TextView = itemView.findViewById(R.id.capital_refunded)
     private var cFee : TextView = itemView.findViewById(R.id.capital_fee)
 
-
-    fun updateWithAmortizations(context : Context, item: Amortizations, currency : Int, callback: AmortizationsAdapter.Listener, position: Int) {
+    /**
+     * UPDATE AMORTIZATIONS
+     * @param item Amortizations
+     * @param callback AmortizationsAdapter.Listener
+     */
+    fun updateWithAmortizations(item: Amortizations, callback: AmortizationsAdapter.Listener) {
         this.callbackWeakRef = WeakReference(callback)
 
         val fm = "%.2f"
@@ -31,7 +35,10 @@ class AmortizationsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
         cFee.text = fm.format(item.capital_fee)
     }
 
-
+    /**
+     * ON CLICK
+     * @param view View
+     */
     override fun onClick(view: View) {
         callbackWeakRef!!.get()?.onClickDeleteButton(adapterPosition)
     }

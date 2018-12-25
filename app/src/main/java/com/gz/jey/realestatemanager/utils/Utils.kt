@@ -12,7 +12,6 @@ import com.gz.jey.realestatemanager.controllers.activities.MainActivity
 import com.gz.jey.realestatemanager.models.Data
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 object Utils{
 
@@ -127,11 +126,23 @@ object Utils{
             return context.getString(R.string.price) + " " + context.getString(R.string.nc)
     }
 
+    /**
+     * TO GET SURFACE IN PROPER FORMAT
+     * @param context Context
+     * @param surface Int
+     * @return String
+     */
     fun getSurfaceFormat(context: Context, surface : Int?) : String{
         return if(surface!=null) surface.toString() + " " + context.getString(R.string.m2)
         else context.getString(R.string.surface) + " " + context.getString(R.string.nc)
     }
 
+    /**
+     * TO GET ROOM NUMBERS IN PROPER FORMAT
+     * @param context Context
+     * @param room Int
+     * @return String
+     */
     fun getRoomNumFormat(context : Context, room : Int?) : String{
         val r = if(room!=null && room>1) context.getString(R.string.rooms)
             else context.getString(R.string.room)
@@ -140,6 +151,14 @@ object Utils{
         else "? $r"
     }
 
+
+    /**
+     * TO GET PRICE PER M² IN PROPER FORMAT
+     * @param context Context
+     * @param price Long
+     * @param surface Int
+     * @return String
+     */
     fun getPPMFormat(context : Context, price : Long?, surface : Int?) : String{
 
         return if(price!=null && surface!=null){
@@ -152,7 +171,16 @@ object Utils{
         }
     }
 
-    fun formatedLocation(a:String?,b:String?,c:String?,d:String?,e:String?) : String{
+    /**
+     * TO GET LOCATION IN PROPER FORMAT
+     * @param a String
+     * @param b String
+     * @param c String
+     * @param d String
+     * @param e String
+     * @return String
+     */
+    fun formatLocation(a:String?, b:String?, c:String?, d:String?, e:String?) : String{
         val sb = StringBuilder()
         if(!a.isNullOrEmpty()) sb.append("$a,\r\n")
         if(!b.isNullOrEmpty()) sb.append("$b,\r\n")
@@ -163,12 +191,21 @@ object Utils{
         return sb.substring(0, sb.length-3)
     }
 
+    /**
+     * TO GET BACK TO MAIN ACTIVITY
+     * @param activity Activity
+     */
     fun backToMainActivity(activity : Activity){
         val intent = Intent(activity, MainActivity::class.java)
         activity.startActivity(intent)
         activity.finish()
     }
 
+    /**
+     * TO KNOW IF IN LANDSCAPE OR PORTRAIT
+     * @param context Context
+     * @return Boolean
+     */
     fun isLandscape(context: Context): Boolean{
         return context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     }

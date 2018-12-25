@@ -25,7 +25,12 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
     // FOR DATA
     private var callbackWeakRef: WeakReference<RealEstateAdapter.Listener>? = null
 
-
+    /**
+     * UPDATE REAL ESTATE
+     * @param context Context
+     * @param item RealEstate
+     * @param callback RealEstateAdapter.Listener
+     */
     fun updateWithRealEstate(context : Context, item: RealEstate, callback: RealEstateAdapter.Listener) {
         this.callbackWeakRef = WeakReference(callback)
         this.type.text = getFirstLine(context, item.type, item.room, item.surface)
@@ -60,6 +65,14 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
         }
     }
 
+    /**
+     * TO GET FIRST LINE IN A PROPER FORMAT
+     * @param context Context
+     * @param type  Int?
+     * @param room  Int?
+     * @param surface Int?
+     * @return String
+     */
     private fun getFirstLine(context: Context, type : Int?, room : Int?, surface: Int?) : String{
         val res = itemView.context.resources
         val sb = StringBuilder()
@@ -70,6 +83,14 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
         else ""
     }
 
+    /**
+     * TO GET SECOND LINE IN A PROPER FORMAT
+     * @param context Context
+     * @param locality  String
+     * @param price Long?
+     * @param surface Int?
+     * @return String
+     */
     private fun getSecondLine(context: Context, locality : String, price : Long?, surface: Int?): String{
         val sb = StringBuilder()
         if(locality.isNotEmpty()) sb.append("($locality)").append("  ")
@@ -78,6 +99,10 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
         else ""
     }
 
+    /**
+     * ON CLICK
+     * @param view View
+     */
     override fun onClick(view: View) {
         callbackWeakRef!!.get()?.onClickDeleteButton(adapterPosition)
     }

@@ -19,6 +19,12 @@ class PhotosViewHolder(photoView: View) : RecyclerView.ViewHolder(photoView), Vi
     // FOR DATA
     private var callbackWeakRef: WeakReference<PhotosAdapter.Listener>? = null
 
+    /**
+     * UPDATE AMORTIZATIONS
+     * @param photo Photos
+     * @param context Context
+     * @param callback PhotosAdapter.Listener
+     */
     fun updateWithPhotos(photo: Photos, context : Context, callback: PhotosAdapter.Listener) {
         val res = context.resources
         this.cb.visibility = View.GONE
@@ -32,6 +38,10 @@ class PhotosViewHolder(photoView: View) : RecyclerView.ViewHolder(photoView), Vi
                 .into(this.photo)
     }
 
+    /**
+     * ON CLICK
+     * @param view View
+     */
     override fun onClick(view: View) {
         callbackWeakRef!!.get()?.onClickDeleteButton(adapterPosition)
     }

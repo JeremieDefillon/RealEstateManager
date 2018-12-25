@@ -141,7 +141,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
         else getString(R.string.nc)
         descriptionValue.typeface = if (item.description.isNotEmpty()) Typeface.DEFAULT else Typeface.DEFAULT
 
-        val loc = Utils.formatedLocation(item.streetNumber, item.street, item.zipCode, item.locality, item.state)
+        val loc = Utils.formatLocation(item.streetNumber, item.street, item.zipCode, item.locality, item.state)
 
         val loca: View = BuildItems().statItem(context!!, ns)
         locLayout.addView(loca)
