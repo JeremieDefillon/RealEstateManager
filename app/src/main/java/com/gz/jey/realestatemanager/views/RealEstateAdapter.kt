@@ -2,7 +2,6 @@ package com.gz.jey.realestatemanager.views
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.ViewGroup
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.BuildItems
@@ -44,10 +43,6 @@ class RealEstateAdapter// CONSTRUCTOR
 
     fun getAllRealEstate(): List<RealEstate> {
         return this.realEstates
-    }
-
-    fun getRealEstate(position: Int): RealEstate {
-        return this.realEstates[position]
     }
 
     fun updateData(realEstates: List<RealEstate>, width: Int, height: Int) {

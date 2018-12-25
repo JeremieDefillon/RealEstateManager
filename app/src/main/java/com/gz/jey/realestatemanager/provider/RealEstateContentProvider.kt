@@ -28,7 +28,7 @@ class RealEstateContentProvider : ContentProvider() {
             return cursor
         }
 
-        throw IllegalArgumentException("Failed to query row for uri $uri")
+        throw IllegalArgumentException("Failed to query row for uri $uri") as Throwable
     }
 
     override fun getType(uri: Uri): String? {
@@ -68,8 +68,8 @@ class RealEstateContentProvider : ContentProvider() {
 
     companion object {
 
-        val AUTHORITY = "com.gz.jey.realestatemanager.provider"
-        val TABLE_NAME = RealEstate::class.java.simpleName
-        val URI_REAL_ESTATE = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
+        const val AUTHORITY = "com.gz.jey.realestatemanager.provider"
+        val TABLE_NAME = RealEstate::class.java.simpleName!!
+        val URI_REAL_ESTATE = Uri.parse("content://$AUTHORITY/$TABLE_NAME")!!
     }
 }

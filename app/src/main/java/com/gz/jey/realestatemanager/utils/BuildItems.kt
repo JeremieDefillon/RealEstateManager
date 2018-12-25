@@ -14,6 +14,12 @@ import com.gz.jey.realestatemanager.models.Data
 
 class BuildItems{
 
+    /**
+     * TO BUILD A PHOTO VIEW
+     * @param context Context
+     * @param size Int
+     * @return CardView
+     */
     fun photosCardView(context : Context, size : Int) : CardView{
         val dim = (size*0.8f).toInt()
         val marge = (size*0.1f).toInt()
@@ -96,6 +102,13 @@ class BuildItems{
         return cardView
     }
 
+    /**
+     * TO BUILD A REAL ESTATE VIEW
+     * @param context Context
+     * @param width Int
+     * @param height Int
+     * @return View
+     */
     fun reItem(context : Context, width : Int, height : Int) : View{
         val itemParams = FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -198,6 +211,12 @@ class BuildItems{
         return itemView
     }
 
+    /**
+     * TO BUILD A STAT ITEM VIEW
+     * @param context Context
+     * @param size Int
+     * @return View
+     */
     fun statItem(context : Context, size : Int) : View{
         val itemParams = FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -269,6 +288,13 @@ class BuildItems{
         return itemView
     }
 
+
+    /**
+     * TO BUILD A MAP IMAGE
+     * @param context Context
+     * @param size Int
+     * @return View
+     */
     fun mapImage(context : Context, size : Int) : View{
         val marge = (size*0.1f).toInt()
         val itemParams = FrameLayout.LayoutParams(

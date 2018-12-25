@@ -25,7 +25,8 @@ class PhotosViewHolder(photoView: View) : RecyclerView.ViewHolder(photoView), Vi
         this.callbackWeakRef = WeakReference(callback)
         val leg = if(photo.legend!=0) res.getStringArray(R.array.photos_ind)[photo.legend] else "?"
         val num = if(photo.num!=0) photo.num.toString() else ""
-        this.legend.text = "$leg $num"
+        val legNum = "$leg $num"
+        this.legend.text = legNum
         Glide.with(context)
                 .load(photo.image)
                 .into(this.photo)

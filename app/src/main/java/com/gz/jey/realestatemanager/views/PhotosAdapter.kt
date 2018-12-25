@@ -52,10 +52,6 @@ class PhotosAdapter// CONSTRUCTOR
         return this.photos!!
     }
 
-    fun getPhotos(position: Int): Photos {
-        return this.photos!![position]
-    }
-
     fun updateData(photos: List<Photos>, screenX: Int) {
         this.photos = photos
         this.screenX = screenX

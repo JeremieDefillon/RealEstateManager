@@ -41,10 +41,10 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
                 .into(this.photo)
 
         if(item.photos != null && item.photos!!.isNotEmpty()) {
-            for(p in item.photos!!){
-                if(p.main){
+            for(ph in item.photos!!){
+                if(ph.main){
                     Glide.with(itemView.context)
-                            .load(p.image!!)
+                            .load(ph.image!!)
                             .into(this.photo)
                     break
                 }
