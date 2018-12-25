@@ -13,7 +13,6 @@ import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.AutocompletePrediction
 import com.google.android.gms.location.places.Places
 import com.google.android.gms.maps.model.LatLngBounds
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -30,7 +29,7 @@ class PlacesAdapter
 /**
  * Initializes with a resource for text rows and autocomplete query bounds.
  *
- * @see android.widget.ArrayAdapter.ArrayAdapter
+ * @see android.widget.ArrayAdapter
  */
 (context: Context,
  /**

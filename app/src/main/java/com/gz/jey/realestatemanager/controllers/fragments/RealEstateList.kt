@@ -288,6 +288,9 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
         }
     }
 
+    /**
+     * INTERFACE FOR REAL ESTATE LIST LISTENER
+     */
     interface RealEstateListListener {
         fun initDetails()
         fun setRE(realEstate: RealEstate)

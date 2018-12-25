@@ -49,37 +49,37 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:customtabs:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support:animated-vector-drawable:27.1.1'
-    implementation 'com.android.support:multidex:1.0.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "com.android.support:design:$support_version"
+    implementation "com.android.support.constraint:constraint-layout:1.1.3"
+    implementation "com.android.support:support-v4:$support_version"
+    implementation "com.android.support:recyclerview-v7:$support_version"
+    implementation "com.android.support:customtabs:$support_version"
+    implementation "com.android.support:cardview-v7:$support_version"
+    implementation "com.android.support:animated-vector-drawable:$support_version"
+    implementation "com.android.support:multidex:1.0.3"
+    testImplementation "junit:junit:4.12"
+    androidTestImplementation "com.android.support.test:runner:1.0.2"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //BUTTERKNIFE
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation "com.jakewharton:butterknife:8.8.1"
+    annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation "com.google.code.gson:gson:2.8.5"
 
     // Glide
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    kapt 'com.github.bumptech.glide:compiler:4.8.0'
+    implementation "com.github.bumptech.glide:glide:4.8.0"
+    kapt "com.github.bumptech.glide:compiler:4.8.0"
 
     // Architecture Component - Room
     implementation "android.arch.persistence.room:runtime:1.1.1"
     kapt "android.arch.persistence.room:compiler:1.1.1"
 
     // Lifecyles, LiveData and ViewModel
-    kapt 'com.android.databinding:compiler:3.1.4'
+    kapt "com.android.databinding:compiler:3.1.4"
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:1.1.1"
@@ -90,10 +90,6 @@ dependencies {
     // alternatively, just LiveData
     implementation "android.arch.lifecycle:livedata:1.1.1"
     kapt "android.arch.lifecycle:compiler:1.1.1"
-
-    // Room (use 1.1.1)
-    implementation "android.arch.persistence.room:runtime:1.1.1"
-    kapt "android.arch.persistence.room:compiler:1.1.1"
 
     // Paging
     implementation "android.arch.paging:runtime:1.0.1"
@@ -106,21 +102,18 @@ dependencies {
 
     // RX Image Picker
     implementation "com.github.qingmei2:rximagepicker_support:2.2.0"
-    implementation 'com.github.qingmei2:rximagepicker_support_zhihu:2.2.0'
+    implementation "com.github.qingmei2:rximagepicker_support_zhihu:2.2.0"
     // Google Map Service
-    implementation 'com.google.android.gms:play-services-maps:16.0.0'
-    implementation 'com.google.maps.android:android-maps-utils:0.5'
+    implementation "com.google.android.gms:play-services-maps:16.0.0"
+    implementation "com.google.maps.android:android-maps-utils:0.5"
     // Google Place Service
-    implementation 'com.google.android.gms:play-services-places:16.0.0'
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
-    // PLAY SERVICES
-    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation "com.google.android.gms:play-services-places:16.0.0"
+    implementation "com.google.android.gms:play-services-location:16.0.0"
 
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-
+    implementation "com.google.code.gson:gson:2.8.5"
+    implementation "com.squareup.retrofit2:retrofit:2.3.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
+    implementation "io.reactivex.rxjava2:rxjava:2.1.9"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
 }

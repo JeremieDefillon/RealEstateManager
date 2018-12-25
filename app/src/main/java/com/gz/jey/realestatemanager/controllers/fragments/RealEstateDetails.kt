@@ -94,12 +94,13 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
                 }
     }
     /**
-     *
+     * TO INIT FRAGMENT
      */
     fun init() {
         Log.d("RE DETAILS OK ID", Data.reID.toString())
         getRealEstate()
     }
+
     /**
      * GET REAL ESTATE
      */
@@ -307,7 +308,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
         activity!!.finish()
     }
     /**
-     *
+     * ON DESTROY TO CLEAN DIALOG AND AVOID MEMORY LEAKS
      */
     override fun onDestroy() {
         super.onDestroy()
@@ -319,7 +320,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
         private var itemViewModel : ItemViewModel? = null
 
         /**
-         * @param mainActivity MainActivity
+         * @param ivm ItemViewModel
          * @return new RealEstateDetails()
          */
         fun newInstance(ivm: ItemViewModel): RealEstateDetails {

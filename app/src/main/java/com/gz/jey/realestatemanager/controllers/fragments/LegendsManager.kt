@@ -59,7 +59,7 @@ class LegendsManager : Fragment() {
 
     /**
      * @param context Context
-     * On ATTCH CONTEXT TO LISTENER
+     * On ATTACH CONTEXT TO LISTENER
      */
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -236,6 +236,9 @@ class LegendsManager : Fragment() {
         }
     }
 
+    /**
+     * INTERFACE FOR LEGENDS MANAGER LISTENER
+     */
     interface LegendsManagerListener {
         fun changeToolBarMenu(index: Int)
         fun setSave(b: Boolean)

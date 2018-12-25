@@ -55,12 +55,20 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         return mView
     }
 
+    /**
+     * CALLED ON INSTANCE OF THIS FRAGMENT TO CREATE FRAGMENT
+     * @param savedInstanceState Bundle
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null && savedInstanceState.containsKey(TEMP_RE))
             tempRE = savedInstanceState.getParcelable(TEMP_RE)
     }
 
+    /**
+     * CALLED ON INSTANCE OF THIS FRAGMENT TO ATTACH CONTEXT LISTENER
+     * @param context Context
+     */
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is AddOrEditListener)
@@ -77,16 +85,24 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         init()
     }
 
+    /**
+     * TO INIT FRAGMENT
+     */
     private fun init() {
         setIcon()
         editValues()
         setItems()
     }
 
-    override fun onClickDeleteButton(position: Int) {
-        // DELETE
-    }
+    /**
+     * ON CLICK DELETE BUTTON ( NEVER USED )
+     * @param position Int
+     */
+    override fun onClickDeleteButton(position: Int) {}
 
+    /**
+     * TO SET ITEMS
+     */
     private fun setItems() {
         locate_btn.setCompoundDrawables(lookIcon, null, unValidateIcon, null)
 
@@ -134,6 +150,11 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         sold_date_button.setOnClickListener { ViewDialogDatePicker().showDialog(activity!!, Code.SOLD_DATE) }
     }
 
+    /**
+     * TO INSERT STANDARD VALUES
+     * @param code String
+     * @param value String
+     */
     fun insertStandardValue(code: String, value: String) {
 
         when (code) {
@@ -173,6 +194,10 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         editValues()
     }
 
+    /**
+     * TO INSERT LOCATION VALUE
+     * @param address String
+     */
     fun insertLocation(address: String) {
         disposable = ApiStreams.streamGeoCode(address)
                 .subscribeWith(object : DisposableObserver<GeoCode>() {
@@ -188,6 +213,10 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
                 })
     }
 
+    /**
+     * TO SET LOCATION VALUE
+     * @param gc GeoCode
+     */
     fun setLocation(gc: GeoCode) {
         if (gc.results != null &&
                 gc.results.isNotEmpty() &&
@@ -220,6 +249,9 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         editValues()
     }
 
+    /**
+     * TO EDIT VALUES
+     */
     private fun editValues() {
 
         if (tempRE != null) {
@@ -256,6 +288,9 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         checkingValidate()
     }
 
+    /**
+     * TO SAVE REAL ESTATE
+     */
     fun saveRealEstate() {
         val re = RealEstate(
                 tempRE!!.id,
@@ -295,11 +330,17 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         mListener.savedRe(re)
     }
 
+    /**
+     * TO CHECK OR UNCHECK SOLD STATE
+     */
     private fun checkSold() {
         tempRE!!.sold = !tempRE!!.sold
         checkingValidate()
     }
 
+    /**
+     * TO CHECK VALIDATE
+     */
     private fun checkingValidate() {
         mListener.setSave((tempRE!!.street.isNotEmpty()
                 && tempRE!!.locality.isNotEmpty()
@@ -346,6 +387,9 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         }
     }
 
+    /**
+     * TO SET ICONS
+     */
     private fun setIcon() {
         addIcon = SetImageColor.changeDrawableColor(activity!!, R.drawable.add_box, ContextCompat.getColor(activity!!, R.color.colorSecondary))
         checkIcon = SetImageColor.changeDrawableColor(activity!!, R.drawable.check_box, ContextCompat.getColor(activity!!, R.color.colorSecondary))
@@ -355,12 +399,21 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         unValidateIcon = SetImageColor.changeDrawableColor(activity!!, R.drawable.check_circle, ContextCompat.getColor(activity!!, R.color.colorGrey))
     }
 
+    /**
+     * TO GLIDE PHOTO
+     * @param ph String
+     */
     private fun glideThis(ph: String) {
         Glide.with(this)
                 .load(ph)
                 .into(photo_value)
     }
 
+    /**
+     * TO SEPARATE VALUE
+     * @param s String
+     * @return ArrayList<Boolean>
+     */
     private fun separateValue(s: String): ArrayList<Boolean> {
         val ss = s.split(",")
         val bo: ArrayList<Boolean> = arrayListOf(false, false, false, false, false, false, false, false)
@@ -370,6 +423,9 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         return bo
     }
 
+    /**
+     * TO GET POINTS OF INTEREST LIST
+     */
     private fun getPoiList(): String {
         val sb = StringBuilder()
         if (tempRE!!.poiSchool) sb.append(resources.getStringArray(R.array.poi_ind)[0] + "\r\n")
@@ -385,6 +441,9 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         else ""
     }
 
+    /**
+     * ON DESTROY TO CLEAN DISPOSABLE AND AVOID MEMORY LEAKS
+     */
     override fun onDestroy() {
         super.onDestroy()
         this.disposable = null
@@ -395,8 +454,9 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         var tempRE: TempRealEstate? = null
         var itemViewModel: ItemViewModel? = null
         /**
-         * @param addOrEditActivity MainActivity
-         * @return new RealEstateList()
+         * @param tempRealEstate TempRealEstate
+         * @param vm ItemViewModel
+         * @return new AddOrEdit()
          */
         fun newInstance(tempRealEstate: TempRealEstate, vm: ItemViewModel): AddOrEdit {
             val fragment = AddOrEdit()
@@ -409,6 +469,9 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
         }
     }
 
+    /**
+     * INTERFACE FOR ADD OR EDIT LISTENER
+     */
     interface AddOrEditListener {
         fun openAddressInput(res : ArrayList<String?>)
         fun setFragment(index : Int)

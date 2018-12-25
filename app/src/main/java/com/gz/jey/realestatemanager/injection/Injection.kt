@@ -19,7 +19,7 @@ object Injection {
     }
 
     private fun provideExecutor(): Executor {
-        return Executors.newSingleThreadExecutor()
+        return Executors.newSingleThreadExecutor()!!
     }
 
     fun provideViewModelFactory(context: Context): ViewModelFactory {

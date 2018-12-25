@@ -73,12 +73,21 @@ class PhotosManager : Fragment() {
         init()
     }
 
+
+    /**
+     * @param context Context
+     * On ATTACH CONTEXT TO LISTENER
+     */
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is PhotosManagerListener)
             mListener = context
     }
 
+
+    /**
+     * TO INIT FRAGMENT
+     */
     private fun init() {
         //Log.d("Photos []", tempRE!!.photos.toString())
         photosList.clear()
@@ -99,6 +108,10 @@ class PhotosManager : Fragment() {
         }
     }
 
+
+    /**
+     * TO SET ALL PHOTOS
+     */
     private fun setAllPhotos() {
         val numPic = if (Utils.isLandscape(context!!)) 4 else 3
         photos_grid.columnCount = numPic
@@ -141,11 +154,20 @@ class PhotosManager : Fragment() {
         }
     }
 
+
+    /**
+     * @param i Int
+     * TO SELECT PHOTO
+     */
     private fun selectPhoto(i: Int) {
         photosList[i].selected = !photosList[i].selected
         checkSelect(i)
     }
 
+    /**
+     * @param i Int
+     * TO CHECK SELECTED
+     */
     private fun checkSelect(i: Int) {
         Log.d("PH $i SELECTED", photosList[i].selected.toString())
         photos_grid.getChildAt(i).findViewById<ImageView>(R.id.selector_check).visibility =
@@ -165,14 +187,23 @@ class PhotosManager : Fragment() {
             mListener.changeToolBarMenu(1)
     }
 
+    /**
+     * TO ADD PHOTOS
+     */
     fun addPhotos() {
         ViewDialogPhotoPicker().showDialog(activity!!)
     }
 
+    /**
+     * TO DELETE PHOTOS
+     */
     fun deletePhotos() {
         ViewDialogConfirmAction().showDialog(activity!!, Code.DELETE_PHOTOS)
     }
 
+    /**
+     * TO CONFIRM DELETING
+     */
     fun confirmDelete() {
         val toDel: ArrayList<Photos> = ArrayList()
         for (p in photosList)
@@ -186,6 +217,9 @@ class PhotosManager : Fragment() {
         mListener.savePhotos()
     }
 
+    /**
+     * TO ADD NEW PHOTO
+     */
     private fun addNewPhoto(uri: String) {
         Log.d("Photo", uri)
         justApplied = true
@@ -195,10 +229,16 @@ class PhotosManager : Fragment() {
         mListener.savePhotos()
     }
 
+    /**
+     * TO OPEN UP GALLERY
+     */
     fun openGallery() {
         checkPermissionAndRequest(REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION_GALLERY_NORMAL)
     }
 
+    /**
+     * GALLERY
+     */
     @SuppressLint("CheckResult")
     private fun gallery() {
         val rxImagePicker: ZhihuImagePicker = RxImagePicker
@@ -213,10 +253,16 @@ class PhotosManager : Fragment() {
                 .subscribe { p -> addNewPhoto(p.uri.toString()) }
     }
 
+    /**
+     * TO OPEN UP CAMERA
+     */
     fun openCamera() {
         checkPermissionAndRequest(REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION_CAMERA)
     }
 
+    /**
+     * CAMERA
+     */
     @SuppressLint("CheckResult")
     private fun camera() {
         val rxImagePicker: ZhihuImagePicker = RxImagePicker
@@ -225,6 +271,12 @@ class PhotosManager : Fragment() {
         rxImagePicker.openCamera(activity!!)
                 .subscribe { p -> addNewPhoto(p.uri.toString()) }
     }
+
+    // AUTHORIZATIONS
+    /**
+     * TO CHECK PERMISSION AND REQUEST
+     * @param requestCode Int
+     */
     private fun checkPermissionAndRequest(requestCode: Int) {
         if (ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity!!,
@@ -235,6 +287,12 @@ class PhotosManager : Fragment() {
         }
     }
 
+    /**
+     * ON REQUEST PERMISSION RESULT
+     * @param requestCode Int
+     * @param permissions Array<String>
+     * @param grantResults IntArray
+     */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             onPermissionGrant(requestCode)
@@ -243,6 +301,10 @@ class PhotosManager : Fragment() {
         }
     }
 
+    /**
+     * ON PERMISSION GRANTED
+     * @param requestCode Int
+     */
     private fun onPermissionGrant(requestCode: Int) {
         when (requestCode) {
             REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION_CAMERA -> camera()
@@ -270,6 +332,9 @@ class PhotosManager : Fragment() {
         private const val REQUEST_WRITE_EXTERNAL_STORAGE_PERMISSION_GALLERY_NORMAL = 100
     }
 
+    /**
+     * INTERFACE FOR PHOTOS MANAGER LISTENER
+     */
     interface PhotosManagerListener {
         fun changeToolBarMenu(index : Int)
         fun setSave(b : Boolean)

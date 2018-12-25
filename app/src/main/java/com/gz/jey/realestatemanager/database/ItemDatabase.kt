@@ -25,6 +25,11 @@ abstract class ItemDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: ItemDatabase? = null
 
+        /**
+         * TO GET INSTANCE
+         * @param context Context
+         * @return ItemDatabase
+         */
         // --- INSTANCE ---
         fun getInstance(context: Context): ItemDatabase? {
             if (INSTANCE == null) {

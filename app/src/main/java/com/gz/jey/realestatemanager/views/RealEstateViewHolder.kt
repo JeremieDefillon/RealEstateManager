@@ -1,13 +1,11 @@
 package com.gz.jey.realestatemanager.views
 
 import android.content.Context
-import android.net.Uri
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
