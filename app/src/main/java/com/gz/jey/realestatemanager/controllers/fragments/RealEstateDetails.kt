@@ -1,3 +1,5 @@
+@file:Suppress("NAME_SHADOWING")
+
 package com.gz.jey.realestatemanager.controllers.fragments
 
 import android.arch.lifecycle.Observer
@@ -78,7 +80,9 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
         configureRecyclerView()
         init()
     }
-
+    /**
+     * CONFIGURE RECYCLER VIEW
+     */
     private fun configureRecyclerView() {
         this.adapter = PhotosAdapter(this)
         val llm = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -89,12 +93,16 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
                     this.openPhotos(position, this.adapter.getAllPhotos())
                 }
     }
-
+    /**
+     *
+     */
     fun init() {
         Log.d("RE DETAILS OK ID", Data.reID.toString())
         getRealEstate()
     }
-
+    /**
+     * GET REAL ESTATE
+     */
     private fun getRealEstate() {
         if (Data.reID != null) {
             scrv.visibility = View.VISIBLE
@@ -106,7 +114,10 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
             noRe.visibility = View.VISIBLE
         }
     }
-
+    /**
+     * @param item RealEstate
+     * to update Real Estate Details
+     */
     private fun updateRealEstateDetails(item: RealEstate) {
         val second = ContextCompat.getColor(view!!.context, R.color.colorSecondary)
         val grey = ContextCompat.getColor(view!!.context, R.color.colorGrey)
@@ -232,7 +243,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
                 8 -> {
                     statIcon.background = SetImageColor.changeDrawableColor(context!!, R.drawable.perm_identity, second)
                     statLbl.text = getString(R.string.agent)
-                    statValue.text = if (item.agentName != null) item.agentName else getString(R.string.nc)
+                    statValue.text = if (item.agentName.isNotEmpty()) item.agentName else getString(R.string.nc)
                 }
                 9 -> {
                     statIcon.background = SetImageColor.changeDrawableColor(context!!, R.drawable.poi, second)
@@ -260,7 +271,13 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
         if(Data.isEdit && item.photos!=null)
             openPhotos(Data.photoNum!!, item.photos!!)
     }
-
+    /**
+     * @param price Long
+     * @param surface Int
+     * @param icon ImageView
+     * @param value TextView
+     * to set price state
+     */
     private fun setPriceState(price: Long?, surface: Int?, icon: ImageView, value: TextView) {
         val symb = if (Data.currency == 1) R.drawable.euro else R.drawable.dollar
         icon.background = SetImageColor.changeDrawableColor(activity!!, symb, ContextCompat.getColor(view!!.context, R.color.colorSecondary))
@@ -270,19 +287,28 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
                 .append(Utils.getPPMFormat(this.context!!, price, surface))
         value.text = sb.toString()
     }
-
+    /**
+     * @param post Int
+     * @param photos List<Photos>
+     * to open photos
+     */
     private fun openPhotos(pos: Int, photos: List<Photos>) {
         this.dialog = ViewDialogBigPhotos()
         this.dialog!!.showDialog(activity!!, pos, photos)
     }
-
+    /**
+     * @param id Long
+     * to open map activity
+     */
     private fun openMapActivity(id: Long) {
         val intent = Intent(activity, MapsActivity::class.java)
         intent.putExtra(Code.RE_ID, id)
         startActivity(intent)
         activity!!.finish()
     }
-
+    /**
+     *
+     */
     override fun onDestroy() {
         super.onDestroy()
         if(this.dialog != null)
@@ -290,7 +316,7 @@ class RealEstateDetails : Fragment(), PhotosAdapter.Listener {
     }
 
     companion object {
-        var itemViewModel : ItemViewModel? = null
+        private var itemViewModel : ItemViewModel? = null
 
         /**
          * @param mainActivity MainActivity

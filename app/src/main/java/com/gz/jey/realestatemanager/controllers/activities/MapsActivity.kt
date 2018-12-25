@@ -5,8 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.ActionBar
@@ -26,13 +24,21 @@ import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.injection.Injection
 import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Code
-import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.SetImageColor
+import com.gz.jey.realestatemanager.utils.Utils
 import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    companion object {
+        const val DEFAULT_ZOOM = 13f
+    }
+
+    /**
+     * @param p0 Marker
+     * @return true
+     */
     override fun onMarkerClick(p0: Marker?): Boolean {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(Code.FROM_MAP, true)
@@ -42,13 +48,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         return true
     }
 
-    private val DEFAULT_ZOOM = 13f
     private lateinit var mMap: GoogleMap
     var toolbar: Toolbar? = null
 
     // FOR DATA
-    lateinit var itemViewModel: ItemViewModel
-
+    private lateinit var itemViewModel: ItemViewModel
+    /**
+     * @param savedInstanceState Bundle
+     * CREATE ACTIVITY
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
@@ -63,11 +71,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
+     * @param googleMap GoogleMap
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -102,28 +106,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         invalidateOptionsMenu()
         Objects.requireNonNull<ActionBar>(supportActionBar).setHomeAsUpIndicator(R.drawable.back_button)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        toolbar!!.setNavigationOnClickListener { backToMainActivity() }
+        toolbar!!.setNavigationOnClickListener { Utils.backToMainActivity(this) }
     }
-
+    /**
+     * SET VIEW MODEL
+     */
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
         this.itemViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ItemViewModel::class.java)
     }
 
-
-    // ACTIONS
+    /**
+     * SET MAP
+     */
     private fun setMap(){
         this.itemViewModel.getAllRealEstate()
                 .observe(this, Observer<List<RealEstate>> { re -> setMarkers(re!!) })
 
     }
-
+    /**
+     * @param re List<RealEstate>
+     * to set markers
+     */
     private fun setMarkers(re: List<RealEstate>){
         val id = intent.getLongExtra(Code.RE_ID, 0)
 
         for (r in re){
             val thisRe = LatLng(r.latitude!!, r.longitude!!)
-            var ico : Bitmap? = null
+            var ico : Bitmap?
             if(r.id == id) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(thisRe, DEFAULT_ZOOM))
                 ico = BitmapFactory.decodeResource(resources, R.drawable.home)
@@ -139,10 +149,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-
-    private fun backToMainActivity(){
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
 }

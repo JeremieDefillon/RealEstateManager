@@ -32,8 +32,6 @@ import kotlin.collections.ArrayList
 
 class SetFiltersActivity : AppCompatActivity() {
 
-    // FRAGMENTS
-    val TAG = "SetFilters"
     // FOR DESIGN
     private var toolMenu: Menu? = null
     var toolbar: Toolbar? = null
@@ -74,6 +72,9 @@ class SetFiltersActivity : AppCompatActivity() {
         this.setPanel()
     }
 
+    /**
+     * TO SET ITEMS
+     */
     private fun setItems() {
         add_type_image.background = addIcon
         add_poi_image.background = addIcon
@@ -129,11 +130,17 @@ class SetFiltersActivity : AppCompatActivity() {
     // DATA
     // -------------------
 
+    /**
+     * TO SET VIEW MODEL
+     */
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
         this.itemViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ItemViewModel::class.java)
     }
 
+    /**
+     * TO SET PANEL
+     */
     private fun setPanel() {
         itemViewModel.getFilters(Code.FILTERS_DATA).observeOnce(Observer { fi ->
             if (fi != null) getFilters(fi)
@@ -141,18 +148,28 @@ class SetFiltersActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * @param fi Filters
+     * TO GET FILTERS
+     */
     private fun getFilters(fi: Filters) {
         Log.d("GET FILTERS", fi.toString())
         this.filters = fi
         getDtbValue()
     }
 
+    /**
+     * TO CREATE FILTERS
+     */
     private fun createFilters() {
         this.filters = Filters(Code.FILTERS_DATA, null, null, null, null, null, null, null, null, null, null, null, null, null)
         itemViewModel.createFilters(this.filters!!)
         ToastMessage().notifyMessage(this, Code.ERROR_NOT_FOUND)
     }
 
+    /**
+     * TO GET DATABASE VALUES
+     */
     private fun getDtbValue() {
         if (filters!!.id != null) {
             if (filters!!.type != null) {
@@ -194,6 +211,10 @@ class SetFiltersActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * @param index Int
+     * TO OPEN DIALOG
+     */
     private fun openDialog(index: Int) {
         val res: ArrayList<String> = ArrayList()
         insert = index
@@ -290,6 +311,9 @@ class SetFiltersActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * TO SET SEARCH FILTERS
+     */
     private fun setSearchFilters() {
         Log.d("FILTERS SAVE", filters.toString())
 
@@ -304,6 +328,10 @@ class SetFiltersActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * @param setFilter Boolean
+     * TO GO BACK TO MAIN ACTIVITY
+     */
     private fun backToMainActivity(setFilter: Boolean) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(Code.FILTERS, setFilter)
@@ -311,6 +339,9 @@ class SetFiltersActivity : AppCompatActivity() {
         finish()
     }
 
+    /**
+     * TO RESET ALL FILTERS
+     */
     private fun resetAllFilters() {
         filters!!.type = null
         type_value.visibility = View.GONE
@@ -343,6 +374,11 @@ class SetFiltersActivity : AppCompatActivity() {
         min_photos_value.text = ""
     }
 
+    /**
+     * @param code String
+     * @param res String
+     * TO INSERT STANDARD VALUE
+     */
     fun insertStandardValue(code: String, res: String) {
         Log.d("RESULTS $code", res)
         when (code) {
@@ -405,6 +441,11 @@ class SetFiltersActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * @param code String
+     * @param res ArrayList<String>
+     * TO INSERT MULTIPLE VALUES
+     */
     fun insertMultiValues(code: String, res: ArrayList<String>) {
         Log.d("FILTERS", code + " " + res.toString())
         when (code) {
@@ -435,6 +476,11 @@ class SetFiltersActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * @param code String
+     * @param array ArrayList<String>
+     * TO SET SEVERAL VALUE
+     */
     private fun setSeveralValue(code: String, array: ArrayList<String>): String {
         val res = when (code) {
             Code.FILTER_TYPE -> resources.getStringArray(R.array.type_ind)
@@ -451,6 +497,11 @@ class SetFiltersActivity : AppCompatActivity() {
         return t.toString()
     }
 
+    /**
+     * @param r ArrayList<String>
+     * TO GET INT LIST
+     * @return List<Int>
+     */
     private fun getIntList(r: ArrayList<String>): List<Int>? {
         return if (r.isNotEmpty()) {
             val l: ArrayList<Int> = ArrayList()
@@ -461,14 +512,25 @@ class SetFiltersActivity : AppCompatActivity() {
             null
     }
 
+    /**
+     * TO SET ICON
+     */
     private fun setIcon() {
         addIcon = SetImageColor.changeDrawableColor(this, R.drawable.add_box, getC(R.color.colorSecondary))
     }
 
+    /**
+     * @param c Int
+     * @return Int
+     */
     private fun getC(c: Int): Int {
         return ContextCompat.getColor(this, c)
     }
 
+    /**
+     * @param observer Observer<T>
+     * TO OBSERVE ONCE LIVE DATA
+     */
     private fun <T> LiveData<T>.observeOnce(observer: Observer<T>) {
         observeForever(object : Observer<T> {
             override fun onChanged(t: T?) {

@@ -21,7 +21,6 @@ import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogConfirmAction
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogNoResults
 import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogPhotoPicker
-import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.TempRealEstate
 import com.gz.jey.realestatemanager.models.sql.Photos
@@ -40,8 +39,8 @@ class PhotosManager : Fragment() {
     private var screenY = 0
 
     // FOR DATA
-    lateinit var mListener: PhotosManagerListener
-    val cardViews: ArrayList<CardView> = ArrayList()
+    private lateinit var mListener: PhotosManagerListener
+    private val cardViews: ArrayList<CardView> = ArrayList()
     var photosList : ArrayList<Photos> = ArrayList()
     private var justApplied = false
 
@@ -254,18 +253,15 @@ class PhotosManager : Fragment() {
 
     companion object {
         var tempRE: TempRealEstate? = null
-        var itemViewModel: ItemViewModel? = null
-        var photosList : ArrayList<Photos> = ArrayList()
+        private var photosList : ArrayList<Photos> = ArrayList()
         /**
          * @param tempRealEstate TempRealEstate
-         * @param ivm ItemViewModel
          * @param pl ArrayList<Photos>
          * @return new RealEstateList()
          */
-        fun newInstance(tempRealEstate: TempRealEstate, ivm: ItemViewModel, pl : ArrayList<Photos>): PhotosManager {
+        fun newInstance(tempRealEstate: TempRealEstate, pl : ArrayList<Photos>): PhotosManager {
             val fragment = PhotosManager()
             tempRE = tempRealEstate
-            itemViewModel = ivm
             photosList = pl
             return fragment
         }
@@ -275,7 +271,7 @@ class PhotosManager : Fragment() {
     }
 
     interface PhotosManagerListener {
-        fun changeToolBarMenu(i : Int)
+        fun changeToolBarMenu(index : Int)
         fun setSave(b : Boolean)
         fun savePhotos()
     }

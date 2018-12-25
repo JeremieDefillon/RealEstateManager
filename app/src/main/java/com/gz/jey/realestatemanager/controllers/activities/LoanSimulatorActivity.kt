@@ -20,12 +20,14 @@ import com.gz.jey.realestatemanager.controllers.dialog.ViewDialogAmortizationTab
 import com.gz.jey.realestatemanager.models.Amortizations
 import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.Data
+import com.gz.jey.realestatemanager.utils.Utils
 import com.gz.jey.realestatemanager.views.AmortizationsAdapter
 import kotlinx.android.synthetic.main.activity_loan_simulator.*
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.*
 
+@Suppress("DEPRECATION")
 class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener {
 
     private val amortizations : ArrayList<Amortizations> = ArrayList()
@@ -58,12 +60,15 @@ class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener
         invalidateOptionsMenu()
         Objects.requireNonNull<ActionBar>(supportActionBar).setHomeAsUpIndicator(R.drawable.back_button)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        toolbar!!.setNavigationOnClickListener { backToMainActivity() }
+        toolbar!!.setNavigationOnClickListener { Utils.backToMainActivity(this) }
     }
 
-
+    /**
+     * @param position Int
+     * ON CLICK DELETE BUTTON
+     */
     override fun onClickDeleteButton(position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //Never used
     }
 
     /**
@@ -118,6 +123,9 @@ class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener
         })
     }
 
+    /**
+     * TO CALCULATE LOAN'S DETAILS
+     */
     private fun calculate(){
         closeKeyboard()
        if(totalCapital!=null && rate!=null && years!=null){
@@ -136,14 +144,12 @@ class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener
            var totm = 0f
            var toti = 0f
            var totc = 0f
-           var totf = 0f
 
            val it0 = Amortizations(1, monthlyFee, interestFee0, capRefund0, capFee0)
            amortizations.add(it0)
            totm += monthlyFee
            toti += interestFee0
            totc += capRefund0
-           totf = capFee0
 
            for(i in 1 until months){
                val interestFee = getInterestCost(amortizations[i-1].capital_fee)
@@ -156,17 +162,16 @@ class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener
                totm += monthlyFee
                toti += interestFee
                totc += capRefund
-               totf = capFee
            }
 
            if(totc > totalCapital!!) {
-               Log.d("CAPITAL SUP", totc.toString())
+               Log.d("CAPITAL MORE", totc.toString())
                val over = totc-totalCapital!!
                amortizations[months-1].monthly_payed = amortizations[months-1].monthly_payed - over
                amortizations[months-1].capital_refunded = amortizations[months-1].capital_refunded - over
                amortizations[months-1].capital_fee = 0.00f
            }else if(totc < totalCapital!!) {
-               Log.d("CAPITAL MOINS", totc.toString())
+               Log.d("CAPITAL LESS", totc.toString())
                val miss = totalCapital!!-totc
                amortizations[months-1].monthly_payed = amortizations[months-1].monthly_payed + miss
                amortizations[months-1].capital_refunded = amortizations[months-1].capital_refunded + miss
@@ -180,20 +185,33 @@ class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener
        }
     }
 
+    /**
+     * TO OPEN AMORTIZATION TABLE
+     */
     private fun openAmortization(){
         ViewDialogAmortizationTable().showDialog(this, amortizations)
     }
 
-    // FORMULE
+    /**
+     * TO GET MONTHLY FEE
+     * @param capital Float
+     * @param rate Float
+     * @param years Int
+     * @return Float
+     */
     private fun getMonthlyFee(capital : Float , rate : Float, years : Int) : Float{
-        val K = capital
-        val T = (rate/100f)/12f
+        val t = (rate/100f)/12f
         val d = years * 12
-        val va = ( K * T ) / ( 1 - Math.pow(( 1 + T.toDouble() ), -d.toDouble()).toFloat() )
+        val va = ( capital * t ) / ( 1 - Math.pow(( 1 + t.toDouble() ), -d.toDouble()).toFloat() )
 
         return (va*100)/100.toFloat()
     }
 
+    /**
+     * TO GET INTEREST COST
+     * @param capital Float
+     * @return Float
+     */
     private fun getInterestCost(capital : Float) : Float{
         val va = (capital * (rate!!/100)) / 12f
 
@@ -203,20 +221,21 @@ class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener
         return (va*100)/100.toFloat()
     }
 
+    /**
+     * TO OPEN KEYBOARD
+     * @param v View
+     */
     private fun showKeyboard(v : View){
         v.requestFocus()
         val keyboard = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         keyboard.showSoftInput(v, 0)
     }
 
+    /**
+     * TO CLOSE KEYBOARD
+     */
     private fun closeKeyboard() {
         val inputManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(this.currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-    }
-
-    private fun backToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
     }
 }

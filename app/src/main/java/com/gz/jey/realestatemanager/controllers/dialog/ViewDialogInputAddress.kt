@@ -1,7 +1,7 @@
 package com.gz.jey.realestatemanager.controllers.dialog
 
+import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.text.Editable
@@ -36,7 +36,13 @@ class ViewDialogInputAddress {
     private lateinit var unvalidIcon: Drawable
     private lateinit var placesAdapter: PlacesAdapter
 
-
+    /**
+     * @param gdc GeoDataClient
+     * @param activity AddOrEditActivity
+     * @param actualValue ArrayList<String?>
+     * TO SHOW DIALOG
+     */
+    @SuppressLint("SetTextI18n")
     fun showDialog(gdc: GeoDataClient, activity: AddOrEditActivity, actualValue: ArrayList<String?>) {
         val context = activity.applicationContext
         val dialog = Dialog(activity)
@@ -109,6 +115,9 @@ class ViewDialogInputAddress {
         dialog.show()
     }
 
+    /**
+     * TO CHECK VALIDATE
+     */
     private fun checkValidate() {
         if (resultFullAddress == inputAddress.text.toString() && !resultFullAddress.isNullOrEmpty()) {
             checkAC.background = validIcon

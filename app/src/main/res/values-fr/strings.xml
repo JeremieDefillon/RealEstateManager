@@ -215,6 +215,7 @@
         <item>Grenier</item>
         <item>Céllier</item>
         <item>Cave</item>
+        <item>Vue</item>
     </string-array>
 
     <string-array name="nums_ind">

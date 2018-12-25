@@ -40,24 +40,5 @@ abstract class ItemDatabase : RoomDatabase() {
             return INSTANCE
         }
 
-        fun destroyInstance(){
-            INSTANCE = null
-        }
-
-        /*// ---
-        private fun prepopulateDatabase(): RoomDatabase.Callback {
-            return object : RoomDatabase.Callback() {
-
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    super.onCreate(db)
-
-                    val contentValues = ContentValues()
-                    contentValues.put("id", 1)
-                    contentValues.put("type", "Flat")
-
-                    db.insert("RealEstate", OnConflictStrategy.IGNORE, contentValues)
-                }
-            }
-        }*/
     }
 }

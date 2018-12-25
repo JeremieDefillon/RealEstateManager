@@ -16,7 +16,6 @@ import com.gz.jey.realestatemanager.models.Code
 import com.gz.jey.realestatemanager.models.Data
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.Utils
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -31,7 +30,6 @@ class NotificationReceiver : BroadcastReceiver() {
 
     // Activity
     private lateinit var re : RealEstate
-    private val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.FRANCE)
 
     /**
      * @param context Context
@@ -107,6 +105,14 @@ class NotificationReceiver : BroadcastReceiver() {
         notificationManager.notify(987, builder.build())
     }
 
+    /**
+     * @param context Context
+     * @param type Int
+     * @param room Int
+     * @param surface Int
+     * @return String
+     * TO BUILD FIRST LINE OF NOTIF
+     */
     private fun getFirstLine(context: Context, type : Int?, room : Int?, surface: Int?) : String{
         val res = context.resources
         val sb = StringBuilder()
@@ -117,6 +123,14 @@ class NotificationReceiver : BroadcastReceiver() {
         else ""
     }
 
+    /**
+     * @param context Context
+     * @param locality String
+     * @param price Long
+     * @param surface Int
+     * @return String
+     * TO BUILD SECOND LINE OF NOTIF
+     */
     private fun getSecondLine(context: Context, locality : String, price : Long?, surface: Int?): String{
         val sb = StringBuilder()
         if(locality.isNotEmpty()) sb.append("($locality)").append("  ")

@@ -7,8 +7,8 @@ import retrofit2.http.Query
 
 interface ApiService {
     /**
-     * REQUEST TO GET RESTAURANT AROUND LOCATION
-     * @return Observable<Place>
+     * REQUEST TO GET GEO CODE
+     * @return Observable<GeoCode>
      */
     @GET("maps/api/geocode/json?")
     fun getGeoCode(

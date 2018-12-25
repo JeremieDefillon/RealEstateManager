@@ -12,9 +12,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.bumptech.glide.Glide
 import com.gz.jey.realestatemanager.R
-import com.gz.jey.realestatemanager.injection.ItemViewModel
 import com.gz.jey.realestatemanager.models.Data
-import com.gz.jey.realestatemanager.models.TempRealEstate
 import com.gz.jey.realestatemanager.models.sql.Photos
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import kotlinx.android.synthetic.main.legends_manager.*
@@ -26,7 +24,7 @@ class LegendsManager : Fragment() {
     private var screenY = 0
 
     // FOR DATA
-    lateinit var mListener: LegendsManagerListener
+    private lateinit var mListener: LegendsManagerListener
 
     private var counter = 0
     private var main: Int? = null
@@ -59,12 +57,19 @@ class LegendsManager : Fragment() {
         init()
     }
 
+    /**
+     * @param context Context
+     * On ATTCH CONTEXT TO LISTENER
+     */
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is LegendsManager.LegendsManagerListener)
             mListener = context
     }
 
+    /**
+     * INIT THE FRAGMENT
+     */
     private fun init() {
         cancel_btn.setOnClickListener { mListener.setFragment(1) }
         val icon = SetImageColor.changeDrawableColor(this.context!!, R.drawable.circle_button_background, ContextCompat.getColor(this.context!!, R.color.colorSecondary))
@@ -138,6 +143,9 @@ class LegendsManager : Fragment() {
         setPic()
     }
 
+    /**
+     * TO SET THE PICTURE
+     */
     private fun setPic() {
         Data.photoNum = counter
         var next: Int? = null
@@ -195,6 +203,9 @@ class LegendsManager : Fragment() {
         }
     }
 
+    /**
+     * TO SET CHECKLIST
+     */
     private fun setCheckList() {
         legend_btn.setSelection(photosList[counter].legend)
         num_btn.setSelection(photosList[counter].num)
@@ -202,6 +213,9 @@ class LegendsManager : Fragment() {
         check_main.isChecked = (photosList[counter].main || (counter == main))
     }
 
+    /**
+     * TO SAVE ITEM
+     */
     private fun saveItem() {
         photosList[counter].legend = legend_btn.selectedItemPosition
         photosList[counter].num = num_btn.selectedItemPosition
@@ -209,26 +223,23 @@ class LegendsManager : Fragment() {
     }
 
     companion object {
-        var tempRE: TempRealEstate? = null
-        var itemViewModel: ItemViewModel? = null
         var photosList: ArrayList<Photos> = ArrayList()
+
         /**
-         * @param addOrEditActivity MainActivity
-         * @return new RealEstateList()
+         * @param pl ArrayList<Photos>
+         * @return LegendsManager
          */
-        fun newInstance(tempRealEstate: TempRealEstate, vm: ItemViewModel, pl: ArrayList<Photos>): LegendsManager {
+        fun newInstance(pl: ArrayList<Photos>): LegendsManager {
             val fragment = LegendsManager()
-            tempRE = tempRealEstate
-            itemViewModel = vm
             photosList = pl
             return fragment
         }
     }
 
     interface LegendsManagerListener {
-        fun changeToolBarMenu(i: Int)
+        fun changeToolBarMenu(index: Int)
         fun setSave(b: Boolean)
-        fun setFragment(i: Int)
+        fun setFragment(index: Int)
         fun savePhotos()
     }
 }

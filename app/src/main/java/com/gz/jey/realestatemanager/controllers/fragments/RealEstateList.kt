@@ -61,16 +61,27 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
         init()
     }
 
+    /**
+     * @param context Context
+     * On ATTACH CONTEXT TO LISTENER
+     */
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is RealEstateListListener)
             mListener = context
     }
 
+    /**
+     * @param position Int
+     * Do Nothing
+     */
     override fun onClickDeleteButton(position: Int) {
-        // DELETE
+        // NOTHING
     }
 
+    /**
+     * CONFIGURE RECYCLER VIEW
+     */
     private fun configureRecyclerView() {
         this.adapter = RealEstateAdapter(this)
         this.recyclerView!!.adapter = this.adapter
@@ -81,6 +92,9 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
                 }
     }
 
+    /**
+     * Init this Activity
+     */
     private fun init() {
         Log.d("RE LIST", "OK")
         val num = if (Data.tabMode)
@@ -101,17 +115,24 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
         getRealEstates()
     }
 
+    /**
+     * GET REAL ESTATES
+     */
     private fun getRealEstates() {
         if (activity!!.intent.hasExtra(Code.FILTERS) && activity!!.intent.getBooleanExtra(Code.FILTERS, false))
             itemViewModel!!.getFilters(Code.FILTERS_DATA)
-                    .observe(this, Observer<Filters> { fi -> setFilters(fi!!) })
+                    .observe(this, Observer<Filters> { fi -> setByFilters(fi!!) })
         else {
             itemViewModel!!.getAllRealEstate()
                     .observe(this, Observer<List<RealEstate>> { re -> checkIfSpecialStatement(re!!) })
         }
     }
 
-    private fun checkIfSpecialStatement(items: List<RealEstate>){
+    /**
+     * @param items List<RealEstate>
+     * to check if special statement
+     */
+    private fun checkIfSpecialStatement(items: List<RealEstate>) {
         if (activity!!.intent.hasExtra(Code.FROM_MAP) && activity!!.intent.getBooleanExtra(Code.FROM_MAP, false)) {
             activity!!.intent.putExtra(Code.FROM_MAP, false)
             val id = activity!!.intent.getLongExtra(Code.RE_ID, 0)
@@ -139,7 +160,12 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
         }
     }
 
-    private fun selectRealEstate(position: Int, items: List<RealEstate>) : Int{
+    /**
+     * @param position Int
+     * @param items List<RealEstate>
+     * to save instance state
+     */
+    private fun selectRealEstate(position: Int, items: List<RealEstate>): Int {
         this.position = position
         Data.reID = items[position].id
         mListener.setRE(items[position])
@@ -167,12 +193,15 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
                 this.position = null
                 1
             }
-        }else
+        } else
             0
-
     }
 
-    private fun setFilters(fi: Filters) {
+    /**
+     * @param fi Filters
+     * to get and set real estates by filters
+     */
+    private fun setByFilters(fi: Filters) {
         val query: SimpleSQLiteQuery? = BuildRequestSQL().setBuild(fi)
         if (query != null) {
             itemViewModel!!.getFilteredRealEstate(query)
@@ -193,15 +222,25 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
         }
     }
 
+    /**
+     * @param position Int
+     * @param items List<RealEstate>
+     * to update Real Estates List with position
+     */
     private fun updateRealEstateList(position: Int, items: List<RealEstate>) {
         if (items.isNotEmpty()) {
             infoText!!.visibility = View.GONE
             val act = selectRealEstate(position, items)
             mListener.setEdit(true)
-            when(act){
-                0 -> {}
-                1 -> {mListener.setFragment(1)}
-                2 -> {mListener.initDetails()}
+            when (act) {
+                0 -> {
+                }
+                1 -> {
+                    mListener.setFragment(1)
+                }
+                2 -> {
+                    mListener.initDetails()
+                }
             }
         } else {
             infoText!!.visibility = View.VISIBLE
@@ -212,27 +251,37 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
         this.adapter!!.updateData(items, width!!, height!!)
     }
 
+    /**
+     * @param id Long
+     * @param items List<RealEstate>
+     * @return Int (position by id)
+     */
     private fun getPositionByID(id: Long, items: List<RealEstate>): Int? {
         val re = findRE(id, items)
         return items.indexOf(re)
     }
 
-    private fun findRE(id: Long, items: List<RealEstate>) : RealEstate?{
+    /**
+     * @param id Long
+     * @param items List<RealEstate>
+     * @return RealEstate (find real estate with id)
+     */
+    private fun findRE(id: Long, items: List<RealEstate>): RealEstate? {
         Log.d("ID $id", items.toString())
-        return items.find { realEstate: RealEstate -> realEstate.id == id}
+        return items.find { realEstate: RealEstate -> realEstate.id == id }
     }
 
     companion object {
         var itemViewModel: ItemViewModel? = null
         /**
-         * @param ivm ItemViewMode
+         * @param ivm ItemViewModel
          * @param re RealEstate
          * @return RealEstateList()
          */
         fun newInstance(ivm: ItemViewModel, re: RealEstate?): RealEstateList {
             val fragment = RealEstateList()
             itemViewModel = ivm
-            if(re!=null) {
+            if (re != null) {
                 Data.reID = re.id
             }
             return fragment
@@ -242,7 +291,7 @@ class RealEstateList : Fragment(), RealEstateAdapter.Listener {
     interface RealEstateListListener {
         fun initDetails()
         fun setRE(realEstate: RealEstate)
-        fun setFragment(index : Int)
-        fun setEdit(bool : Boolean)
+        fun setFragment(index: Int)
+        fun setEdit(bool: Boolean)
     }
 }

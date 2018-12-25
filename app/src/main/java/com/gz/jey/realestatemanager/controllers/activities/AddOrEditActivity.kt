@@ -44,65 +44,59 @@ import com.gz.jey.realestatemanager.models.TempRealEstate
 import com.gz.jey.realestatemanager.models.sql.Photos
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.SetImageColor
+import com.gz.jey.realestatemanager.utils.Utils
 import java.util.*
 import kotlin.collections.ArrayList
 
 class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, LocationListener,
         AddOrEdit.AddOrEditListener, PhotosManager.PhotosManagerListener, LegendsManager.LegendsManagerListener {
 
-    override fun openAddressInput(res: ArrayList<String?>) {
-        ViewDialogInputAddress().showDialog(mGeoDataClient!!, this, res)
-    }
-
-    override fun onConnectionFailed(p0: ConnectionResult) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     companion object {
         const val TAG = "AddOrEditActivity"
-        const val RE_TEMP = "RE_TEMP"
         const val REAL_ESTATE = "REAL_ESTATE"
         const val PHOTOS_LIST = "PHOTOS_LIST"
+        const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 34
     }
+
     // FRAGMENTS
     lateinit var addOrEdit: AddOrEdit
     lateinit var photosManager: PhotosManager
-    lateinit var legendsManager: LegendsManager
+    private lateinit var legendsManager: LegendsManager
 
     // FOR DESIGN
     private lateinit var enableSaveIcon: Drawable
     private lateinit var disableSaveIcon: Drawable
     private var toolMenu: Menu? = null
-    var fragmentContainer: FrameLayout? = null
+    private var fragmentContainer: FrameLayout? = null
     var toolbar: Toolbar? = null
-    lateinit var saveItem: MenuItem
-    lateinit var addPhotoItem: MenuItem
-    lateinit var editPhotoItem: MenuItem
-    lateinit var removePhotoItem: MenuItem
-    val paramItems: ArrayList<Boolean> = arrayListOf(false, false, false, false)
+    private lateinit var saveItem: MenuItem
+    private lateinit var addPhotoItem: MenuItem
+    private lateinit var editPhotoItem: MenuItem
+    private lateinit var removePhotoItem: MenuItem
+    private val paramItems: ArrayList<Boolean> = arrayListOf(false, false, false, false)
     var loading: FrameLayout? = null
 
     // FOR DATA
-    lateinit var itemViewModel: ItemViewModel
+    private lateinit var itemViewModel: ItemViewModel
     lateinit var database: ItemDatabase
-    var tabLand: Boolean = false
-    var enableSave: Boolean = false
-    var errorLoc: Boolean = false
+    private var tabLand: Boolean = false
+    private var enableSave: Boolean = false
+    private var errorLoc: Boolean = false
 
-    var photosList: ArrayList<Photos> = ArrayList()
+    private var photosList: ArrayList<Photos> = ArrayList()
 
     lateinit var mGoogleApiClient: GoogleApiClient
-    var mGeoDataClient: GeoDataClient? = null
+    private var mGeoDataClient: GeoDataClient? = null
     private var mPlaceDetectionClient: PlaceDetectionClient? = null
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
 
     // FOR PERMISSIONS
-    private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 34
-    var mLocationPermissionGranted: Boolean = false
+
+    private var mLocationPermissionGranted: Boolean = false
     var mLastKnownLocation: LatLng? = null
 
     // FOR REALESTATE SELECTOR
-    var tempRE: TempRealEstate? = null
+    private var tempRE: TempRealEstate? = null
 
     /**
      * @param savedInstanceState Bundle
@@ -131,6 +125,10 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
         initActivity()
     }
 
+    /**
+     * @param outState Bundle
+     * to save instance state
+     */
     override fun onSaveInstanceState(outState: Bundle?) {
         outState?.putInt(Code.FRAG_NUM, Data.fragNum)
         if(Data.photoNum!=null)
@@ -189,6 +187,10 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
         return true
     }
 
+    /**
+     * @param menu Menu
+     * to set option menu
+     */
     private fun setOptionMenu(menu: Menu) {
         removePhotoItem = menu.getItem(0)
         editPhotoItem = menu.getItem(1)
@@ -205,7 +207,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
 
     /**
      * @param item MenuItem
-     * @return boolean
+     * @return Boolean
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
@@ -251,12 +253,17 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
     // -------------------
     // DATA
     // -------------------
-
+    /**
+     * TO SET VIEW MODEL
+     */
     private fun setViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(this)
         this.itemViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ItemViewModel::class.java)
     }
 
+    /**
+     * TO GET REAL ESTATE
+     */
     private fun getRealEstate() {
         if (tempRE != null) {
             Log.d("TEMP RE NOT NULL ", tempRE!!.toString())
@@ -271,6 +278,10 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
         }
     }
 
+    /**
+     * @param realEstate RealEstate
+     * to update Real Estate
+     */
     private fun updateRealEstate(realEstate: RealEstate?) {
         val re = realEstate ?: RealEstate(null, "", "", "", "", "", false, null, null, null, null,
                 null, null, null, null, "", null, false, "", "", "",
@@ -305,13 +316,13 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
 
             1 -> {
                 changeToolBarMenu(1)
-                this.photosManager = PhotosManager.newInstance(tempRE!!, itemViewModel, photosList)
+                this.photosManager = PhotosManager.newInstance(tempRE!!, photosList)
                 fragment = this.photosManager
             }
 
             2 -> {
                 changeToolBarMenu(3)
-                this.legendsManager = LegendsManager.newInstance(tempRE!!, itemViewModel, photosList)
+                this.legendsManager = LegendsManager.newInstance(photosList)
                 fragment = this.legendsManager
             }
         }
@@ -321,23 +332,24 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
                 .commit()
     }
 
-    private fun backToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
+    /**
+     * @param re RealEstate
+     * to set Notification when A real Estate save or change is made
+     */
     override fun savedRe(re: RealEstate) {
-        val intent = Intent(applicationContext, NotificationReceiver::class.java)
-        intent.putExtra(REAL_ESTATE, re)
-        val pendingIntent = PendingIntent.getBroadcast(applicationContext,
-                987, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-
-        pendingIntent.send()
-
-        backToMainActivity()
+        if(Data.enableNotif){
+            val intent = Intent(applicationContext, NotificationReceiver::class.java)
+            intent.putExtra(REAL_ESTATE, re)
+            val pendingIntent = PendingIntent.getBroadcast(applicationContext,
+                    987, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            pendingIntent.send()
+            Utils.backToMainActivity(this)
+        }
     }
 
+    /**
+     * to Save Photos
+     */
     override fun savePhotos() {
         photosList = photosManager.photosList
         val pl = arrayListOf<Photos>()
@@ -346,18 +358,22 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
         Log.d("SAVED PHOTOS", tempRE!!.photos.toString())
     }
 
-    override fun changeToolBarMenu(em: Int) {
+    /**
+     * @param index Int
+     * to Change toolbar Menu
+     */
+    override fun changeToolBarMenu(index: Int) {
         invalidateOptionsMenu()
         Objects.requireNonNull<ActionBar>(supportActionBar).setHomeAsUpIndicator(R.drawable.back_button)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        when (em) {
+        when (index) {
             0 -> {
                 paramItems[0] = false
                 paramItems[1] = false
                 paramItems[2] = false
                 paramItems[3] = true
-                toolbar!!.setNavigationOnClickListener { backToMainActivity() }
+                toolbar!!.setNavigationOnClickListener { Utils.backToMainActivity(this) }
             }
             1 -> {
                 paramItems[0] = false
@@ -383,17 +399,41 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
         }
     }
 
-    override fun setSave(bool: Boolean) {
-        Log.d("SET SAVE", bool.toString())
-        enableSave = bool
+    /**
+     * @param b Boolean
+     * to enable or disable the save Icon
+     */
+    override fun setSave(b: Boolean) {
+        Log.d("SET SAVE", b.toString())
+        enableSave = b
         if (toolMenu != null)
             setOptionMenu(toolMenu!!)
+    }
+
+    /**
+     * @param res ArrayList<String?>
+     * Open Dialog for Input Address
+     */
+    override fun openAddressInput(res: ArrayList<String?>) {
+        ViewDialogInputAddress().showDialog(mGeoDataClient!!, this, res)
+    }
+
+    /**
+     * @param p0 ConnectionResult
+     * Do Nothing
+     */
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        //To change body of created functions use File | Settings | File Templates.
     }
 
     /////////////////////////////////////////
     ///// LOCATION //////////////////////////
     /////////////////////////////////////////
 
+    /**
+     * @param p0 android.location.Location?
+     * on location change
+     */
     override fun onLocationChanged(p0: android.location.Location?) {
         if (p0 != null) {
             mLastKnownLocation = (LatLng(p0.latitude, p0.longitude))

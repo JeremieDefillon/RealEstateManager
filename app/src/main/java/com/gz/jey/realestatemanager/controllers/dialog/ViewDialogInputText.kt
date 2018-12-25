@@ -1,5 +1,6 @@
 package com.gz.jey.realestatemanager.controllers.dialog
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -32,9 +33,15 @@ class ViewDialogInputText {
     private lateinit var cancelBtn: Button
     private lateinit var editBtn: Button
 
-    private val list: ArrayList<String> = ArrayList()
     private var result: String? = null
 
+    /**
+     * @param activity AddOrEditActivity
+     * @param code String
+     * @param actualValue ArrayList<String?>
+     * TO SHOW DIALOG
+     */
+    @SuppressLint("SetTextI18n")
     fun showDialog(activity: Activity, code: String, actualValue:String?) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -177,6 +184,12 @@ class ViewDialogInputText {
         dialog.show()
     }
 
+    /**
+     * @param activity Activity
+     * @param ed String
+     * TO SHOW PRICE's OVERVIEW
+     * @return String
+     */
     private fun getPriceOverview(activity: Activity, ed: String): String {
         val sb = StringBuilder()
         try {
@@ -195,6 +208,12 @@ class ViewDialogInputText {
         return sb.toString()
     }
 
+    /**
+     * @param activity Activity
+     * @param ed String
+     * TO GET SURFACE's OVERVIEW
+     * @return String
+     */
     private fun getSurfaceOverview(activity: Activity, ed: String): String {
         val sb = StringBuilder()
         try {

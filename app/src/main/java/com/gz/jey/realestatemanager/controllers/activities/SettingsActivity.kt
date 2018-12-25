@@ -2,8 +2,8 @@ package com.gz.jey.realestatemanager.controllers.activities
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -23,9 +23,12 @@ import com.gz.jey.realestatemanager.models.sql.RealEstate
 import com.gz.jey.realestatemanager.utils.SetImageColor
 import kotlinx.android.synthetic.main.activity_settings.*
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.*
+import android.provider.MediaStore
+import kotlin.collections.ArrayList
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -35,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var euroIcon: Drawable
 
     // FOR DATA
-    lateinit var itemViewModel: ItemViewModel
+    private lateinit var itemViewModel: ItemViewModel
 
     /**
      * @param savedInstanceState Bundle
@@ -114,7 +117,25 @@ class SettingsActivity : AppCompatActivity() {
         if (data != null) {
             val js = getGson(data)
             Log.d("JSON", js.toString())
+            val files = getFilePaths()
+
+
             for (re in js) {
+
+                for (ph in re.photos!!){
+                    val maybe = if(ph.num != 0) "_"+ph.num else ""
+                    val pa = re.id.toString() + "_" + ph.legend+maybe+".jpg"
+
+                    for (p in files){
+                        val f = File(p)
+                        val imageName = f.name
+                        if(imageName == pa){
+                            ph.image = f.absolutePath
+                            break
+                        }
+                    }
+                }
+
                 itemViewModel.createRealEstate(re)
             }
             backToMainActivity()
@@ -131,7 +152,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun getAssetJsonData(): String? {
-        val fileName = if(Data.tabMode) "all_re_tablet.json" else "all_re_phone.json"
+        val fileName = "all_re.json"
         val json: String?
         json = try {
             val inputStream: InputStream = assets.open(fileName)
@@ -159,6 +180,69 @@ class SettingsActivity : AppCompatActivity() {
         val gson = Gson()
         val listType = object : TypeToken<List<RealEstate>>() {}.type
         return gson.fromJson(data, listType)
+    }
+
+    private fun getFilePaths(): ArrayList<String> {
+
+        val u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(MediaStore.Images.ImageColumns.DATA)
+        var c: Cursor? = null
+        val dirList = TreeSet<String>()
+        val resultIAV = ArrayList<String>()
+
+        var directories: Array<String?> = arrayOfNulls(0)
+        if (u != null) {
+            Log.d("URI", u.toString())
+            c = managedQuery(u, projection, null, null, null)
+        }
+
+        if (c != null && c.moveToFirst()) {
+            do {
+                var tempDir = c.getString(0)
+                tempDir = tempDir.substring(0, tempDir.lastIndexOf("/"))
+                try {
+                    dirList.add(tempDir)
+                } catch (e: Exception) {
+                    Log.e("ERROR DIR LIST", e.toString())
+                }
+
+            } while (c.moveToNext())
+            directories = arrayOfNulls(dirList.size)
+            dirList.toArray(directories)
+
+        }
+
+        for (i in 0 until dirList.size) {
+            val imageDir = File(directories[i])
+            var imageList: Array<File>? = imageDir.listFiles() ?: continue
+            for (imagePath in imageList!!) {
+
+                try {
+
+                    if (imagePath.isDirectory) {
+                        imageList = imagePath.listFiles()
+
+                    }
+                    if (imagePath.name.contains(".jpg") || imagePath.name.contains(".JPG")
+                            || imagePath.name.contains(".jpeg") || imagePath.name.contains(".JPEG")
+                            || imagePath.name.contains(".png") || imagePath.name.contains(".PNG")
+                            || imagePath.name.contains(".gif") || imagePath.name.contains(".GIF")
+                            || imagePath.name.contains(".bmp") || imagePath.name.contains(".BMP")) {
+
+
+                        val path = imagePath.absolutePath
+                        resultIAV.add(path)
+
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.e("ERROR IMG PATH", e.toString())
+                }
+                //  }
+            }
+        }
+
+        return resultIAV
     }
 
 }

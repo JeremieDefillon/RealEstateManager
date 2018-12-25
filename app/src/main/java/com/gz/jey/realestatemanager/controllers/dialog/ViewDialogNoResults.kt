@@ -18,6 +18,11 @@ class ViewDialogNoResults {
     private lateinit var cancelBtn: Button
     private lateinit var editBtn: Button
 
+    /**
+     * @param activity Activity
+     * @param code String
+     * TO SHOW DIALOG
+     */
     fun showDialog(activity: Activity, code: String) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

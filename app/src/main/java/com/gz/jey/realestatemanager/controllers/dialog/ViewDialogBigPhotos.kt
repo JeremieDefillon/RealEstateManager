@@ -1,5 +1,8 @@
+@file:Suppress("IMPLICIT_CAST_TO_ANY")
+
 package com.gz.jey.realestatemanager.controllers.dialog
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.graphics.Point
@@ -26,6 +29,12 @@ class ViewDialogBigPhotos{
     private lateinit var closeBtn: ImageView
     lateinit var dialog : Dialog
 
+    /**
+     * @param activity Activity
+     * @param pos Int
+     * @param photos List<Photos>
+     * TO SHOW DIALOG
+     */
     fun showDialog(activity: Activity, pos : Int, photos : List<Photos>) {
         Data.isEdit = true
         dialog = Dialog(activity)
@@ -74,6 +83,13 @@ class ViewDialogBigPhotos{
         dialog.show()
     }
 
+    /**
+     * @param activity Activity
+     * @param pos Int
+     * @param photos List<Photos>
+     * TO INIT DIALOG
+     */
+    @SuppressLint("SetTextI18n")
     private fun init(activity: Activity, pos : Int, photos : List<Photos>){
         Data.photoNum = pos
         if(pos==0) prevBtn.visibility = View.GONE

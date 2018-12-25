@@ -200,21 +200,22 @@
     </string-array>
 
     <string-array name="photos_ind">
-        <item>\?</item>
-        <item>Facade</item>
-        <item>Hall</item>
-        <item>Lounge</item>
-        <item>Kitchen</item>
-        <item>Bedroom</item>
-        <item>Bathroom</item>
-        <item>Office</item>
-        <item>Dressing</item>
-        <item>Garden</item>
-        <item>Terrace</item>
-        <item>Garage</item>
-        <item>Attic</item>
-        <item>Cellar</item>
-        <item>Utility</item>
+        <item>\?</item>             <!-- 0 -->
+        <item>Facade</item>         <!-- 1 -->
+        <item>Hall</item>           <!-- 2 -->
+        <item>Lounge</item>         <!-- 3 -->
+        <item>Kitchen</item>        <!-- 4 -->
+        <item>Bedroom</item>        <!-- 5 -->
+        <item>Bathroom</item>       <!-- 6 -->
+        <item>Office</item>         <!-- 7 -->
+        <item>Dressing</item>       <!-- 8 -->
+        <item>Garden</item>         <!-- 9 -->
+        <item>Terrace</item>        <!-- 10 -->
+        <item>Garage</item>         <!-- 11 -->
+        <item>Attic</item>          <!-- 12 -->
+        <item>Cellar</item>         <!-- 13 -->
+        <item>Utility</item>        <!-- 14 -->
+        <item>View</item>           <!-- 15 -->
     </string-array>
 
     <string-array name="nums_ind">

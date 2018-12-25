@@ -26,8 +26,11 @@ class ViewDialogPhotoPicker {
     private lateinit var galleryDraw : Drawable
     private lateinit var cameraDraw : Drawable
 
-    private lateinit var uri : Uri
-
+    /**
+     * @param activity Activity
+     * TO SHOW
+     * DIALOG
+     */
     fun showDialog(activity: Activity) {
         act = activity as AddOrEditActivity
         val dialog = Dialog(activity)

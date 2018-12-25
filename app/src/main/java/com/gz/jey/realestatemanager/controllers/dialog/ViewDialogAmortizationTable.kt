@@ -1,5 +1,6 @@
 package com.gz.jey.realestatemanager.controllers.dialog
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.support.v7.widget.RecyclerView
 import android.view.Window
@@ -14,8 +15,6 @@ import android.widget.TextView
 
 class ViewDialogAmortizationTable {
 
-    private val TAG = "INPUT ADDRESS"
-
     private lateinit var cancelBtn: Button
     // FOR VIEWS
     private lateinit var adapter : AmortizationsAdapter
@@ -27,7 +26,12 @@ class ViewDialogAmortizationTable {
     private lateinit var totCapital : TextView
     //private lateinit var totFee : TextView
 
-
+    /**
+     * @param activity LoanSimulatorActivity
+     * @param amort ArrayList<Amortizations>
+     * TO SHOW DIALOG
+     */
+    @SuppressLint("SetTextI18n")
     fun showDialog(activity: LoanSimulatorActivity, amort : ArrayList<Amortizations>) {
         val d2 = "%.2f"
         val dialog = Dialog(activity)
@@ -73,6 +77,10 @@ class ViewDialogAmortizationTable {
         dialog.show()
     }
 
+    /**
+     * @param activity LoanSimulatorActivity
+     * TO CONFIGURE RECYCLERVIEW
+     */
     private fun configureRecyclerView(activity : LoanSimulatorActivity) {
         val llm = LinearLayoutManager(activity)
         llm.orientation = LinearLayoutManager.VERTICAL

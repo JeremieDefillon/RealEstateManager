@@ -46,7 +46,7 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
             for(p in item.photos!!){
                 if(p.main){
                     Glide.with(itemView.context)
-                            .load(Uri.parse(p.image!!))
+                            .load(p.image!!)
                             .into(this.photo)
                     break
                 }

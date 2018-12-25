@@ -5,16 +5,16 @@ import android.arch.lifecycle.ViewModelProvider
 import com.gz.jey.realestatemanager.repositories.*
 import java.util.concurrent.Executor
 
+@Suppress("UNCHECKED_CAST")
 class ViewModelFactory(
         private val itemDataSource: RealEstateDataRepository,
-        private val photoDataSource: PhotosDataRepository,
         private val filtersDataSource: FiltersDataRepository,
         private val executor: Executor
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ItemViewModel::class.java)) {
-            return ItemViewModel(itemDataSource, photoDataSource, filtersDataSource, executor) as T
+            return ItemViewModel(itemDataSource, filtersDataSource, executor) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

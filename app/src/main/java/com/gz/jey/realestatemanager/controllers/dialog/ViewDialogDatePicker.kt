@@ -1,5 +1,6 @@
 package com.gz.jey.realestatemanager.controllers.dialog
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.util.Log
@@ -23,6 +24,7 @@ class ViewDialogDatePicker {
     private lateinit var editBtn : Button
     private lateinit var image : ImageView
 
+    @SuppressLint("SetTextI18n")
     /**
      * @param activity Activity
      * @param code String

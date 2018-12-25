@@ -13,11 +13,6 @@ object Injection {
         return RealEstateDataRepository(database!!.realEstateDao())
     }
 
-    private fun providePhotosDataSource(context: Context): PhotosDataRepository {
-        val database = ItemDatabase.getInstance(context)
-        return PhotosDataRepository(database!!.photosDao())
-    }
-
     private fun provideFiltersDataSource(context: Context): FiltersDataRepository {
         val database = ItemDatabase.getInstance(context)
         return FiltersDataRepository(database!!.filtersDao())
@@ -29,9 +24,8 @@ object Injection {
 
     fun provideViewModelFactory(context: Context): ViewModelFactory {
         val dataSourceRealEstate = provideRealEstateDataSource(context)
-        val dataSourcePhotos = providePhotosDataSource(context)
         val dataSourceFilters = provideFiltersDataSource(context)
         val executor = provideExecutor()
-        return ViewModelFactory(dataSourceRealEstate, dataSourcePhotos, dataSourceFilters,executor)
+        return ViewModelFactory(dataSourceRealEstate, dataSourceFilters,executor)
     }
 }

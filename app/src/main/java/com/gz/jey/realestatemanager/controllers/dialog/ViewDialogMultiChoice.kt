@@ -1,5 +1,6 @@
 package com.gz.jey.realestatemanager.controllers.dialog
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.res.Configuration
@@ -27,10 +28,16 @@ class ViewDialogMultiChoice {
 
     private val chk: ArrayList<CheckBox> = ArrayList()
     private val rdb: ArrayList<RadioButton> = ArrayList()
-    private var uri: String? = null
 
     private var checkCode: String? = null
 
+    /**
+     * @param activity Activity
+     * @param code String
+     * @param actualValue ArrayList<String>
+     * TO SHOW DIALOG
+     */
+    @SuppressLint("SetTextI18n")
     fun showDialog(activity: Activity, code: String, actualValue: ArrayList<String>) {
         val dialog = Dialog(activity)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -103,6 +110,13 @@ class ViewDialogMultiChoice {
 
     }
 
+    /**
+     * @param activity Activity
+     * @param code String
+     * @param type Int
+     * @param dialog Dialog
+     * TO SET ON CLICK
+     */
     private fun setOnClick(activity: Activity, code: String, type: Int, dialog: Dialog) {
         when (type) {
             0 -> {
@@ -161,6 +175,13 @@ class ViewDialogMultiChoice {
         }
     }
 
+    /**
+     * @param activity Activity
+     * @param code String
+     * @param list ArrayList<String>
+     * TO SET CHECKLIST
+     */
+    @SuppressLint("InflateParams")
     private fun setCheckList(activity: Activity, code: String, list: ArrayList<String>) {
         val params = scrollView.layoutParams
         when (activity.resources.configuration.orientation) {
@@ -217,6 +238,10 @@ class ViewDialogMultiChoice {
         }
     }
 
+    /**
+     * @param c Int
+     * TO UNCHECK ALL OTHER CHECKBOX
+     */
     private fun checkedSingle(c: Int) {
         for (i in 0 until rdb.size) {
             if (i != c)

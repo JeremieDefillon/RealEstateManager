@@ -191,8 +191,7 @@ class PlacesAdapter
     }
 
     companion object {
-
-        private val TAG = "PlaceAutoCompleteAd"
+        const val TAG = "PlaceAutoCompleteAd"
         private val STYLE_BOLD = StyleSpan(Typeface.BOLD)
     }
 }

@@ -5,6 +5,11 @@ import android.widget.Toast
 import com.gz.jey.realestatemanager.models.Code
 
 class ToastMessage{
+    /**
+     * @param context Context
+     * @param code String
+     * TO NOTIFY MESSAGE
+     */
     fun notifyMessage(context: Context, code : String){
         val msg = when(code){
             Code.UNEDITABLE -> "Can't Edit, please select a re first !"
@@ -19,6 +24,10 @@ class ToastMessage{
         }
     }
 
+    /**
+     * @param message CharSequence
+     * TO TOAST MESSAGE
+     */
     private fun Context.toast(message: CharSequence) =
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

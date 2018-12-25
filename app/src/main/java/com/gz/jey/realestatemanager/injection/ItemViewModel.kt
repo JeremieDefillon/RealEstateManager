@@ -10,7 +10,6 @@ import java.util.concurrent.Executor
 
 class ItemViewModel(// REPOSITORIES
         private val realEstateDataSource: RealEstateDataRepository,
-        private val photosDataSource: PhotosDataRepository,
         private val filtersDataSource: FiltersDataRepository,
         private val executor: Executor
 ) : ViewModel() {
@@ -41,10 +40,6 @@ class ItemViewModel(// REPOSITORIES
 
     fun updateRealEstate(realEstate: RealEstate) {
         executor.execute { realEstateDataSource.updateRealEstate(realEstate) }
-    }
-
-    fun updateAllRealEstates(realEstates: List<RealEstate>) {
-        executor.execute { realEstateDataSource.updateAllRealEstates(realEstates) }
     }
 
     // -------------

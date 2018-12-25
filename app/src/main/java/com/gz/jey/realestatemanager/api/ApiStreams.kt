@@ -28,10 +28,9 @@ object ApiStreams {
         }
 
     /**
-     * FETCH RESTAURANTS LIST REQUEST WITH GOOGLE PLACE
-     * @param loc LatLng
-     * @param lang Int
-     * @return Observable<Place>
+     * FETCH GEO CODE REQUEST WITH GOOGLE API
+     * @param address String
+     * @return Observable<GeoCode>
      */
     fun streamGeoCode(address: String): Observable<GeoCode> {
         val apiService = this.retrofit.create(ApiService::class.java)
@@ -42,10 +41,11 @@ object ApiStreams {
     }
 
     /**
-     * FETCH RESTAURANT DETAILS REQUEST WITH GOOGLE PLACE
-     * @param id String
-     * @param lang Int
-     * @return Observable<Details>
+     * FETCH Static Map REQUEST WITH GOOGLE API
+     * @param address String
+     * @param dimen Int
+     * @param pos LatLng
+     * @return String ( map image url )
      */
     fun getStaticMap(address : String, dimen :Int, pos :LatLng?) : String{
         val max = dimen.toString()+"x"+dimen.toString()
