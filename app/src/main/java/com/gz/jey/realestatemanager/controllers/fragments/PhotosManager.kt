@@ -42,6 +42,7 @@ class PhotosManager : Fragment() {
     private lateinit var mListener: PhotosManagerListener
     private val cardViews: ArrayList<CardView> = ArrayList()
     var photosList : ArrayList<Photos> = ArrayList()
+    var mainPhoto : Photos? = null
     private var justApplied = false
 
     // FOR DESIGN
@@ -98,12 +99,14 @@ class PhotosManager : Fragment() {
                     0
         Log.d("Photos [$max]", tempRE!!.photos.toString())
         if (max > 0) {
+            mainPhoto = tempRE!!.mainPhoto
             for (i in 0 until max) {
                 photosList.add(tempRE!!.photos!![i])
                 if (i >= max - 1)
                     setAllPhotos()
             }
         } else {
+            mainPhoto = null
             ViewDialogNoResults().showDialog(activity!!, Code.NO_PHOTO)
         }
     }
@@ -142,7 +145,7 @@ class PhotosManager : Fragment() {
                             .into(img)
                 }
 
-                if (p.main) m.visibility = View.VISIBLE
+                if (tempRE!!.mainPhoto==p) m.visibility = View.VISIBLE
                 else m.visibility = View.GONE
 
                 photos_grid.addView(c)
@@ -223,7 +226,7 @@ class PhotosManager : Fragment() {
     private fun addNewPhoto(uri: String) {
         Log.d("Photo", uri)
         justApplied = true
-        val ph = Photos(null, null, uri,0,0,false,true)
+        val ph = Photos(null, null, uri,0,0,true)
         photosList.add(ph)
         setAllPhotos()
         mListener.savePhotos()

@@ -285,11 +285,11 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
     private fun updateRealEstate(realEstate: RealEstate?) {
         val re = realEstate ?: RealEstate(null, "", "", "", "", "", false, null, null, null, null,
                 null, null, null, null, "", null, false, "", "", "",
-                false, false, false, false, false, false, false, false, null,0)
+                false, false, false, false, false, false, false, false, null,null,0)
 
         tempRE = TempRealEstate(re.id, re.streetNumber, re.street, re.zipCode, re.locality, re.state, re.verified, re.latitude, re.longitude, re.type, re.surface,
                 re.room, re.bed, re.bath, re.kitchen, re.description, re.price, re.sold, re.marketDate, re.soldDate, re.agentName,
-                re.poiSchool, re.poiShops, re.poiPark, re.poiSubway, re.poiBus, re.poiTrain, re.poiHospital, re.poiAirport, re.photos, re.selected)
+                re.poiSchool, re.poiShops, re.poiPark, re.poiSubway, re.poiBus, re.poiTrain, re.poiHospital, re.poiAirport, re.photos, re.mainPhoto, re.selected)
 
         Log.d("TEMP RE UPDATED", tempRE!!.toString())
 
@@ -322,7 +322,7 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
 
             2 -> {
                 changeToolBarMenu(3)
-                this.legendsManager = LegendsManager.newInstance(photosList)
+                this.legendsManager = LegendsManager.newInstance(photosList, tempRE!!.mainPhoto)
                 fragment = this.legendsManager
             }
         }
@@ -357,6 +357,11 @@ class AddOrEditActivity : AppCompatActivity(), OnConnectionFailedListener, Locat
         tempRE!!.photos = pl
         Log.d("SAVED PHOTOS", tempRE!!.photos.toString())
     }
+
+    override fun saveMainPhoto(mainPhoto : Photos?) {
+        tempRE!!.mainPhoto = mainPhoto
+    }
+
 
     /**
      * @param index Int

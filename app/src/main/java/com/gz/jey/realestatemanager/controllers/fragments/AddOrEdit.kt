@@ -322,7 +322,8 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
                 tempRE!!.poiTrain,
                 tempRE!!.poiHospital,
                 tempRE!!.poiAirport,
-                tempRE!!.photos)
+                tempRE!!.photos,
+                tempRE!!.mainPhoto)
 
         if (tempRE!!.id != null) itemViewModel!!.updateRealEstate(re)
         else itemViewModel!!.createRealEstate(re)
@@ -368,18 +369,11 @@ class AddOrEdit : Fragment(), RealEstateAdapter.Listener {
             description_icon.background = addIcon
             description_value.text = tempRE!!.description
         }
-        if (tempRE!!.photos != null && tempRE!!.photos!!.isNotEmpty()) {
-            photo_icon.visibility = View.VISIBLE
-            photo_info.visibility = View.VISIBLE
+        if (tempRE!!.mainPhoto != null) {
             photo_value.background = null
-            for (p in tempRE!!.photos!!) {
-                if (p.main) {
-                    photo_icon.visibility = View.GONE
-                    photo_info.visibility = View.GONE
-                    glideThis(p.image!!)
-                    break
-                }
-            }
+            photo_icon.visibility = View.GONE
+            photo_info.visibility = View.GONE
+            glideThis(tempRE!!.mainPhoto!!.image!!)
         } else {
             photo_info.visibility = View.VISIBLE
             photo_icon.visibility = View.VISIBLE

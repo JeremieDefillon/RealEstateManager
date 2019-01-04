@@ -235,7 +235,9 @@ class LoanSimulatorActivity : AppCompatActivity(), AmortizationsAdapter.Listener
      * TO CLOSE KEYBOARD
      */
     private fun closeKeyboard() {
-        val inputManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(this.currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        if(this.currentFocus != null){
+            val inputManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(this.currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        }
     }
 }

@@ -35,83 +35,90 @@ data class TempRealEstate(
         var poiHospital: Boolean = false,
         var poiAirport: Boolean = false,
         var photos: List<Photos>? = null,
+        var mainPhoto: Photos? = null,
         var selected : Int = 0
 ) : Parcelable {
-    constructor(source: Parcel) : this(
-            source.readValue(Long::class.java.classLoader) as Long?,
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            1 == source.readInt(),
-            source.readValue(Double::class.java.classLoader) as Double?,
-            source.readValue(Double::class.java.classLoader) as Double?,
-            source.readValue(Int::class.java.classLoader) as Int?,
-            source.readValue(Int::class.java.classLoader) as Int?,
-            source.readValue(Int::class.java.classLoader) as Int?,
-            source.readValue(Int::class.java.classLoader) as Int?,
-            source.readValue(Int::class.java.classLoader) as Int?,
-            source.readValue(Int::class.java.classLoader) as Int?,
-            source.readString(),
-            source.readValue(Long::class.java.classLoader) as Long?,
-            1 == source.readInt(),
-            source.readString(),
-            source.readString(),
-            source.readString(),
-            1 == source.readInt(),
-            1 == source.readInt(),
-            1 == source.readInt(),
-            1 == source.readInt(),
-            1 == source.readInt(),
-            1 == source.readInt(),
-            1 == source.readInt(),
-            1 == source.readInt(),
-            ArrayList<Photos>().apply { source.readList(this, Photos::class.java.classLoader)},
-            source.readValue(Int::class.java.classLoader) as Int
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeValue(id)
-        writeString(streetNumber)
-        writeString(street)
-        writeString(zipCode)
-        writeString(locality)
-        writeString(state)
-        writeInt((if (verified) 1 else 0))
-        writeValue(latitude)
-        writeValue(longitude)
-        writeValue(type)
-        writeValue(surface)
-        writeValue(room)
-        writeValue(bed)
-        writeValue(bath)
-        writeValue(kitchen)
-        writeString(description)
-        writeValue(price)
-        writeInt((if (sold) 1 else 0))
-        writeString(marketDate)
-        writeString(soldDate)
-        writeString(agentName)
-        writeInt((if (poiSchool) 1 else 0))
-        writeInt((if (poiShops) 1 else 0))
-        writeInt((if (poiPark) 1 else 0))
-        writeInt((if (poiSubway) 1 else 0))
-        writeInt((if (poiBus) 1 else 0))
-        writeInt((if (poiTrain) 1 else 0))
-        writeInt((if (poiHospital) 1 else 0))
-        writeInt((if (poiAirport) 1 else 0))
-        writeList(photos)
-        writeValue(selected)
+    constructor(parcel: Parcel) : this(
+            parcel.readValue(Long::class.java.classLoader) as? Long,
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readValue(Double::class.java.classLoader) as? Double,
+            parcel.readValue(Double::class.java.classLoader) as? Double,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readValue(Int::class.java.classLoader) as? Int,
+            parcel.readString(),
+            parcel.readValue(Long::class.java.classLoader) as? Long,
+            parcel.readByte() != 0.toByte(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readString(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.readByte() != 0.toByte(),
+            parcel.createTypedArrayList(Photos.CREATOR),
+            parcel.readParcelable(Photos::class.java.classLoader),
+            parcel.readInt()) {
     }
 
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<TempRealEstate> = object : Parcelable.Creator<TempRealEstate> {
-            override fun createFromParcel(source: Parcel): TempRealEstate = TempRealEstate(source)
-            override fun newArray(size: Int): Array<TempRealEstate?> = arrayOfNulls(size)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeValue(id)
+        parcel.writeString(streetNumber)
+        parcel.writeString(street)
+        parcel.writeString(zipCode)
+        parcel.writeString(locality)
+        parcel.writeString(state)
+        parcel.writeByte(if (verified) 1 else 0)
+        parcel.writeValue(latitude)
+        parcel.writeValue(longitude)
+        parcel.writeValue(type)
+        parcel.writeValue(surface)
+        parcel.writeValue(room)
+        parcel.writeValue(bed)
+        parcel.writeValue(bath)
+        parcel.writeValue(kitchen)
+        parcel.writeString(description)
+        parcel.writeValue(price)
+        parcel.writeByte(if (sold) 1 else 0)
+        parcel.writeString(marketDate)
+        parcel.writeString(soldDate)
+        parcel.writeString(agentName)
+        parcel.writeByte(if (poiSchool) 1 else 0)
+        parcel.writeByte(if (poiShops) 1 else 0)
+        parcel.writeByte(if (poiPark) 1 else 0)
+        parcel.writeByte(if (poiSubway) 1 else 0)
+        parcel.writeByte(if (poiBus) 1 else 0)
+        parcel.writeByte(if (poiTrain) 1 else 0)
+        parcel.writeByte(if (poiHospital) 1 else 0)
+        parcel.writeByte(if (poiAirport) 1 else 0)
+        parcel.writeTypedList(photos)
+        parcel.writeParcelable(mainPhoto, flags)
+        parcel.writeInt(selected)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<TempRealEstate> {
+        override fun createFromParcel(parcel: Parcel): TempRealEstate {
+            return TempRealEstate(parcel)
+        }
+
+        override fun newArray(size: Int): Array<TempRealEstate?> {
+            return arrayOfNulls(size)
         }
     }
 }

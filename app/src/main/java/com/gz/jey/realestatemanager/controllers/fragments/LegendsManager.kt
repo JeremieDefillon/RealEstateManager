@@ -27,7 +27,6 @@ class LegendsManager : Fragment() {
     private lateinit var mListener: LegendsManagerListener
 
     private var counter = 0
-    private var main: Int? = null
 
     // FOR DESIGN
     /**
@@ -89,11 +88,6 @@ class LegendsManager : Fragment() {
         if (counter >= photosList.size)
             next_btn.visibility = View.GONE
 
-        for ((i, p) in photosList.withIndex())
-            if (p.main) {
-                main = i
-                break
-            }
 
         ArrayAdapter.createFromResource(
                 this.context,
@@ -121,6 +115,8 @@ class LegendsManager : Fragment() {
         num_btn.setSelection(0)
 
         finish_btn.setOnClickListener {
+            mListener.saveMainPhoto(mainPhoto)
+
             for ((i, p) in photosList.withIndex()) {
                 p.selected = false
                 if (i == photosList.size - 1) {
@@ -129,15 +125,13 @@ class LegendsManager : Fragment() {
                     mListener.setFragment(1)
                 }
             }
+            Data.photoNum = null
         }
 
         check_main.setOnClickListener {
-            for (p in photosList)
-                p.main = false
-
-            main = null
+            mainPhoto = null
             if (check_main.isChecked)
-                main = counter
+                mainPhoto = photosList[counter]
         }
 
         setPic()
@@ -210,7 +204,7 @@ class LegendsManager : Fragment() {
         legend_btn.setSelection(photosList[counter].legend)
         num_btn.setSelection(photosList[counter].num)
 
-        check_main.isChecked = (photosList[counter].main || (counter == main))
+        check_main.isChecked = (mainPhoto == photosList[counter])
     }
 
     /**
@@ -219,19 +213,20 @@ class LegendsManager : Fragment() {
     private fun saveItem() {
         photosList[counter].legend = legend_btn.selectedItemPosition
         photosList[counter].num = num_btn.selectedItemPosition
-        photosList[counter].main = (main == counter)
+        mainPhoto = photosList[counter]
     }
 
     companion object {
         var photosList: ArrayList<Photos> = ArrayList()
-
+        var mainPhoto: Photos? = null
         /**
          * @param pl ArrayList<Photos>
          * @return LegendsManager
          */
-        fun newInstance(pl: ArrayList<Photos>): LegendsManager {
+        fun newInstance(pl: ArrayList<Photos>, mp : Photos?): LegendsManager {
             val fragment = LegendsManager()
             photosList = pl
+            mainPhoto = mp
             return fragment
         }
     }
@@ -244,5 +239,6 @@ class LegendsManager : Fragment() {
         fun setSave(b: Boolean)
         fun setFragment(index: Int)
         fun savePhotos()
+        fun saveMainPhoto(mainPhoto: Photos?)
     }
 }

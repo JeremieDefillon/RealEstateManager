@@ -31,11 +31,11 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
      * @param item RealEstate
      * @param callback RealEstateAdapter.Listener
      */
-    fun updateWithRealEstate(context : Context, item: RealEstate, callback: RealEstateAdapter.Listener) {
+    fun updateWithRealEstate(context: Context, item: RealEstate, callback: RealEstateAdapter.Listener) {
         this.callbackWeakRef = WeakReference(callback)
         this.type.text = getFirstLine(context, item.type, item.room, item.surface)
-        val p = if(item.price != null)
-            if(Data.currency == 1) Utils.convertDollarToEuro(item.price!!) else item.price
+        val p = if (item.price != null)
+            if (Data.currency == 1) Utils.convertDollarToEuro(item.price!!) else item.price
         else null
         this.district.text = getSecondLine(context, item.locality, p, item.surface)
         this.price.text = Utils.convertedHighPrice(context, p)
@@ -45,23 +45,18 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
                 .load(npic)
                 .into(this.photo)
 
-        if(item.photos != null && item.photos!!.isNotEmpty()) {
-            for(ph in item.photos!!){
-                if(ph.main){
-                    Glide.with(itemView.context)
-                            .load(ph.image!!)
-                            .into(this.photo)
-                    break
-                }
-            }
+        if (item.mainPhoto != null) {
+            Glide.with(itemView.context)
+                    .load(item.mainPhoto!!.image!!)
+                    .into(this.photo)
         }
 
-        if(item.selected>0){
-            itemButton.setBackgroundColor(ContextCompat.getColor(itemView.context ,R.color.colorSecondary))
-            price.setTextColor(ContextCompat.getColor(itemView.context ,R.color.colorWhite))
-        }else{
-            itemButton.setBackgroundColor(ContextCompat.getColor(itemView.context ,R.color.colorWhite))
-            price.setTextColor(ContextCompat.getColor(itemView.context ,R.color.colorSecondary))
+        if (item.selected > 0) {
+            itemButton.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorSecondary))
+            price.setTextColor(ContextCompat.getColor(itemView.context, R.color.colorWhite))
+        } else {
+            itemButton.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorWhite))
+            price.setTextColor(ContextCompat.getColor(itemView.context, R.color.colorSecondary))
         }
     }
 
@@ -73,13 +68,13 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
      * @param surface Int?
      * @return String
      */
-    private fun getFirstLine(context: Context, type : Int?, room : Int?, surface: Int?) : String{
+    private fun getFirstLine(context: Context, type: Int?, room: Int?, surface: Int?): String {
         val res = itemView.context.resources
         val sb = StringBuilder()
-        if(type!=null) sb.append(res.getStringArray(R.array.type_ind)[type]).append("  ")
-        if(room!=null) sb.append(Utils.getRoomNumFormat(context, room)).append("  ")
-        if(room!=null) sb.append(Utils.getSurfaceFormat(context, surface)).append("  ")
-        return if(sb.isNotEmpty()) sb.substring(0, sb.toString().length-1)
+        if (type != null) sb.append(res.getStringArray(R.array.type_ind)[type]).append("  ")
+        if (room != null) sb.append(Utils.getRoomNumFormat(context, room)).append("  ")
+        if (room != null) sb.append(Utils.getSurfaceFormat(context, surface)).append("  ")
+        return if (sb.isNotEmpty()) sb.substring(0, sb.toString().length - 1)
         else ""
     }
 
@@ -91,11 +86,11 @@ class RealEstateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), 
      * @param surface Int?
      * @return String
      */
-    private fun getSecondLine(context: Context, locality : String, price : Long?, surface: Int?): String{
+    private fun getSecondLine(context: Context, locality: String, price: Long?, surface: Int?): String {
         val sb = StringBuilder()
-        if(locality.isNotEmpty()) sb.append("($locality)").append("  ")
+        if (locality.isNotEmpty()) sb.append("($locality)").append("  ")
         sb.append(Utils.getPPMFormat(context, price, surface)).append("  ")
-        return if(sb.isNotEmpty()) sb.substring(0, sb.toString().length-1)
+        return if (sb.isNotEmpty()) sb.substring(0, sb.toString().length - 1)
         else ""
     }
 

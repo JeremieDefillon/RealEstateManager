@@ -192,7 +192,7 @@ class SettingsActivity : AppCompatActivity() {
 
         var directories: Array<String?> = arrayOfNulls(0)
         if (u != null) {
-            Log.d("URI", u.toString())
+            Log.d("URI ", u.toString())
             c = managedQuery(u, projection, null, null, null)
         }
 

@@ -8,10 +8,11 @@ import android.content.Context
 import com.gz.jey.realestatemanager.database.dao.*
 import com.gz.jey.realestatemanager.models.sql.*
 import com.gz.jey.realestatemanager.utils.IntConverter
+import com.gz.jey.realestatemanager.utils.MainPhotoConverter
 import com.gz.jey.realestatemanager.utils.PhotosConverter
 
 @Database(entities = [RealEstate::class, Photos::class, Filters::class], version = 1, exportSchema = false)
-@TypeConverters(PhotosConverter::class, IntConverter::class)
+@TypeConverters(PhotosConverter::class, MainPhotoConverter::class, IntConverter::class)
 abstract class ItemDatabase : RoomDatabase() {
 
     // --- DAO ---

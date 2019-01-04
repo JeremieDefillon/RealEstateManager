@@ -146,7 +146,7 @@ class PlacesAdapter
      * Returns an empty list if no results were found.
      * Returns null if the API client is not available or the query did not complete
      * successfully.
-     * This method MUST be called off the main UI thread, as it will block until data is returned
+     * This method MUST be called off the mainPhoto UI thread, as it will block until data is returned
      * from the API, which may include a network request.
      *
      * @param constraint Autocomplete query string
@@ -164,7 +164,7 @@ class PlacesAdapter
                     .getAutocompletePredictions(mGoogleApiClient, constraint.toString(),
                             mBounds, mPlaceFilter)
 
-            // This method should have been called off the main UI thread. Block and wait for at most 60s
+            // This method should have been called off the mainPhoto UI thread. Block and wait for at most 60s
             // for a result from the API.
             val autocompletePredictions = results
                     .await(60, TimeUnit.SECONDS)

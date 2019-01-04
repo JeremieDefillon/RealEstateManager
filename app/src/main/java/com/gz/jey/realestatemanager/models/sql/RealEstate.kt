@@ -6,6 +6,7 @@ import android.arch.persistence.room.TypeConverters
 import android.content.ContentValues
 import android.os.Parcel
 import android.os.Parcelable
+import com.gz.jey.realestatemanager.utils.MainPhotoConverter
 import com.gz.jey.realestatemanager.utils.PhotosConverter
 
 @Entity(tableName = "RealEstate")
@@ -42,9 +43,12 @@ data class RealEstate(
         var poiAirport : Boolean = false,
         @TypeConverters(PhotosConverter::class)
         var photos: List<Photos>? = null,
+        @TypeConverters(MainPhotoConverter::class)
+        var mainPhoto: Photos? = null,
         var photoNum: Int = 0,
         var selected: Int = 0
 ) : Parcelable {
+
     constructor(parcel: Parcel) : this(
             parcel.readValue(Long::class.java.classLoader) as? Long,
             parcel.readString(),
@@ -75,9 +79,11 @@ data class RealEstate(
             parcel.readByte() != 0.toByte(),
             parcel.readByte() != 0.toByte(),
             parcel.readByte() != 0.toByte(),
-            parcel.readValue(Photos::class.java.classLoader) as? List<Photos>,
+            parcel.createTypedArrayList(Photos.CREATOR),
+            parcel.readParcelable(Photos::class.java.classLoader),
             parcel.readInt(),
-            parcel.readInt())
+            parcel.readInt()) {
+    }
 
     constructor() : this(null,
             "",
@@ -108,6 +114,7 @@ data class RealEstate(
             false,
             false,
             false,
+            null,
             null,
             0,
             0)
@@ -143,6 +150,7 @@ data class RealEstate(
         parcel.writeByte(if (poiHospital) 1 else 0)
         parcel.writeByte(if (poiAirport) 1 else 0)
         parcel.writeTypedList(photos)
+        parcel.writeParcelable(mainPhoto, flags)
         parcel.writeInt(photoNum)
         parcel.writeInt(selected)
     }
@@ -195,5 +203,4 @@ data class RealEstate(
             return re
         }
     }
-
 }
