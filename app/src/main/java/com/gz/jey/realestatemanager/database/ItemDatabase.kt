@@ -38,7 +38,6 @@ abstract class ItemDatabase : RoomDatabase() {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(context.applicationContext,
                                 ItemDatabase::class.java, "RealEstateDatabase.db")
-                                //.addCallback(prepopulateDatabase())
                                 .build()
                     }
                 }

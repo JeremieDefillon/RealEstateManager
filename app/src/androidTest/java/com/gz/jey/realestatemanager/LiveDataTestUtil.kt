@@ -14,10 +14,10 @@ object LiveDataTestUtil {
         var observer : Observer<T>? = null
         observer= Observer {
             value -> value?.let {
-                data[0] = value
-                latch.countDown()
-                liveData.removeObserver(observer!!)
-            }
+            data[0] = value
+            latch.countDown()
+            liveData.removeObserver(observer!!)
+        }
         }
         liveData.observeForever(observer)
         latch.await(2, TimeUnit.SECONDS)

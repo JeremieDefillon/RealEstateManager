@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import com.gz.jey.realestatemanager.R
 import com.gz.jey.realestatemanager.controllers.activities.MainActivity
 import com.gz.jey.realestatemanager.models.Data
@@ -142,7 +144,9 @@ object Utils{
         if(!c.isNullOrEmpty()) sb.append("$d,\r\n")
         if(!d.isNullOrEmpty()) sb.append("$e,\r\n")
 
-        return sb.substring(0, sb.length-3)
+        return if(sb.toString().length > 3)
+            sb.substring(0, sb.length-3)
+        else ""
     }
 
     /**
@@ -162,5 +166,11 @@ object Utils{
      */
     fun isLandscape(context: Context): Boolean{
         return context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    }
+
+    fun isConnected(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo = cm.activeNetworkInfo
+        return activeNetwork.isConnectedOrConnecting
     }
 }

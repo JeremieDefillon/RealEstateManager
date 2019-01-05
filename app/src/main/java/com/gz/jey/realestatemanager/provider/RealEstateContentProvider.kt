@@ -6,6 +6,7 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
+import android.provider.BaseColumns
 import com.gz.jey.realestatemanager.database.ItemDatabase
 import com.gz.jey.realestatemanager.models.sql.RealEstate
 
@@ -105,10 +106,24 @@ class RealEstateContentProvider : ContentProvider() {
         throw IllegalArgumentException("Failed to update row into $uri")
     }
 
-    companion object {
 
+    companion object {
         const val AUTHORITY = "com.gz.jey.realestatemanager.provider"
-        val TABLE_NAME = RealEstate::class.java.simpleName!!
-        val URI_REAL_ESTATE = Uri.parse("content://$AUTHORITY/$TABLE_NAME")!!
+        val TABLE_NAME = "RealEstate"
+        val URI_COMMAND = Uri
+                .parse("content://$AUTHORITY")
+                .buildUpon()
+                .appendPath(TABLE_NAME)
+                .build()!!
+    }
+
+    interface CommandEntry : BaseColumns {
+        companion object {
+            const val TABLE_NAME = "RealEstate"
+            const val MIME_TYPE = "vnd.android.cursor.dir/vnd.$AUTHORITY.$TABLE_NAME"
+            const val COLUMN_ID = "id"
+            const val COLUMN_PRICE = "price"
+            const val COLUMN_SURFACE = "surface"
+        }
     }
 }

@@ -33,7 +33,41 @@ class RealEstateDaoTest {
 
     // DATA SET FOR TEST
     private val RE_ID : Long = 1
-    private val RE_DEMO : RealEstate = RealEstate(RE_ID,null,0, 1000000, 540, 6, 5, 2, "", 0, 0, 0, "", "", "Jey")
+    private val RE_DEMO : RealEstate = RealEstate(
+            RE_ID,
+            "1a",
+            "Street Avenue",
+            "69001",
+            "Lyon",
+            "France",
+            true,
+            0.0,
+            0.0,
+            4,
+            350,
+            10,
+            4,
+            3,
+            1,
+            "",
+            1000000,
+            false,
+            "2018-10-28",
+            "",
+            "Jey",
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false,
+            null,
+            null,
+            0,
+            0
+    )
 
 
     @Test
@@ -45,11 +79,20 @@ class RealEstateDaoTest {
         // TEST
         val re = LiveDataTestUtil.getValue(this.database!!.realEstateDao().getRealEstate(1))
         assertTrue(re.id!! == RE_DEMO.id && re.id == RE_ID)
+        assertTrue(re.streetNumber == RE_DEMO.streetNumber)
+        assertTrue(re.street == RE_DEMO.street)
+        assertTrue(re.zipCode == RE_DEMO.zipCode)
+        assertTrue(re.locality == RE_DEMO.locality)
+        assertTrue(re.state == RE_DEMO.state)
+        assertTrue(re.surface == RE_DEMO.surface)
+        assertTrue(re.price == RE_DEMO.price)
+
     }
 
     @After
     @Throws(Exception::class)
     fun closeDb() {
+        this.database!!.realEstateDao().deleteRealEstate(RE_ID)
         database?.close()
     }
 }

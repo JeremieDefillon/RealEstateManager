@@ -4,13 +4,19 @@ import com.gz.jey.realestatemanager.utils.Utils
 import junit.framework.Assert
 import org.junit.Test
 import java.util.*
+import java.text.SimpleDateFormat
+
 
 class UtilsTest{
 
     @Test
-    fun testGetTodayDate(){
+    fun testGetTodayDateEn(){
         val cal = Calendar.getInstance()
-        val dString = Utils.getTodayDate().split("/")
+        val date = cal.time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val formattedDate = dateFormat.format(date)
+
+        val dString = Utils.getDateEn(formattedDate).split("/")
         val day = cal.get(Calendar.DAY_OF_MONTH)
         // month's array is made from 0 to 11 so we had + 1
         val month = cal.get(Calendar.MONTH) + 1
@@ -22,9 +28,13 @@ class UtilsTest{
     }
 
     @Test
-    fun testGetTodayDateStr(){
+    fun testGetTodayDateFr(){
         val cal = Calendar.getInstance()
-        val dString = Utils.getTodayDateStr().split("/")
+        val date = cal.time
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val formattedDate = dateFormat.format(date)
+
+        val dString = Utils.getDateFr(formattedDate).split("/")
         val day = cal.get(Calendar.DAY_OF_MONTH)
         // month's array is made from 0 to 11 so we had + 1
         val month = cal.get(Calendar.MONTH) + 1
@@ -37,8 +47,8 @@ class UtilsTest{
 
     @Test
     fun testConvertDollarToEuro(){
-        val dollar = 100
-        val expected = 81
+        val dollar : Long = 100
+        val expected : Long = 81
         val euro = Utils.convertDollarToEuro(dollar)
 
         Assert.assertEquals(expected, euro)
@@ -46,18 +56,10 @@ class UtilsTest{
 
     @Test
     fun testConvertEuroToDollar(){
-        val euro = 100
-        val expected = 123
+        val euro : Long = 100
+        val expected : Long = 123
         val dollar = Utils.convertEuroToDollar(euro)
 
         Assert.assertEquals(expected, dollar)
-    }
-
-    @Test
-    fun testConvertHighPrice(){
-        val expected = "1,000,000"
-        val money = Utils.convertedHighPrice("1000000")
-
-        Assert.assertEquals(expected, money)
     }
 }
